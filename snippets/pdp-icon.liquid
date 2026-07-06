@@ -1,0 +1,15 @@
+{%- comment -%}
+  Renders an inline icon for the PDP delivery-services list.
+  Accepts:
+  - icon: {String} one of 'box', 'truck', 'clipboard', 'play'. Defaults to 'box'.
+{%- endcomment -%}
+{%- case icon -%}
+  {%- when 'truck' -%}
+    {{- 'icon-truck.svg' | inline_asset_content -}}
+  {%- when 'clipboard' -%}
+    {{- 'icon-clipboard.svg' | inline_asset_content -}}
+  {%- when 'play' -%}
+    {{- 'icon-play.svg' | inline_asset_content -}}
+  {%- else -%}
+    {{- 'icon-box.svg' | inline_asset_content -}}
+{%- endcase -%}

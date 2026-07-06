@@ -1,9 +1,15 @@
 {{ 'pdp.css' | asset_url | stylesheet_tag }}
+{%- if section.settings.show_add_to_cart -%}
+  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}
  
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
   assign category_label = section.settings.breadcrumb_category
   assign subcategory_label = product.type
+  assign product_form_id = 'pdp-product-form-' | append: section.id
+  assign delivery_blocks = section.blocks | where: 'type', 'delivery_item'
+  assign package_blocks = section.blocks | where: 'type', 'package'
 -%}
  
 <div class="pdp" id="pdp-{{ section.id }}">
@@ -153,6 +159,7 @@
                       assign is_selected = true
                     endif
                   -%}
+<a
                     href="{{ variant.url }}"
                     class="pdp__swatch{% if is_selected %} pdp__swatch--selected{% endif %}"
                     aria-label="{{ variant.option1 }}"
@@ -184,7 +191,36 @@
 </a>
           {%- endif -%}
 </div>
- 
+
+        {%- if section.settings.delivery_heading != blank or delivery_blocks.size > 0 -%}
+<div class="pdp__delivery">
+            {%- if section.settings.delivery_heading != blank -%}
+<h2 class="pdp__delivery-heading">{{ section.settings.delivery_heading }}</h2>
+            {%- endif -%}
+            {%- if section.settings.delivery_subheading != blank -%}
+<p class="pdp__delivery-subheading">{{ section.settings.delivery_subheading }}</p>
+            {%- endif -%}
+
+            {%- if delivery_blocks.size > 0 -%}
+<div class="pdp__delivery-list">
+                {%- for block in delivery_blocks -%}
+<div class="pdp__delivery-item" {{ block.shopify_attributes }}>
+<span class="pdp__delivery-icon">{% render 'pdp-icon', icon: block.settings.icon %}</span>
+<div class="pdp__delivery-text">{{ block.settings.text }}</div>
+</div>
+                {%- endfor -%}
+</div>
+            {%- endif -%}
+
+            {%- if section.settings.delivery_details_label != blank -%}
+<a href="{{ section.settings.delivery_details_url | default: '#' }}" class="pdp__delivery-details-link">
+                {{ section.settings.delivery_details_label }}
+<svg width="7" height="12" viewBox="0 0 7 12" fill="none" aria-hidden="true"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</a>
+            {%- endif -%}
+</div>
+        {%- endif -%}
+
         <div class="pdp__purchase">
 <div class="pdp__price-row">
 <p class="pdp__price">{{ current_variant.price | money }}</p>
@@ -195,7 +231,53 @@
           {%- if section.settings.price_note != blank -%}
 <p class="pdp__price-note">{{ section.settings.price_note }}</p>
           {%- endif -%}
- 
+
+          {%- if section.settings.show_payment_options -%}
+<details class="pdp__payment-options">
+<summary>
+                <span>{{ section.settings.payment_options_label | default: 'View payment options' }}</span>
+<svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</summary>
+<div class="pdp__payment-options-content">{{ section.settings.payment_options_content }}</div>
+</details>
+          {%- endif -%}
+
+          {%- if section.settings.show_add_to_cart -%}
+<product-form data-section-id="{{ section.id }}">
+<div class="product-form__error-message-wrapper" role="alert" hidden>
+<span class="pdp__error-icon">{{- 'icon-error.svg' | inline_asset_content -}}</span>
+<span class="product-form__error-message"></span>
+</div>
+              {%- form 'product', product, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+<input
+                  type="hidden"
+                  name="id"
+                  value="{{ current_variant.id }}"
+                  {% if current_variant.available == false or current_variant == null %}disabled{% endif %}
+                  class="product-variant-id"
+>
+<button
+                  type="submit"
+                  name="add"
+                  class="pdp__btn pdp__btn--primary"
+                  {% if current_variant.available == false or current_variant == null %}disabled{% endif %}
+>
+<span class="pdp__btn-icon">{{- 'icon-cart.svg' | inline_asset_content -}}</span>
+<span>
+                    {%- if current_variant == null -%}
+                      {{ 'products.product.unavailable' | t }}
+                    {%- elsif current_variant.available == false -%}
+                      {{ 'products.product.sold_out' | t }}
+                    {%- else -%}
+                      {{ section.settings.add_to_cart_label | default: 'Add to cart' }}
+                    {%- endif -%}
+</span>
+                  {%- render 'loading-spinner' -%}
+</button>
+              {%- endform -%}
+</product-form>
+          {%- endif -%}
+
           <div class="pdp__btn-row">
             {%- if section.settings.phone_number != blank -%}
 <a href="tel:{{ section.settings.phone_number | remove: ' ' }}" class="pdp__btn">
@@ -234,7 +316,48 @@
             {%- endfor -%}
 </div>
         {%- endif -%}
- 
+
+        {%- if package_blocks.size > 0 -%}
+<div class="pdp__packages">
+<h2 class="pdp__packages-heading">
+              {{ section.settings.packages_heading | default: 'Available packages' }}
+<span class="pdp__packages-count">{{ package_blocks.size }}</span>
+</h2>
+<div class="pdp__packages-list">
+              {%- for block in package_blocks -%}
+                {%- liquid
+                  assign package_product = block.settings.product
+                  assign package_url = package_product.url | default: block.settings.url
+                  assign package_title = block.settings.title | default: package_product.title
+                  assign package_image = package_product.featured_image
+                -%}
+<a href="{{ package_url | default: '#' }}" class="pdp__package-card" {{ block.shopify_attributes }}>
+<span class="pdp__package-image">
+                    {%- if package_image != blank -%}
+<img
+                        src="{{ package_image | image_url: width: 200 }}"
+                        alt="{{ package_image.alt | escape }}"
+                        width="64"
+                        height="64"
+                        loading="lazy"
+>
+                    {%- endif -%}
+</span>
+<span class="pdp__package-info">
+<span class="pdp__package-title">{{ package_title }}</span>
+                    {%- if package_product != blank -%}
+<span class="pdp__package-price">{{ package_product.price | money }}</span>
+                    {%- endif -%}
+</span>
+                  {%- if block.settings.badge_label != blank -%}
+<span class="pdp__package-badge">{{ block.settings.badge_label }}</span>
+                  {%- endif -%}
+</a>
+              {%- endfor -%}
+</div>
+</div>
+        {%- endif -%}
+
       </div>
 </aside>
  
@@ -332,6 +455,33 @@
     },
     {
       "type": "header",
+      "content": "Delivery services"
+    },
+    {
+      "type": "text",
+      "id": "delivery_heading",
+      "label": "Heading",
+      "default": "Delivery services"
+    },
+    {
+      "type": "text",
+      "id": "delivery_subheading",
+      "label": "Subheading",
+      "default": "Included in delivery"
+    },
+    {
+      "type": "text",
+      "id": "delivery_details_label",
+      "label": "\"View details\" link label",
+      "default": "View delivery details"
+    },
+    {
+      "type": "url",
+      "id": "delivery_details_url",
+      "label": "\"View details\" link URL"
+    },
+    {
+      "type": "header",
       "content": "Price"
     },
     {
@@ -345,6 +495,43 @@
       "id": "availability_text",
       "label": "Availability text",
       "default": "Available upon request"
+    },
+    {
+      "type": "header",
+      "content": "Payment options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_options",
+      "label": "Show payment options toggle",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "payment_options_label",
+      "label": "Toggle label",
+      "default": "View payment options"
+    },
+    {
+      "type": "richtext",
+      "id": "payment_options_content",
+      "label": "Payment options content"
+    },
+    {
+      "type": "header",
+      "content": "Add to cart"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add_to_cart",
+      "label": "Show add to cart button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_label",
+      "label": "Button label",
+      "default": "Add to cart"
     },
     {
       "type": "header",
@@ -366,6 +553,16 @@
       "id": "contact_label",
       "label": "Contact button label",
       "default": "Contact us"
+    },
+    {
+      "type": "header",
+      "content": "Available packages"
+    },
+    {
+      "type": "text",
+      "id": "packages_heading",
+      "label": "Heading",
+      "default": "Available packages"
     },
     {
       "type": "header",
@@ -445,14 +642,70 @@
           "label": "Caption"
         }
       ]
+    },
+    {
+      "type": "delivery_item",
+      "name": "Delivery service item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "box", "label": "Box" },
+            { "value": "truck", "label": "Truck" },
+            { "value": "clipboard", "label": "Clipboard / checklist" },
+            { "value": "play", "label": "Play / video" }
+          ],
+          "default": "box"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p><strong>Delivery within 2 weeks of order confirmation.</strong></p>"
+        }
+      ]
+    },
+    {
+      "type": "package",
+      "name": "Available package",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Bundle product",
+          "info": "Its title, image and price are used unless overridden below."
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title override"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link (used if no product is selected)"
+        },
+        {
+          "type": "text",
+          "id": "badge_label",
+          "label": "Badge label",
+          "default": "Combined price"
+        }
+      ]
     }
   ],
   "presets": [
     {
       "name": "PDP: Technogym style",
       "blocks": [
+        { "type": "delivery_item", "settings": { "icon": "box", "text": "<p><strong>Delivery within 2 weeks of order confirmation.</strong><br>We will call to arrange your delivery date.</p>" } },
+        { "type": "delivery_item", "settings": { "icon": "clipboard", "text": "<p><strong>Professional installation and inspection</strong></p>" } },
+        { "type": "delivery_item", "settings": { "icon": "play", "text": "<p><strong>Onboarding and support from our experts</strong></p>" } },
         { "type": "accordion", "settings": { "title": "Key features" } },
         { "type": "accordion", "settings": { "title": "Dimensions" } },
+        { "type": "accordion", "settings": { "title": "What's included" } },
         { "type": "accordion", "settings": { "title": "FAQs" } },
         { "type": "slide" },
         { "type": "slide" },
