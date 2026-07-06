@@ -1,0 +1,465 @@
+{{ 'pdp.css' | asset_url | stylesheet_tag }}
+ 
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign category_label = section.settings.breadcrumb_category
+  assign subcategory_label = product.type
+-%}
+ 
+<div class="pdp" id="pdp-{{ section.id }}">
+<div class="pdp__wrapper">
+ 
+    <!-- ============ LEFT: SCROLLING GALLERY (DESKTOP) ============ -->
+<div class="pdp__gallery">
+ 
+      {%- if product.featured_media -%}
+<div class="pdp__gallery-hero">
+<img
+            src="{{ product.featured_media | image_url: width: 1600 }}"
+            alt="{{ product.featured_media.alt | escape }}"
+            width="{{ product.featured_media.width }}"
+            height="{{ product.featured_media.height }}"
+            loading="eager"
+>
+</div>
+      {%- endif -%}
+ 
+      {%- assign gallery_media = product.media | where: 'media_type', 'image' -%}
+      {%- if gallery_media.size > 1 -%}
+<div class="pdp__gallery-grid">
+          {%- for media in gallery_media offset: 1 -%}
+<div class="pdp__gallery-item">
+<img
+                src="{{ media | image_url: width: 1000 }}"
+                alt="{{ media.alt | escape }}"
+                width="{{ media.width }}"
+                height="{{ media.height }}"
+                loading="lazy"
+>
+</div>
+          {%- endfor -%}
+</div>
+      {%- endif -%}
+ 
+      {%- if section.settings.show_audio_button -%}
+<button type="button" class="pdp__audio-btn" aria-label="{{ section.settings.audio_button_label | default: 'Play audio guide' }}" data-pdp-audio-toggle>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" stroke="currentColor" stroke-width="1.6"/>
+<path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+</svg>
+</button>
+      {%- endif -%}
+</div>
+ 
+    <!-- ============ MOBILE-ONLY: SWIPEABLE CAROUSEL + THUMB STRIP ============ -->
+    {%- assign all_media = product.media | where: 'media_type', 'image' -%}
+    {%- if all_media.size > 0 -%}
+<div class="pdp__m-gallery">
+<div class="pdp__m-main" data-pdp-m-main>
+          {%- for media in all_media -%}
+<div class="pdp__m-slide" data-pdp-m-slide data-index="{{ forloop.index0 }}">
+<img
+                src="{{ media | image_url: width: 1200 }}"
+                alt="{{ media.alt | escape }}"
+                width="{{ media.width }}"
+                height="{{ media.height }}"
+                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+>
+</div>
+          {%- endfor -%}
+</div>
+ 
+        {%- if section.settings.show_audio_button -%}
+<button type="button" class="pdp__audio-btn pdp__audio-btn--mobile" aria-label="{{ section.settings.audio_button_label | default: 'Play audio guide' }}" data-pdp-audio-toggle>
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" stroke="currentColor" stroke-width="1.6"/>
+<path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+</svg>
+</button>
+        {%- endif -%}
+ 
+        {%- if all_media.size > 1 -%}
+<div class="pdp__m-thumbs-wrap">
+<button type="button" class="pdp__m-thumbs-nav pdp__m-thumbs-nav--prev" data-pdp-m-thumbs-prev aria-label="Scroll images left">
+<svg width="8" height="14" viewBox="0 0 8 14" fill="none" aria-hidden="true"><path d="M7 1 1 7l6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+<div class="pdp__m-thumbs" data-pdp-m-thumbs>
+              {%- for media in all_media -%}
+<button
+                  type="button"
+                  class="pdp__m-thumb{% if forloop.first %} pdp__m-thumb--active{% endif %}"
+                  data-pdp-m-thumb
+                  data-index="{{ forloop.index0 }}"
+                  aria-label="View image {{ forloop.index }}"
+>
+<img
+                    src="{{ media | image_url: width: 400 }}"
+                    alt="{{ media.alt | escape }}"
+                    width="200"
+                    height="150"
+                    loading="lazy"
+>
+</button>
+              {%- endfor -%}
+</div>
+<button type="button" class="pdp__m-thumbs-nav pdp__m-thumbs-nav--next" data-pdp-m-thumbs-next aria-label="Scroll images right">
+<svg width="8" height="14" viewBox="0 0 8 14" fill="none" aria-hidden="true"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+</div>
+        {%- endif -%}
+</div>
+    {%- endif -%}
+ 
+    <!-- ============ RIGHT: STICKY PRODUCT INFO ============ -->
+<aside class="pdp__sidebar">
+<div class="pdp__sidebar-inner">
+ 
+        <div class="pdp__info">
+          {%- if category_label != blank or subcategory_label != blank -%}
+<p class="pdp__breadcrumb">
+              {%- if category_label != blank -%}
+                {%- if section.settings.breadcrumb_category_url != blank -%}
+<a href="{{ section.settings.breadcrumb_category_url }}">{{ category_label }}</a>
+                {%- else -%}
+<span>{{ category_label }}</span>
+                {%- endif -%}
+              {%- endif -%}
+              {%- if category_label != blank and subcategory_label != blank -%}
+<span class="pdp__breadcrumb-sep">&bull;</span>
+              {%- endif -%}
+              {%- if subcategory_label != blank -%}
+<a href="{{ subcategory_label | url_for_type }}">{{ subcategory_label }}</a>
+              {%- endif -%}
+</p>
+          {%- endif -%}
+ 
+          <h1 class="pdp__title">{{ product.title }}</h1>
+ 
+          {%- if product.metafields.custom.subtitle != blank -%}
+<p class="pdp__subtitle">{{ product.metafields.custom.subtitle }}</p>
+          {%- elsif product.type != blank -%}
+<p class="pdp__subtitle">{{ product.type }}</p>
+          {%- endif -%}
+ 
+          {%- if product.has_only_default_variant == false and product.options.size > 0 -%}
+<div class="pdp__option">
+<p class="pdp__option-label">{{ product.options.first | upcase }}: {{ current_variant.option1 | upcase }}</p>
+<div class="pdp__swatches">
+                {%- for variant in product.variants -%}
+                  {%- liquid
+                    assign swatch_image = variant.featured_image | default: product.featured_media
+                    assign is_selected = false
+                    if variant.id == current_variant.id
+                      assign is_selected = true
+                    endif
+                  -%}
+                    href="{{ variant.url }}"
+                    class="pdp__swatch{% if is_selected %} pdp__swatch--selected{% endif %}"
+                    aria-label="{{ variant.option1 }}"
+                    title="{{ variant.option1 }}"
+>
+                    {%- if swatch_image -%}
+<img
+                        src="{{ swatch_image | image_url: width: 120 }}"
+                        alt="{{ variant.option1 | escape }}"
+                        width="60"
+                        height="60"
+                        loading="lazy"
+>
+                    {%- endif -%}
+</a>
+                {%- endfor -%}
+</div>
+</div>
+          {%- endif -%}
+ 
+          {%- if product.description != blank -%}
+<div class="pdp__description">{{ product.description | strip_html | truncatewords: 28 }}</div>
+          {%- endif -%}
+ 
+          {%- if section.settings.specs_anchor != blank -%}
+<a href="#{{ section.settings.specs_anchor }}" class="pdp__specs-link">
+              {{ section.settings.specs_label | default: 'Technical Specifications' }}
+<svg width="7" height="12" viewBox="0 0 7 12" fill="none" aria-hidden="true"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</a>
+          {%- endif -%}
+</div>
+ 
+        <div class="pdp__purchase">
+<div class="pdp__price-row">
+<p class="pdp__price">{{ current_variant.price | money }}</p>
+            {%- if section.settings.availability_text != blank -%}
+<p class="pdp__availability">{{ section.settings.availability_text }}</p>
+            {%- endif -%}
+</div>
+          {%- if section.settings.price_note != blank -%}
+<p class="pdp__price-note">{{ section.settings.price_note }}</p>
+          {%- endif -%}
+ 
+          <div class="pdp__btn-row">
+            {%- if section.settings.phone_number != blank -%}
+<a href="tel:{{ section.settings.phone_number | remove: ' ' }}" class="pdp__btn">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                {{ section.settings.phone_number }}
+</a>
+            {%- endif -%}
+ 
+            {%- if section.settings.contact_url != blank -%}
+<a href="{{ section.settings.contact_url }}" class="pdp__btn">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6.5 12 13l9-6.5M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+                {{ section.settings.contact_label | default: 'Contact us' }}
+</a>
+            {%- endif -%}
+</div>
+</div>
+ 
+        {%- if section.blocks.size > 0 -%}
+<div class="pdp__accordions">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'accordion' -%}
+<div class="pdp__accordion" {{ block.shopify_attributes }}>
+<button type="button" class="pdp__accordion-trigger" aria-expanded="false" data-pdp-accordion-trigger>
+<span>{{ block.settings.title }}</span>
+<svg class="pdp__accordion-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
+<path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+</button>
+<div class="pdp__accordion-panel" data-pdp-accordion-panel>
+<div class="pdp__accordion-panel-inner">
+                      {{ block.settings.content }}
+</div>
+</div>
+</div>
+              {%- endif -%}
+            {%- endfor -%}
+</div>
+        {%- endif -%}
+ 
+      </div>
+</aside>
+ 
+  </div>
+</div>
+ 
+<!-- ============ DARK FULL-WIDTH FEATURE CAROUSEL ============ -->
+{%- if section.settings.show_feature_carousel -%}
+<div class="pfc" style="background-color: {{ section.settings.pfc_background_color }}; color: {{ section.settings.pfc_text_color }};">
+<div class="pfc__header">
+      {%- if section.settings.show_audio_button -%}
+<button type="button" class="pfc__audio-btn" aria-label="Play audio guide">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" stroke="currentColor" stroke-width="1.6"/>
+<path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+</svg>
+</button>
+      {%- endif -%}
+      {%- if section.settings.pfc_heading != blank -%}
+<h2 class="pfc__heading">{{ section.settings.pfc_heading }}</h2>
+      {%- endif -%}
+</div>
+ 
+    {%- assign carousel_blocks = section.blocks | where: 'type', 'slide' -%}
+    {%- if carousel_blocks.size > 0 -%}
+<div class="pfc__track-wrap">
+<div class="pfc__track" data-pfc-track>
+          {%- for block in carousel_blocks -%}
+<div class="pfc__slide" {{ block.shopify_attributes }}>
+              {%- if block.settings.image != blank -%}
+<img
+                  src="{{ block.settings.image | image_url: width: 900 }}"
+                  alt="{{ block.settings.image.alt | escape }}"
+                  width="{{ block.settings.image.width }}"
+                  height="{{ block.settings.image.height }}"
+                  loading="lazy"
+>
+              {%- endif -%}
+              {%- if block.settings.caption != blank -%}
+<p class="pfc__caption">{{ block.settings.caption }}</p>
+              {%- endif -%}
+</div>
+          {%- endfor -%}
+</div>
+ 
+        <button type="button" class="pfc__nav pfc__nav--prev" data-pfc-prev aria-label="Previous">
+<svg width="9" height="16" viewBox="0 0 9 16" fill="none"><path d="M8 1 1 8l7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+<button type="button" class="pfc__nav pfc__nav--next" data-pfc-next aria-label="Next">
+<svg width="9" height="16" viewBox="0 0 9 16" fill="none"><path d="M1 1l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</button>
+</div>
+    {%- endif -%}
+</div>
+{%- endif -%}
+ 
+<script src="{{ 'pdp.js' | asset_url }}" defer="defer"></script>
+ 
+{% schema %}
+{
+  "name": "PDP: Technogym style",
+  "tag": "section",
+  "class": "pdp-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Breadcrumb"
+    },
+    {
+      "type": "text",
+      "id": "breadcrumb_category",
+      "label": "Category label",
+      "default": "All exercise equipment"
+    },
+    {
+      "type": "url",
+      "id": "breadcrumb_category_url",
+      "label": "Category link"
+    },
+    {
+      "type": "header",
+      "content": "Specifications link"
+    },
+    {
+      "type": "text",
+      "id": "specs_label",
+      "label": "Label",
+      "default": "Technical Specifications"
+    },
+    {
+      "type": "text",
+      "id": "specs_anchor",
+      "label": "Anchor ID (on this page)",
+      "default": "technical-specifications"
+    },
+    {
+      "type": "header",
+      "content": "Price"
+    },
+    {
+      "type": "text",
+      "id": "price_note",
+      "label": "Price note",
+      "default": "GST and freight NOT included"
+    },
+    {
+      "type": "text",
+      "id": "availability_text",
+      "label": "Availability text",
+      "default": "Available upon request"
+    },
+    {
+      "type": "header",
+      "content": "Contact buttons"
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "Phone number",
+      "default": "+91 98200 52225"
+    },
+    {
+      "type": "url",
+      "id": "contact_url",
+      "label": "Contact us link"
+    },
+    {
+      "type": "text",
+      "id": "contact_label",
+      "label": "Contact button label",
+      "default": "Contact us"
+    },
+    {
+      "type": "header",
+      "content": "Audio button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_audio_button",
+      "label": "Show floating audio button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "audio_button_label",
+      "label": "Audio button aria-label",
+      "default": "Play audio guide"
+    },
+    {
+      "type": "header",
+      "content": "Feature carousel (dark section)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_feature_carousel",
+      "label": "Show feature carousel section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "pfc_heading",
+      "label": "Heading",
+      "default": "Superior running and walking for any home"
+    },
+    {
+      "type": "color",
+      "id": "pfc_background_color",
+      "label": "Background color",
+      "default": "#1c1c1c"
+    },
+    {
+      "type": "color",
+      "id": "pfc_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "accordion",
+      "name": "Accordion (sidebar)",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Key features"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    },
+    {
+      "type": "slide",
+      "name": "Carousel slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Caption"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP: Technogym style",
+      "blocks": [
+        { "type": "accordion", "settings": { "title": "Key features" } },
+        { "type": "accordion", "settings": { "title": "Dimensions" } },
+        { "type": "accordion", "settings": { "title": "FAQs" } },
+        { "type": "slide" },
+        { "type": "slide" },
+        { "type": "slide" },
+        { "type": "slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}
