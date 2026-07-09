@@ -1,484 +1,575 @@
-{{ 'pdp.css' | asset_url | stylesheet_tag }}
-{%- if section.settings.show_add_to_cart -%}
-  <script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
-{%- endif -%}
- 
+{{ 'product-premium.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-premium.js' | asset_url }}" defer="defer"></script>
+
 {%- liquid
   assign current_variant = product.selected_or_first_available_variant
-  assign category_label = section.settings.breadcrumb_category
-  assign subcategory_label = product.type
-  assign product_form_id = 'pdp-product-form-' | append: section.id
-  assign delivery_blocks = section.blocks | where: 'type', 'delivery_item'
-  assign package_blocks = section.blocks | where: 'type', 'package'
+  assign product_form_id = 'pp-form-' | append: section.id
+  assign installment_form_id = 'pp-installment-form-' | append: section.id
+  assign media_list = product.media
+  assign benefit_blocks = section.blocks | where: 'type', 'benefit'
+  assign accordion_blocks = section.blocks | where: 'type', 'accordion'
+  assign single_option = false
+  if product.options.size == 1
+    assign single_option = true
+  endif
+
+  assign rating_value = product.metafields.reviews.rating.value | default: 0
+  assign rating_scale_max = product.metafields.reviews.rating.scale_max | default: 5
+  assign rating_count = product.metafields.reviews.rating_count.value | default: 0
+
+  assign current_compare_at = current_variant.compare_at_price
+  assign current_savings = 0
+  assign current_savings_percent = 0
+  if current_compare_at > current_variant.price
+    assign current_savings = current_compare_at | minus: current_variant.price
+    assign current_savings_percent = current_savings | times: 100 | divided_by: current_compare_at
+  endif
 -%}
- 
-<div class="pdp" id="pdp-{{ section.id }}">
-<div class="pdp__wrapper">
- 
-    <!-- ============ LEFT: SCROLLING GALLERY (DESKTOP) ============ -->
-<div class="pdp__gallery">
- 
-      {%- if product.featured_media -%}
-<div class="pdp__gallery-hero">
-<img
-            src="{{ product.featured_media | image_url: width: 1600 }}"
-            alt="{{ product.featured_media.alt | escape }}"
-            width="{{ product.featured_media.width }}"
-            height="{{ product.featured_media.height }}"
-            loading="eager"
+
+{%- capture variant_money_json -%}
+  {
+    {%- for variant in product.variants -%}
+      {%- liquid
+        assign v_compare = variant.compare_at_price | default: 0
+        assign v_on_sale = false
+        assign v_savings = 0
+        assign v_savings_percent = 0
+        if v_compare > variant.price
+          assign v_on_sale = true
+          assign v_savings = v_compare | minus: variant.price
+          assign v_savings_percent = v_savings | times: 100 | divided_by: v_compare
+        endif
+      -%}
+      "{{ variant.id }}": {
+        "price": {{ variant.price | money | json }},
+        "compareAtPrice": {% if v_on_sale %}{{ v_compare | money | json }}{% else %}null{% endif %},
+        "onSale": {{ v_on_sale }},
+        "savings": {{ v_savings | money | json }},
+        "savingsPercent": {{ v_savings_percent }}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  }
+{%- endcapture -%}
+
+<product-premium
+  class="pp gradient color-{{ section.settings.color_scheme }}"
+  id="ProductPremium-{{ section.id }}"
+  data-section-id="{{ section.id }}"
+  data-add-to-cart-label="{{ section.settings.add_to_cart_label | default: 'Add to Cart' }}"
+  data-buy-now-label="{{ section.settings.buy_now_label | default: 'Buy Now' }}"
 >
-</div>
-      {%- endif -%}
- 
-      {%- assign gallery_media = product.media | where: 'media_type', 'image' -%}
-      {%- if gallery_media.size > 1 -%}
-<div class="pdp__gallery-grid">
-          {%- for media in gallery_media offset: 1 -%}
-<div class="pdp__gallery-item">
-<img
-                src="{{ media | image_url: width: 1000 }}"
-                alt="{{ media.alt | escape }}"
-                width="{{ media.width }}"
-                height="{{ media.height }}"
-                loading="lazy"
->
-</div>
-          {%- endfor -%}
-</div>
-      {%- endif -%}
- 
-      {%- if section.settings.show_audio_button -%}
-<button type="button" class="pdp__audio-btn" aria-label="{{ section.settings.audio_button_label | default: 'Play audio guide' }}" data-pdp-audio-toggle>
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" stroke="currentColor" stroke-width="1.6"/>
-<path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-</svg>
-</button>
-      {%- endif -%}
-</div>
- 
-    <!-- ============ MOBILE-ONLY: SWIPEABLE CAROUSEL + THUMB STRIP ============ -->
-    {%- assign all_media = product.media | where: 'media_type', 'image' -%}
-    {%- if all_media.size > 0 -%}
-<div class="pdp__m-gallery">
-<div class="pdp__m-main" data-pdp-m-main>
-          {%- for media in all_media -%}
-<div class="pdp__m-slide" data-pdp-m-slide data-index="{{ forloop.index0 }}">
-<img
-                src="{{ media | image_url: width: 1200 }}"
-                alt="{{ media.alt | escape }}"
-                width="{{ media.width }}"
-                height="{{ media.height }}"
-                loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
->
-</div>
-          {%- endfor -%}
-</div>
- 
-        {%- if section.settings.show_audio_button -%}
-<button type="button" class="pdp__audio-btn pdp__audio-btn--mobile" aria-label="{{ section.settings.audio_button_label | default: 'Play audio guide' }}" data-pdp-audio-toggle>
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" stroke="currentColor" stroke-width="1.6"/>
-<path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-</svg>
-</button>
-        {%- endif -%}
- 
-        {%- if all_media.size > 1 -%}
-<div class="pdp__m-thumbs-wrap">
-<button type="button" class="pdp__m-thumbs-nav pdp__m-thumbs-nav--prev" data-pdp-m-thumbs-prev aria-label="Scroll images left">
-<svg width="8" height="14" viewBox="0 0 8 14" fill="none" aria-hidden="true"><path d="M7 1 1 7l6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-</button>
-<div class="pdp__m-thumbs" data-pdp-m-thumbs>
-              {%- for media in all_media -%}
-<button
-                  type="button"
-                  class="pdp__m-thumb{% if forloop.first %} pdp__m-thumb--active{% endif %}"
-                  data-pdp-m-thumb
-                  data-index="{{ forloop.index0 }}"
-                  aria-label="View image {{ forloop.index }}"
->
-<img
-                    src="{{ media | image_url: width: 400 }}"
-                    alt="{{ media.alt | escape }}"
-                    width="200"
-                    height="150"
-                    loading="lazy"
->
-</button>
-              {%- endfor -%}
-</div>
-<button type="button" class="pdp__m-thumbs-nav pdp__m-thumbs-nav--next" data-pdp-m-thumbs-next aria-label="Scroll images right">
-<svg width="8" height="14" viewBox="0 0 8 14" fill="none" aria-hidden="true"><path d="M1 1l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-</button>
-</div>
-        {%- endif -%}
-</div>
-    {%- endif -%}
- 
-    <!-- ============ RIGHT: STICKY PRODUCT INFO ============ -->
-<aside class="pdp__sidebar">
-<div class="pdp__sidebar-inner">
- 
-        <div class="pdp__info">
-          {%- if category_label != blank or subcategory_label != blank -%}
-<p class="pdp__breadcrumb">
-              {%- if category_label != blank -%}
-                {%- if section.settings.breadcrumb_category_url != blank -%}
-<a href="{{ section.settings.breadcrumb_category_url }}">{{ category_label }}</a>
-                {%- else -%}
-<span>{{ category_label }}</span>
+  <div class="pp__container page-width">
+    <div class="pp__grid">
+
+      <!-- ============ GALLERY ============ -->
+      <div class="pp__gallery{% if section.settings.enable_sticky_gallery %} pp__gallery--sticky{% endif %}">
+        <div
+          class="pp__stage"
+          data-pp-stage
+          {% if section.settings.enable_gallery_zoom %}data-pp-zoom-enabled{% endif %}
+        >
+          {%- if media_list.size > 0 -%}
+            {%- for media in media_list -%}
+              <div
+                class="pp__slide{% if forloop.first %} pp__slide--active{% endif %}"
+                data-pp-slide
+                data-media-id="{{ media.id }}"
+                data-index="{{ forloop.index0 }}"
+              >
+                {%- case media.media_type -%}
+                  {%- when 'image' -%}
+                    <img
+                      class="pp__slide-img"
+                      src="{{ media | image_url: width: 1600 }}"
+                      srcset="
+                        {{ media | image_url: width: 600 }} 600w,
+                        {{ media | image_url: width: 900 }} 900w,
+                        {{ media | image_url: width: 1200 }} 1200w,
+                        {{ media | image_url: width: 1600 }} 1600w,
+                        {{ media | image_url: width: 2000 }} 2000w
+                      "
+                      sizes="(min-width: 990px) 55vw, 100vw"
+                      alt="{{ media.alt | escape }}"
+                      width="{{ media.width }}"
+                      height="{{ media.height }}"
+                      loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                    >
+                  {%- when 'video' -%}
+                    {{ media | media_tag: image_size: '1600x', controls: true, preload: 'none' }}
+                  {%- when 'external_video' -%}
+                    {{ media | external_video_tag: loading: 'lazy' }}
+                  {%- when 'model' -%}
+                    <img
+                      class="pp__slide-img"
+                      src="{{ media.preview_image | image_url: width: 1600 }}"
+                      alt="{{ media.alt | escape }}"
+                      width="{{ media.preview_image.width }}"
+                      height="{{ media.preview_image.height }}"
+                      loading="lazy"
+                    >
+                    <span class="pp__slide-badge">3D</span>
+                {%- endcase -%}
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            <div class="pp__slide pp__slide--active" data-pp-slide data-index="0">
+              {{ 'product-1' | placeholder_svg_tag: 'pp__slide-img pp__slide-img--placeholder' }}
+            </div>
+          {%- endif -%}
+
+          {%- if media_list.size > 1 -%}
+            <button type="button" class="pp__stage-nav pp__stage-nav--prev" data-pp-prev aria-label="Previous image">
+              <svg width="9" height="16" viewBox="0 0 9 16" fill="none" aria-hidden="true"><path d="M8 1 1 8l7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button type="button" class="pp__stage-nav pp__stage-nav--next" data-pp-next aria-label="Next image">
+              <svg width="9" height="16" viewBox="0 0 9 16" fill="none" aria-hidden="true"><path d="M1 1l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          {%- endif -%}
+        </div>
+
+        {%- if media_list.size > 1 -%}
+          <div class="pp__thumbs" data-pp-thumbs role="tablist" aria-label="{{ 'products.product.media.gallery_viewer' | t }}">
+            {%- for media in media_list -%}
+              <button
+                type="button"
+                class="pp__thumb{% if forloop.first %} pp__thumb--active{% endif %}"
+                data-pp-thumb
+                data-media-id="{{ media.id }}"
+                data-index="{{ forloop.index0 }}"
+                role="tab"
+                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                aria-label="{{ 'products.product.media.load_image' | t: index: forloop.index }}"
+              >
+                <img
+                  src="{{ media.preview_image | image_url: width: 200 }}"
+                  alt=""
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                >
+                {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                  <span class="pp__thumb-badge">
+                    <svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor" aria-hidden="true"><path d="M0 0l9 5-9 5V0Z"/></svg>
+                  </span>
+                {%- elsif media.media_type == 'model' -%}
+                  <span class="pp__thumb-badge">3D</span>
                 {%- endif -%}
-              {%- endif -%}
-              {%- if category_label != blank and subcategory_label != blank -%}
-<span class="pdp__breadcrumb-sep">&bull;</span>
-              {%- endif -%}
-              {%- if subcategory_label != blank -%}
-<a href="{{ subcategory_label | url_for_type }}">{{ subcategory_label }}</a>
-              {%- endif -%}
-</p>
+              </button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <!-- ============ PRODUCT INFO ============ -->
+      <div class="pp__info" data-pp-info>
+        <div class="pp__info-inner">
+
+          {%- if section.settings.show_vendor and product.vendor != blank -%}
+            <p class="pp__vendor">{{ product.vendor }}</p>
           {%- endif -%}
- 
-          <h1 class="pdp__title">{{ product.title }}</h1>
- 
-          {%- if product.metafields.custom.subtitle != blank -%}
-<p class="pdp__subtitle">{{ product.metafields.custom.subtitle }}</p>
-          {%- elsif product.type != blank -%}
-<p class="pdp__subtitle">{{ product.type }}</p>
-          {%- endif -%}
- 
-          {%- if product.has_only_default_variant == false and product.options.size > 0 -%}
-<div class="pdp__option">
-<p class="pdp__option-label">{{ product.options.first | upcase }}: {{ current_variant.option1 | upcase }}</p>
-<div class="pdp__swatches">
-                {%- for variant in product.variants -%}
+
+          <h1 class="pp__title">{{ product.title }}</h1>
+
+          {%- if section.settings.show_rating and rating_value > 0 -%}
+            <div class="pp__rating">
+              <span class="pp__rating-stars" aria-hidden="true">
+                {%- for i in (1..5) -%}
                   {%- liquid
-                    assign swatch_image = variant.featured_image | default: product.featured_media
-                    assign is_selected = false
-                    if variant.id == current_variant.id
-                      assign is_selected = true
+                    assign star_diff = rating_value | times: 1.0 | divided_by: rating_scale_max | times: 5 | minus: i | plus: 1
+                    assign star_state = 'empty'
+                    if star_diff >= 1
+                      assign star_state = 'full'
+                    elsif star_diff > 0
+                      assign star_state = 'half'
                     endif
                   -%}
-<a
-                    href="{{ variant.url }}"
-                    class="pdp__swatch{% if is_selected %} pdp__swatch--selected{% endif %}"
-                    aria-label="{{ variant.option1 }}"
-                    title="{{ variant.option1 }}"
->
-                    {%- if swatch_image -%}
-<img
-                        src="{{ swatch_image | image_url: width: 120 }}"
-                        alt="{{ variant.option1 | escape }}"
-                        width="60"
-                        height="60"
-                        loading="lazy"
->
-                    {%- endif -%}
-</a>
+                  <svg class="pp__star pp__star--{{ star_state }}" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2.5 15 9.3l7.3.7-5.5 4.9 1.6 7.1L12 18.3 5.6 22l1.6-7.1L1.7 10l7.3-.7L12 2.5Z"/>
+                  </svg>
                 {%- endfor -%}
-</div>
-</div>
+              </span>
+              <span class="pp__rating-text">
+                {{ rating_value }} &bull; {{ rating_count }}
+                {%- if rating_count == 1 %} Review{% else %} Reviews{% endif -%}
+              </span>
+            </div>
           {%- endif -%}
- 
-          {%- if product.description != blank -%}
-<div class="pdp__description">{{ product.description | strip_html | truncatewords: 28 }}</div>
-          {%- endif -%}
- 
-          {%- if section.settings.specs_anchor != blank -%}
-<a href="#{{ section.settings.specs_anchor }}" class="pdp__specs-link">
-              {{ section.settings.specs_label | default: 'Technical Specifications' }}
-<svg width="7" height="12" viewBox="0 0 7 12" fill="none" aria-hidden="true"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-</a>
-          {%- endif -%}
-</div>
 
-        {%- if section.settings.delivery_heading != blank or delivery_blocks.size > 0 -%}
-<div class="pdp__delivery">
-            {%- if section.settings.delivery_heading != blank -%}
-<h2 class="pdp__delivery-heading">{{ section.settings.delivery_heading }}</h2>
-            {%- endif -%}
-            {%- if section.settings.delivery_subheading != blank -%}
-<p class="pdp__delivery-subheading">{{ section.settings.delivery_subheading }}</p>
-            {%- endif -%}
+          <div class="pp__price-row" id="price-{{ section.id }}" data-pp-price>
+            {%- render 'price', product: product, use_variant: true, show_badges: true, price_class: 'pp__price' -%}
+            <span class="pp__discount-badge" data-pp-discount {% if current_savings <= 0 %}hidden{% endif %}>
+              Save {{ current_savings_percent }}%
+            </span>
+          </div>
 
-            {%- if delivery_blocks.size > 0 -%}
-<div class="pdp__delivery-list">
-                {%- for block in delivery_blocks -%}
-<div class="pdp__delivery-item" {{ block.shopify_attributes }}>
-<span class="pdp__delivery-icon">{% render 'pdp-icon', icon: block.settings.icon %}</span>
-<div class="pdp__delivery-text">{{ block.settings.text }}</div>
-</div>
-                {%- endfor -%}
-</div>
-            {%- endif -%}
-
-            {%- if section.settings.delivery_details_label != blank -%}
-<a href="{{ section.settings.delivery_details_url | default: '#' }}" class="pdp__delivery-details-link">
-                {{ section.settings.delivery_details_label }}
-<svg width="7" height="12" viewBox="0 0 7 12" fill="none" aria-hidden="true"><path d="M1 1l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-</a>
-            {%- endif -%}
-</div>
-        {%- endif -%}
-
-        <div class="pdp__purchase">
-<div class="pdp__price-row">
-<p class="pdp__price">{{ current_variant.price | money }}</p>
-            {%- if section.settings.availability_text != blank -%}
-<p class="pdp__availability">{{ section.settings.availability_text }}</p>
-            {%- endif -%}
-</div>
           {%- if section.settings.price_note != blank -%}
-<p class="pdp__price-note">{{ section.settings.price_note }}</p>
+            <p class="pp__price-note">{{ section.settings.price_note }}</p>
           {%- endif -%}
 
-          {%- if section.settings.show_payment_options -%}
-<details class="pdp__payment-options">
-<summary>
-                <span>{{ section.settings.payment_options_label | default: 'View payment options' }}</span>
-<svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-</summary>
-<div class="pdp__payment-options-content">{{ section.settings.payment_options_content }}</div>
-</details>
+          {%- if section.settings.show_description and product.description != blank -%}
+            <div class="pp__description">
+              {{ product.description | strip_html | truncatewords: section.settings.description_word_count }}
+            </div>
           {%- endif -%}
 
-          {%- if section.settings.show_add_to_cart -%}
-<product-form data-section-id="{{ section.id }}">
-<div class="product-form__error-message-wrapper" role="alert" hidden>
-<span class="pdp__error-icon">{{- 'icon-error.svg' | inline_asset_content -}}</span>
-<span class="product-form__error-message"></span>
-</div>
-              {%- form 'product', product, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
-<input
-                  type="hidden"
-                  name="id"
-                  value="{{ current_variant.id }}"
-                  {% if current_variant.available == false or current_variant == null %}disabled{% endif %}
-                  class="product-variant-id"
->
-<button
+          {%- unless product.has_only_default_variant -%}
+            <div class="pp__variants" data-pp-variants>
+              {%- if single_option -%}
+                <p class="pp__variants-label">{{ product.options.first }}</p>
+                <div class="pp__variant-cards" role="radiogroup" aria-label="{{ product.options.first }}">
+                  {%- for value in product.options_with_values.first.values -%}
+                    {%- liquid
+                      assign matched_variant = product.variants | where: 'option1', value | first
+                      assign is_selected = false
+                      if matched_variant.id == current_variant.id
+                        assign is_selected = true
+                      endif
+                      assign card_compare = matched_variant.compare_at_price
+                      assign card_on_sale = false
+                      if card_compare > matched_variant.price
+                        assign card_on_sale = true
+                      endif
+                    -%}
+                    <button
+                      type="button"
+                      class="pp__variant-card{% if is_selected %} pp__variant-card--selected{% endif %}{% unless matched_variant.available %} pp__variant-card--soldout{% endunless %}"
+                      data-pp-variant-card
+                      data-variant-id="{{ matched_variant.id }}"
+                      role="radio"
+                      aria-checked="{{ is_selected }}"
+                      {% unless matched_variant.available %}aria-disabled="true"{% endunless %}
+                    >
+                      <span class="pp__variant-card-check" aria-hidden="true">
+                        <svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5l3.5 3.5L11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                      <span class="pp__variant-card-title">{{ value }}</span>
+                      {%- if matched_variant.metafields.custom.feature_line != blank -%}
+                        <span class="pp__variant-card-feature">{{ matched_variant.metafields.custom.feature_line }}</span>
+                      {%- endif -%}
+                      <span class="pp__variant-card-price">
+                        {{ matched_variant.price | money }}
+                        {%- if card_on_sale -%}
+                          <s class="pp__variant-card-compare">{{ card_compare | money }}</s>
+                        {%- endif -%}
+                      </span>
+                      {%- unless matched_variant.available -%}
+                        <span class="pp__variant-card-soldout-label">{{ 'products.product.sold_out' | t }}</span>
+                      {%- endunless -%}
+                    </button>
+                  {%- endfor -%}
+                </div>
+              {%- else -%}
+                {%- for option in product.options_with_values -%}
+                  <div class="pp__option" data-pp-option data-option-index="{{ option.position }}">
+                    <p class="pp__option-label">
+                      {{ option.name }}: <span data-pp-option-value>{{ option.selected_value }}</span>
+                    </p>
+                    <div class="pp__option-values">
+                      {%- for value in option.values -%}
+                        <button
+                          type="button"
+                          class="pp__option-pill{% if value == option.selected_value %} pp__option-pill--selected{% endif %}"
+                          data-pp-option-value-btn
+                          data-option-index="{{ option.position }}"
+                          data-value="{{ value | escape }}"
+                          aria-pressed="{% if value == option.selected_value %}true{% else %}false{% endif %}"
+                        >
+                          <span class="pp__option-pill-check" aria-hidden="true">
+                            <svg width="10" height="8" viewBox="0 0 12 10" fill="none"><path d="M1 5l3.5 3.5L11 1.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          </span>
+                          {{ value }}
+                        </button>
+                      {%- endfor -%}
+                    </div>
+                  </div>
+                {%- endfor -%}
+                <p class="pp__combo-message" data-pp-combo-message hidden>{{ section.settings.combo_unavailable_text | default: 'This combination is currently unavailable.' }}</p>
+              {%- endif -%}
+            </div>
+          {%- endunless -%}
+
+          <product-form data-section-id="{{ section.id }}">
+            <div class="product-form__error-message-wrapper pp__error" role="alert" hidden>
+              <span>{{- 'icon-error.svg' | inline_asset_content -}}</span>
+              <span class="product-form__error-message"></span>
+            </div>
+            {%- form 'product', product, id: product_form_id, class: 'pp__form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+              <input
+                type="hidden"
+                name="id"
+                value="{{ current_variant.id }}"
+                {% if current_variant.available == false or current_variant == null %}disabled{% endif %}
+                class="product-variant-id"
+                data-pp-variant-input
+              >
+
+              {%- if section.settings.show_quantity_selector -%}
+                <div class="pp__quantity">
+                  <label class="pp__quantity-label" for="Quantity-{{ section.id }}">
+                    {{ 'products.product.quantity.label' | t }}
+                  </label>
+                  <div class="pp__quantity-stepper">
+                    <button type="button" class="pp__quantity-btn" data-pp-qty-minus aria-label="{{ 'products.product.quantity.decrease' | t: product: product.title | escape }}">
+                      <svg width="12" height="2" viewBox="0 0 12 2" fill="currentColor" aria-hidden="true"><rect width="12" height="2"/></svg>
+                    </button>
+                    <input
+                      type="number"
+                      class="pp__quantity-input"
+                      id="Quantity-{{ section.id }}"
+                      name="quantity"
+                      value="1"
+                      min="1"
+                      inputmode="numeric"
+                      data-pp-qty-input
+                      aria-label="{{ 'products.product.quantity.input_label' | t: product: product.title | escape }}"
+                    >
+                    <button type="button" class="pp__quantity-btn" data-pp-qty-plus aria-label="{{ 'products.product.quantity.increase' | t: product: product.title | escape }}">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><rect x="5" width="2" height="12"/><rect y="5" width="12" height="2"/></svg>
+                    </button>
+                  </div>
+                </div>
+              {%- endif -%}
+
+              <div class="pp__buttons">
+                <button
                   type="submit"
                   name="add"
-                  class="pdp__btn pdp__btn--primary"
+                  class="pp__btn pp__btn--primary button button--primary"
+                  data-pp-add-btn
                   {% if current_variant.available == false or current_variant == null %}disabled{% endif %}
->
-<span class="pdp__btn-icon">{{- 'icon-cart.svg' | inline_asset_content -}}</span>
-<span>
+                >
+                  <span data-pp-add-btn-text>
                     {%- if current_variant == null -%}
                       {{ 'products.product.unavailable' | t }}
                     {%- elsif current_variant.available == false -%}
                       {{ 'products.product.sold_out' | t }}
                     {%- else -%}
-                      {{ section.settings.add_to_cart_label | default: 'Add to cart' }}
+                      {{ section.settings.add_to_cart_label | default: 'Add to Cart' }}
                     {%- endif -%}
-</span>
+                  </span>
                   {%- render 'loading-spinner' -%}
-</button>
+                </button>
+
+                <button
+                  type="button"
+                  class="pp__btn pp__btn--secondary button button--secondary"
+                  data-pp-buy-now
+                  {% if current_variant.available == false or current_variant == null %}disabled{% endif %}
+                >
+                  <span data-pp-buy-now-text>{{ section.settings.buy_now_label | default: 'Buy Now' }}</span>
+                  {%- render 'loading-spinner' -%}
+                </button>
+
+                {%- if section.settings.show_dynamic_checkout -%}
+                  <div class="pp__dynamic-checkout" data-pp-dynamic-checkout>
+                    {{ form | payment_button }}
+                  </div>
+                {%- endif -%}
+              </div>
+            {%- endform -%}
+          </product-form>
+
+          {%- if section.settings.show_payment_terms -%}
+            <div class="pp__installments">
+              {%- form 'product', product, id: installment_form_id, class: 'pp__installments-form' -%}
+                <input type="hidden" name="id" value="{{ current_variant.id }}" data-pp-installment-input>
+                {{ form | payment_terms }}
               {%- endform -%}
-</product-form>
+            </div>
           {%- endif -%}
 
-          <div class="pdp__btn-row">
-            {%- if section.settings.phone_number != blank -%}
-<a href="tel:{{ section.settings.phone_number | remove: ' ' }}" class="pdp__btn">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                {{ section.settings.phone_number }}
-</a>
-            {%- endif -%}
- 
-            {%- if section.settings.contact_url != blank -%}
-<a href="{{ section.settings.contact_url }}" class="pdp__btn">
-<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 6.5 12 13l9-6.5M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
-                {{ section.settings.contact_label | default: 'Contact us' }}
-</a>
-            {%- endif -%}
-</div>
-</div>
- 
-        {%- if section.blocks.size > 0 -%}
-<div class="pdp__accordions">
-            {%- for block in section.blocks -%}
-              {%- if block.type == 'accordion' -%}
-<div class="pdp__accordion" {{ block.shopify_attributes }}>
-<button type="button" class="pdp__accordion-trigger" aria-expanded="false" data-pdp-accordion-trigger>
-<span>{{ block.settings.title }}</span>
-<svg class="pdp__accordion-chevron" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true">
-<path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-</button>
-<div class="pdp__accordion-panel" data-pdp-accordion-panel>
-<div class="pdp__accordion-panel-inner">
-                      {{ block.settings.content }}
-</div>
-</div>
-</div>
-              {%- endif -%}
-            {%- endfor -%}
-</div>
-        {%- endif -%}
-
-        {%- if package_blocks.size > 0 -%}
-<div class="pdp__packages">
-<h2 class="pdp__packages-heading">
-              {{ section.settings.packages_heading | default: 'Available packages' }}
-<span class="pdp__packages-count">{{ package_blocks.size }}</span>
-</h2>
-<div class="pdp__packages-list">
-              {%- for block in package_blocks -%}
-                {%- liquid
-                  assign package_product = block.settings.product
-                  assign package_url = package_product.url | default: block.settings.url
-                  assign package_title = block.settings.title | default: package_product.title
-                  assign package_image = package_product.featured_image
-                -%}
-<a href="{{ package_url | default: '#' }}" class="pdp__package-card" {{ block.shopify_attributes }}>
-<span class="pdp__package-image">
-                    {%- if package_image != blank -%}
-<img
-                        src="{{ package_image | image_url: width: 200 }}"
-                        alt="{{ package_image.alt | escape }}"
-                        width="64"
-                        height="64"
-                        loading="lazy"
->
-                    {%- endif -%}
-</span>
-<span class="pdp__package-info">
-<span class="pdp__package-title">{{ package_title }}</span>
-                    {%- if package_product != blank -%}
-<span class="pdp__package-price">{{ package_product.price | money }}</span>
-                    {%- endif -%}
-</span>
-                  {%- if block.settings.badge_label != blank -%}
-<span class="pdp__package-badge">{{ block.settings.badge_label }}</span>
-                  {%- endif -%}
-</a>
+          {%- if benefit_blocks.size > 0 -%}
+            <ul class="pp__benefits">
+              {%- for block in benefit_blocks -%}
+                <li class="pp__benefit" {{ block.shopify_attributes }}>
+                  <span class="pp__benefit-icon" aria-hidden="true">
+                    {%- case block.settings.icon -%}
+                      {%- when 'trial' -%}
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 8v4l3 2M21 12a9 9 0 1 1-9-9 9 9 0 0 1 9 9Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      {%- when 'warranty' -%}
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3 4 6v6c0 5 3.4 8.6 8 9 4.6-.4 8-4 8-9V6l-8-3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      {%- when 'financing' -%}
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M2 10h20" stroke="currentColor" stroke-width="1.6"/></svg>
+                      {%- when 'returns' -%}
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      {%- when 'shipping' -%}
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M1 8h13v8H1zM14 11h4l4 3v2h-8z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="6" cy="18.5" r="1.6" stroke="currentColor" stroke-width="1.4"/><circle cx="17.5" cy="18.5" r="1.6" stroke="currentColor" stroke-width="1.4"/></svg>
+                      {%- else -%}
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3 12.5 9 18l12-13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    {%- endcase -%}
+                  </span>
+                  <span class="pp__benefit-text">{{ block.settings.text }}</span>
+                </li>
               {%- endfor -%}
-</div>
-</div>
-        {%- endif -%}
+            </ul>
+          {%- endif -%}
 
+          {%- if accordion_blocks.size > 0 -%}
+            <div class="pp__accordion-group">
+              {%- for block in accordion_blocks -%}
+                {%- liquid
+                  assign normalized_title = block.settings.title | strip | downcase
+                  assign trigger_id = 'pp-accordion-trigger-' | append: block.id
+                  assign panel_id = 'pp-accordion-panel-' | append: block.id
+                -%}
+                <div class="pp__accordion" {{ block.shopify_attributes }}>
+                  <h3 class="pp__accordion-heading">
+                    <button
+                      type="button"
+                      class="pp__accordion-trigger"
+                      id="{{ trigger_id }}"
+                      aria-expanded="false"
+                      aria-controls="{{ panel_id }}"
+                      data-pp-accordion-trigger
+                    >
+                      <span>{{ block.settings.title }}</span>
+                      <span class="pp__accordion-icon" aria-hidden="true">
+                        <svg width="12" height="8" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </span>
+                    </button>
+                  </h3>
+                  <div
+                    class="pp__accordion-panel"
+                    id="{{ panel_id }}"
+                    role="region"
+                    aria-labelledby="{{ trigger_id }}"
+                    data-pp-accordion-panel
+                  >
+                    <div class="pp__accordion-panel-inner">
+                      {%- if block.settings.content != blank -%}
+                        {{ block.settings.content }}
+                      {%- elsif normalized_title == 'description' -%}
+                        {{ product.description }}
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+
+        </div>
       </div>
-</aside>
- 
+    </div>
   </div>
-</div>
- 
-<!-- ============ DARK FULL-WIDTH FEATURE CAROUSEL ============ -->
-{%- if section.settings.show_feature_carousel -%}
-<div class="pfc" style="background-color: {{ section.settings.pfc_background_color }}; color: {{ section.settings.pfc_text_color }};">
-<div class="pfc__header">
-      {%- if section.settings.show_audio_button -%}
-<button type="button" class="pfc__audio-btn" aria-label="Play audio guide">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" stroke="currentColor" stroke-width="1.6"/>
-<path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-</svg>
-</button>
-      {%- endif -%}
-      {%- if section.settings.pfc_heading != blank -%}
-<h2 class="pfc__heading">{{ section.settings.pfc_heading }}</h2>
-      {%- endif -%}
-</div>
- 
-    {%- assign carousel_blocks = section.blocks | where: 'type', 'slide' -%}
-    {%- if carousel_blocks.size > 0 -%}
-<div class="pfc__track-wrap">
-<div class="pfc__track" data-pfc-track>
-          {%- for block in carousel_blocks -%}
-<div class="pfc__slide" {{ block.shopify_attributes }}>
-              {%- if block.settings.image != blank -%}
-<img
-                  src="{{ block.settings.image | image_url: width: 900 }}"
-                  alt="{{ block.settings.image.alt | escape }}"
-                  width="{{ block.settings.image.width }}"
-                  height="{{ block.settings.image.height }}"
-                  loading="lazy"
->
-              {%- endif -%}
-              {%- if block.settings.caption != blank -%}
-<p class="pfc__caption">{{ block.settings.caption }}</p>
-              {%- endif -%}
-</div>
-          {%- endfor -%}
-</div>
- 
-        <button type="button" class="pfc__nav pfc__nav--prev" data-pfc-prev aria-label="Previous">
-<svg width="9" height="16" viewBox="0 0 9 16" fill="none"><path d="M8 1 1 8l7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-</button>
-<button type="button" class="pfc__nav pfc__nav--next" data-pfc-next aria-label="Next">
-<svg width="9" height="16" viewBox="0 0 9 16" fill="none"><path d="M1 1l7 7-7 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-</button>
-</div>
-    {%- endif -%}
-</div>
-{%- endif -%}
- 
-<script src="{{ 'pdp.js' | asset_url }}" defer="defer"></script>
- 
+
+  {%- if section.settings.enable_sticky_bar -%}
+    <div class="pp__sticky-bar" data-pp-sticky-bar>
+      <div class="pp__sticky-bar-media">
+        {%- if product.featured_media -%}
+          <img
+            src="{{ product.featured_media | image_url: width: 120 }}"
+            alt=""
+            width="44"
+            height="44"
+            loading="lazy"
+          >
+        {%- endif -%}
+      </div>
+      <div class="pp__sticky-bar-info">
+        <p class="pp__sticky-bar-title">{{ product.title }}</p>
+        <p class="pp__sticky-bar-price" data-pp-sticky-price>{{ current_variant.price | money }}</p>
+      </div>
+      <button
+        type="submit"
+        name="add"
+        form="{{ product_form_id }}"
+        class="pp__btn pp__btn--primary button button--primary pp__sticky-bar-btn"
+        data-pp-sticky-add
+        {% if current_variant.available == false or current_variant == null %}disabled{% endif %}
+      >
+        <span data-pp-sticky-add-text>
+          {%- if current_variant == null -%}
+            {{ 'products.product.unavailable' | t }}
+          {%- elsif current_variant.available == false -%}
+            {{ 'products.product.sold_out' | t }}
+          {%- else -%}
+            {{ section.settings.add_to_cart_label | default: 'Add to Cart' }}
+          {%- endif -%}
+        </span>
+      </button>
+    </div>
+  {%- endif -%}
+
+  <script type="application/json" data-pp-variants>{{ product.variants | json }}</script>
+  <script type="application/json" data-pp-variant-money>{{ variant_money_json }}</script>
+</product-premium>
+
 {% schema %}
 {
-  "name": "PDP: Technogym style",
+  "name": "PDP: Premium",
   "tag": "section",
-  "class": "pdp-section",
+  "class": "pp-section",
   "settings": [
     {
-      "type": "header",
-      "content": "Breadcrumb"
-    },
-    {
-      "type": "text",
-      "id": "breadcrumb_category",
-      "label": "Category label",
-      "default": "All exercise equipment"
-    },
-    {
-      "type": "url",
-      "id": "breadcrumb_category_url",
-      "label": "Category link"
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
     },
     {
       "type": "header",
-      "content": "Specifications link"
+      "content": "Gallery"
     },
     {
-      "type": "text",
-      "id": "specs_label",
-      "label": "Label",
-      "default": "Technical Specifications"
+      "type": "checkbox",
+      "id": "enable_sticky_gallery",
+      "label": "Enable sticky gallery on desktop",
+      "default": true
     },
     {
-      "type": "text",
-      "id": "specs_anchor",
-      "label": "Anchor ID (on this page)",
-      "default": "technical-specifications"
+      "type": "checkbox",
+      "id": "enable_gallery_zoom",
+      "label": "Enable zoom on hover (desktop)",
+      "default": true
     },
     {
       "type": "header",
-      "content": "Delivery services"
+      "content": "Product info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show star rating",
+      "info": "Reads from the product's reviews.rating and reviews.rating_count metafields. Hidden automatically if no rating data exists.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Description"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_description",
+      "label": "Show short description",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "description_word_count",
+      "label": "Description length (words)",
+      "min": 10,
+      "max": 100,
+      "step": 5,
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Variants"
     },
     {
       "type": "text",
-      "id": "delivery_heading",
-      "label": "Heading",
-      "default": "Delivery services"
-    },
-    {
-      "type": "text",
-      "id": "delivery_subheading",
-      "label": "Subheading",
-      "default": "Included in delivery"
-    },
-    {
-      "type": "text",
-      "id": "delivery_details_label",
-      "label": "\"View details\" link label",
-      "default": "View delivery details"
-    },
-    {
-      "type": "url",
-      "id": "delivery_details_url",
-      "label": "\"View details\" link URL"
+      "id": "combo_unavailable_text",
+      "label": "Unavailable combination message",
+      "default": "This combination is currently unavailable."
     },
     {
       "type": "header",
@@ -488,229 +579,113 @@
       "type": "text",
       "id": "price_note",
       "label": "Price note",
-      "default": "GST and freight NOT included"
-    },
-    {
-      "type": "text",
-      "id": "availability_text",
-      "label": "Availability text",
-      "default": "Available upon request"
-    },
-    {
-      "type": "header",
-      "content": "Payment options"
+      "default": "Tax included. Shipping calculated at checkout."
     },
     {
       "type": "checkbox",
-      "id": "show_payment_options",
-      "label": "Show payment options toggle",
-      "default": false
-    },
-    {
-      "type": "text",
-      "id": "payment_options_label",
-      "label": "Toggle label",
-      "default": "View payment options"
-    },
-    {
-      "type": "richtext",
-      "id": "payment_options_content",
-      "label": "Payment options content"
+      "id": "show_payment_terms",
+      "label": "Show installment / financing text",
+      "default": true
     },
     {
       "type": "header",
-      "content": "Add to cart"
+      "content": "Buy buttons"
     },
     {
       "type": "checkbox",
-      "id": "show_add_to_cart",
-      "label": "Show add to cart button",
+      "id": "show_quantity_selector",
+      "label": "Show quantity selector",
       "default": true
     },
     {
       "type": "text",
       "id": "add_to_cart_label",
-      "label": "Button label",
-      "default": "Add to cart"
-    },
-    {
-      "type": "header",
-      "content": "Contact buttons"
+      "label": "Add to cart button label",
+      "default": "Add to Cart"
     },
     {
       "type": "text",
-      "id": "phone_number",
-      "label": "Phone number",
-      "default": "+91 98200 52225"
-    },
-    {
-      "type": "url",
-      "id": "contact_url",
-      "label": "Contact us link"
-    },
-    {
-      "type": "text",
-      "id": "contact_label",
-      "label": "Contact button label",
-      "default": "Contact us"
-    },
-    {
-      "type": "header",
-      "content": "Available packages"
-    },
-    {
-      "type": "text",
-      "id": "packages_heading",
-      "label": "Heading",
-      "default": "Available packages"
-    },
-    {
-      "type": "header",
-      "content": "Audio button"
+      "id": "buy_now_label",
+      "label": "Buy now button label",
+      "default": "Buy Now"
     },
     {
       "type": "checkbox",
-      "id": "show_audio_button",
-      "label": "Show floating audio button",
+      "id": "show_dynamic_checkout",
+      "label": "Show dynamic checkout buttons (Shop Pay, PayPal, etc.)",
       "default": true
-    },
-    {
-      "type": "text",
-      "id": "audio_button_label",
-      "label": "Audio button aria-label",
-      "default": "Play audio guide"
     },
     {
       "type": "header",
-      "content": "Feature carousel (dark section)"
+      "content": "Mobile sticky bar"
     },
     {
       "type": "checkbox",
-      "id": "show_feature_carousel",
-      "label": "Show feature carousel section",
+      "id": "enable_sticky_bar",
+      "label": "Enable sticky add to cart bar on mobile",
       "default": true
-    },
-    {
-      "type": "text",
-      "id": "pfc_heading",
-      "label": "Heading",
-      "default": "Superior running and walking for any home"
-    },
-    {
-      "type": "color",
-      "id": "pfc_background_color",
-      "label": "Background color",
-      "default": "#1c1c1c"
-    },
-    {
-      "type": "color",
-      "id": "pfc_text_color",
-      "label": "Text color",
-      "default": "#ffffff"
     }
   ],
   "blocks": [
     {
-      "type": "accordion",
-      "name": "Accordion (sidebar)",
-      "settings": [
-        {
-          "type": "text",
-          "id": "title",
-          "label": "Title",
-          "default": "Key features"
-        },
-        {
-          "type": "richtext",
-          "id": "content",
-          "label": "Content"
-        }
-      ]
-    },
-    {
-      "type": "slide",
-      "name": "Carousel slide",
-      "settings": [
-        {
-          "type": "image_picker",
-          "id": "image",
-          "label": "Image"
-        },
-        {
-          "type": "text",
-          "id": "caption",
-          "label": "Caption"
-        }
-      ]
-    },
-    {
-      "type": "delivery_item",
-      "name": "Delivery service item",
+      "type": "benefit",
+      "name": "Benefit",
       "settings": [
         {
           "type": "select",
           "id": "icon",
           "label": "Icon",
           "options": [
-            { "value": "box", "label": "Box" },
-            { "value": "truck", "label": "Truck" },
-            { "value": "clipboard", "label": "Clipboard / checklist" },
-            { "value": "play", "label": "Play / video" }
+            { "value": "shipping", "label": "Shipping" },
+            { "value": "trial", "label": "Trial period" },
+            { "value": "warranty", "label": "Warranty" },
+            { "value": "financing", "label": "Financing" },
+            { "value": "returns", "label": "Returns" },
+            { "value": "check", "label": "Checkmark" }
           ],
-          "default": "box"
+          "default": "check"
         },
         {
-          "type": "richtext",
+          "type": "text",
           "id": "text",
           "label": "Text",
-          "default": "<p><strong>Delivery within 2 weeks of order confirmation.</strong></p>"
+          "default": "Free Shipping"
         }
       ]
     },
     {
-      "type": "package",
-      "name": "Available package",
+      "type": "accordion",
+      "name": "Accordion item",
       "settings": [
-        {
-          "type": "product",
-          "id": "product",
-          "label": "Bundle product",
-          "info": "Its title, image and price are used unless overridden below."
-        },
         {
           "type": "text",
           "id": "title",
-          "label": "Title override"
+          "label": "Title",
+          "default": "Description"
         },
         {
-          "type": "url",
-          "id": "url",
-          "label": "Link (used if no product is selected)"
-        },
-        {
-          "type": "text",
-          "id": "badge_label",
-          "label": "Badge label",
-          "default": "Combined price"
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "info": "Leave blank on a block titled \"Description\" to automatically show the product description."
         }
       ]
     }
   ],
   "presets": [
     {
-      "name": "PDP: Technogym style",
+      "name": "PDP: Premium",
       "blocks": [
-        { "type": "delivery_item", "settings": { "icon": "box", "text": "<p><strong>Delivery within 2 weeks of order confirmation.</strong><br>We will call to arrange your delivery date.</p>" } },
-        { "type": "delivery_item", "settings": { "icon": "clipboard", "text": "<p><strong>Professional installation and inspection</strong></p>" } },
-        { "type": "delivery_item", "settings": { "icon": "play", "text": "<p><strong>Onboarding and support from our experts</strong></p>" } },
-        { "type": "accordion", "settings": { "title": "Key features" } },
-        { "type": "accordion", "settings": { "title": "Dimensions" } },
-        { "type": "accordion", "settings": { "title": "What's included" } },
-        { "type": "accordion", "settings": { "title": "FAQs" } },
-        { "type": "slide" },
-        { "type": "slide" },
-        { "type": "slide" },
-        { "type": "slide" }
+        { "type": "benefit", "settings": { "icon": "shipping", "text": "Free Shipping" } },
+        { "type": "benefit", "settings": { "icon": "trial", "text": "30-Day Trial" } },
+        { "type": "benefit", "settings": { "icon": "warranty", "text": "Warranty Included" } },
+        { "type": "benefit", "settings": { "icon": "financing", "text": "Financing Available" } },
+        { "type": "benefit", "settings": { "icon": "returns", "text": "Easy Returns" } },
+        { "type": "accordion", "settings": { "title": "Description" } },
+        { "type": "accordion", "settings": { "title": "Specifications" } },
+        { "type": "accordion", "settings": { "title": "Shipping" } },
+        { "type": "accordion", "settings": { "title": "Warranty" } },
+        { "type": "accordion", "settings": { "title": "FAQs" } }
       ]
     }
   ]

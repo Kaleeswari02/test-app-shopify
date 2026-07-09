@@ -1,0 +1,3 @@
+# Editor/atomic-save temp files (e.g. main-product-premium.liquid.tmp.12736.549c42855d50)
+# picked up by theme dev/watch before the save finishes and rejected by Shopify as illegal filenames.
+*.tmp.*
