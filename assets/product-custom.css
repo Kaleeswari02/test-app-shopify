@@ -1,0 +1,29 @@
+.custom-product{
+    max-width:1400px;
+    margin:60px auto;
+    display:grid;
+    grid-template-columns:65% 35%;
+    gap:40px;
+}
+
+.custom-product__gallery img{
+    width:100%;
+    display:block;
+    margin-bottom:20px;
+    border-radius:12px;
+}
+
+.custom-product__info{
+    position:sticky;
+    top:30px;
+}
+
+.price{
+    font-size:32px;
+    font-weight:700;
+    margin:20px 0;
+}
+
+.description{
+    margin:25px 0;
+}

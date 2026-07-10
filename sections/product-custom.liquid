@@ -1,0 +1,62 @@
+{{ 'product-custom.css' | asset_url | stylesheet_tag }}
+
+<div class="custom-product">
+
+  <div class="custom-product__gallery">
+
+    {% for media in product.media %}
+      <div class="gallery-image">
+        {{
+          media
+          | image_url: width: 900
+          | image_tag: loading: 'lazy'
+        }}
+      </div>
+    {% endfor %}
+
+  </div>
+
+  <div class="custom-product__info">
+
+    <p class="vendor">
+      {{ product.vendor }}
+    </p>
+
+    <h1>
+      {{ product.title }}
+    </h1>
+
+    <div class="price">
+      {{ product.price | money }}
+    </div>
+
+    <div class="description">
+      {{ product.description }}
+    </div>
+
+    {% form 'product', product %}
+
+      <button
+        type="submit"
+        class="button button--primary"
+      >
+        Add to Cart
+      </button>
+
+    {% endform %}
+
+  </div>
+
+</div>
+
+{% schema %}
+{
+  "name": "Product Custom",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Product Custom"
+    }
+  ]
+}
+{% endschema %}
