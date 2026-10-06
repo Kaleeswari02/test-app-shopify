@@ -2747,9 +2747,11 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
   display: block;
 }
 
+/* Bleed to the screen edge, but never wider than the 1440 layout (720px = half of 1440).
+   Past that the track would stretch until the cards barely overflow. */
 .sgym-showcase .sgym-viewport {
-  margin-right: calc(50% - 50cqi);
-  padding-right: calc(50cqi - 50%);
+  margin-right: calc(50% - min(50cqi, 720px));
+  padding-right: calc(min(50cqi, 720px) - 50%);
 }
 
 .sgym-showcase .sgym-track {
@@ -3320,6 +3322,13 @@ sgym-carousel.is-static .sgym-arrow {
   cursor: default;
 }
 
+/* Fade the clipped card while another stop is still to the right. */
+.sgym-showcase sgym-carousel.has-more .sgym-viewport,
+.sgym--dark sgym-carousel.has-more .sgym-viewport {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 64px), transparent);
+  mask-image: linear-gradient(to right, #000 calc(100% - 64px), transparent);
+}
+
 .sgym-slide-card .sgym-viewport {
   max-width: 1111px;
   height: 700px;
@@ -3526,6 +3535,31 @@ sgym-carousel.is-static .sgym-arrow {
   pointer-events: auto;
 }
 
+/* Keep the pair inside the column when the side gutter shrinks (~900–1180).
+   Equal side padding leaves the heading centered and clear of the buttons. */
+@media screen and (min-width: 900px) and (max-width: 1180px) {
+  .sgym--dark .sgym-carousel__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+  }
+
+  .sgym--dark .sgym-carousel__head .sgym-intro {
+    grid-area: 1 / 1;
+    min-width: 0;
+    margin: 0;
+    padding-inline: 124px;
+  }
+
+  .sgym--dark .sgym-carousel__arrows {
+    grid-area: 1 / 1;
+    justify-self: end;
+    align-self: end;
+    position: static;
+    margin: 0;
+  }
+}
+
 .sgym--dark .sgym-carousel__head .sgym-intro a {
   pointer-events: auto;
 }
@@ -3555,7 +3589,7 @@ sgym-carousel.is-static .sgym-arrow {
   margin-left: -20px;
   padding-left: 20px;
   scroll-padding-left: 20px;
-  margin-right: calc(50% - 50cqi);
+  margin-right: calc(50% - min(50cqi, 720px));
 }
 
 .sgym--dark .sgym-track {

@@ -435,6 +435,8 @@ if (!customElements.get('sgym-carousel')) {
 
         const left = this.animTarget ?? this.viewport.scrollLeft;
         const pos = this.positions();
+        const scrolled = this.viewport.scrollLeft;
+        this.classList.toggle('has-more', !loop && pos.some((p) => p > scrolled + OVERFLOW_EPS));
         const setDisabled = (button, disabled) => {
           if (!button) return;
           button.disabled = disabled;
