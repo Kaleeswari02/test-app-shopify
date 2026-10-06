@@ -188,18 +188,30 @@
 }
 
 .sgym-arrow {
-  width: 44px;
-  height: 44px;
+  width: 54px;
+  height: 54px;
   display: grid;
   place-items: center;
   border-radius: 50%;
   flex: 0 0 auto;
+  position: relative;
+  z-index: 2;
+  transition: transform var(--sgym-dur, 0.3s) var(--sgym-ease, cubic-bezier(0, 0, 0.58, 1)), opacity var(--sgym-dur, 0.3s) var(--sgym-ease, cubic-bezier(0, 0, 0.58, 1));
 }
 
 .sgym-arrow img {
-  width: 44px;
-  height: 44px;
+  width: 54px;
+  height: 54px;
   display: block;
+  pointer-events: none;
+}
+
+.sgym-arrow:hover:not(:disabled) {
+  transform: scale(1.06);
+}
+
+.sgym-arrow:active:not(:disabled) {
+  transform: scale(0.94);
 }
 
 .sgym-arrow[data-sgym-prev] img {
@@ -266,9 +278,17 @@
   font-size: clamp(26px, 3vw, 36px);
 }
 
+sgym-carousel {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
 .sgym-carousel__arrows {
   display: flex;
   gap: 8px;
+  position: relative;
+  z-index: 2;
 }
 
 .sgym-viewport {
@@ -1975,12 +1995,6 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
 }
 
 .sgym-arrow {
-  width: 54px;
-  height: 54px;
-  transition: opacity var(--sgym-dur) var(--sgym-ease);
-}
-
-.sgym-arrow img {
   width: 54px;
   height: 54px;
 }
