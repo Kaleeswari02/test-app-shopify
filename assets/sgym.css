@@ -297,8 +297,20 @@ sgym-carousel {
 .sgym-viewport {
   overflow-x: auto;
   scroll-snap-type: x mandatory;
+  scroll-behavior: auto;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+}
+
+/* Suspend snap for the whole JS tween. Inline styles alone lose to Windows Chrome's
+   smooth-scroll + mandatory snap, which snaps the track back on every frame. */
+.sgym-viewport.is-animating {
+  scroll-snap-type: none !important;
+  scroll-behavior: auto !important;
+}
+
+.sgym-viewport.is-animating .sgym-track > * {
+  scroll-snap-align: none !important;
 }
 
 .sgym-viewport::-webkit-scrollbar {
@@ -2871,14 +2883,38 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
   margin-top: 40px;
 }
 
+/* One indicator for the whole item. A border on the title and another on the
+   description leaves the padding gap between them unpainted. */
 .sgym-tab {
-  border-left: 1px solid #fff;
-  padding: 0 20px;
-  transition: border-color var(--sgym-dur) var(--sgym-ease);
+  position: relative;
+  border: 0;
+  padding: 0 20px 0 23px;
 }
 
-.sgym-tab.is-active {
-  border-left: 3px solid #1e1e1e;
+.sgym-tab::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  width: 1px;
+  background: #fff;
+  pointer-events: none;
+  transition: width var(--sgym-dur) var(--sgym-ease), background-color var(--sgym-dur) var(--sgym-ease);
+}
+
+.sgym-tab.is-active::before {
+  width: 3px;
+  background: #1e1e1e;
+}
+
+.sgym-tabs-card .sgym-tab .sgym-tab__button,
+.sgym-tabs-card .sgym-tab.is-active .sgym-tab__button,
+.sgym-tabs-card .sgym-tab .sgym-tab__panel,
+.sgym-tabs-card .sgym-tab .sgym-tab__panel-inner {
+  border: 0;
+  box-shadow: none;
 }
 
 .sgym-tab__button {
@@ -2908,9 +2944,11 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
 .sgym-tab__panel-inner {
   overflow: hidden;
   min-height: 0;
+  padding-top: 0;
   font-size: 16px;
   line-height: 22px;
   color: rgba(30, 30, 30, 0.8);
+  transition: padding-top var(--sgym-dur) var(--sgym-ease);
 }
 
 .sgym-tab.is-active .sgym-tab__panel-inner {
@@ -3223,6 +3261,8 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
 
 .sgym-counter {
   position: absolute;
+  display: inline-flex;
+  align-items: center;
   top: 64px;
   right: 67.5px;
   min-height: 0;
@@ -3244,6 +3284,8 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
   height: 55px;
   display: grid;
   place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
 }
 
 .sgym-counter__ring {
@@ -3257,19 +3299,25 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
   stroke-dashoffset: 100;
 }
 
-sgym-carousel[data-autoplay='true'].is-playing .sgym-counter__arc {
-  animation: sgym-ring var(--sgym-interval, 5s) linear forwards;
+button.sgym-counter {
+  appearance: none;
+  font-family: inherit;
+  line-height: 1;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
-sgym-carousel:hover .sgym-counter__arc,
-sgym-carousel:focus-within .sgym-counter__arc {
-  animation-play-state: paused;
+button.sgym-counter:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
 }
 
-@keyframes sgym-ring {
-  to {
-    stroke-dashoffset: 0;
-  }
+.sgym-counter [data-sgym-current] {
+  display: inline-block;
+}
+
+sgym-carousel.is-static .sgym-arrow {
+  cursor: default;
 }
 
 .sgym-slide-card .sgym-viewport {
@@ -3506,6 +3554,7 @@ sgym-carousel:focus-within .sgym-counter__arc {
 .sgym--dark .sgym-viewport {
   margin-left: -20px;
   padding-left: 20px;
+  scroll-padding-left: 20px;
   margin-right: calc(50% - 50cqi);
 }
 
@@ -3854,6 +3903,8 @@ sgym-carousel:focus-within .sgym-counter__arc {
   .sgym-gallery__slide,
   .sgym-tabs__panel,
   .sgym-tab__panel,
+  .sgym-tab__panel-inner,
+  .sgym-tab::before,
   .sgym-modes__panel,
   .sgym-modes__thumb,
   .sgym-atc,
