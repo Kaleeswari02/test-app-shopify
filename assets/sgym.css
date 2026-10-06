@@ -4440,13 +4440,15 @@ sgym-modes {
 
   .sgym-slide--collage .sgym-slide-card__link {
     position: absolute;
-    left: 6%;
-    right: 6%;
+    left: auto;
+    right: 3%;
     top: auto;
-    bottom: 3.5%;
-    width: auto;
+    bottom: 2.4%;
+    width: max-content;
+    max-width: 78%;
     font-size: 11px;
-    text-align: center;
+    line-height: 1.15;
+    text-align: right;
   }
 
   .sgym-counter__text,
@@ -4739,20 +4741,10 @@ sgym-show.is-paused .sgym-counter__arc {
 }
 
 @media screen and (max-width: 749px) {
-  sgym-show.sgym-show {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .sgym-show__panel {
-    order: 1;
-  }
-
   sgym-show .sgym-counter {
-    order: 2;
     position: static;
     align-self: center;
-    margin: 16px auto 0;
+    margin: 4px auto 14px;
   }
 
   .sgym-show__panel .sgym-slide,
