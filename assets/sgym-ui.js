@@ -192,6 +192,286 @@ if (!customElements.get('sgym-modes')) {
   );
 }
 
+if (!customElements.get('sgym-show')) {
+  customElements.define(
+    'sgym-show',
+    class SgymShow extends HTMLElement {
+      connectedCallback() {
+        this.slides = [...this.querySelectorAll('[data-sgym-slide]')];
+        this.countEl = this.querySelector('[data-sgym-count]');
+        this.numEl = this.querySelector('[data-sgym-num]');
+        this.toggleBtn = this.querySelector('[data-sgym-toggle]');
+        this.arc = this.querySelector('.sgym-counter__arc');
+        this.counter = this.querySelector('.sgym-counter');
+        this.word = this.dataset.counterWord || 'OF';
+        this.interval = Number(this.dataset.interval || 6000);
+        this.reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        this.index = 0;
+        this.userPaused = false;
+        this.inView = false;
+        this.hovered = false;
+        this.focused = false;
+        this.tabHidden = document.hidden;
+        this.cycleMs = 0;
+        this.remaining = 0;
+        this.timer = null;
+        this.swapTimer = null;
+        this.started = 0;
+
+        const collage = this.slides.findIndex((slide) => slide.classList.contains('sgym-slide--collage'));
+        if (this.reduce) {
+          this.index = collage >= 0 ? collage : Math.max(0, this.slides.length - 1);
+          this.userPaused = true;
+          this.classList.add('is-reduced');
+        }
+
+        this.toggleBtn?.addEventListener('click', () => this.toggle());
+        this.addEventListener('mouseenter', () => this.setHovered(true));
+        this.addEventListener('mouseleave', () => this.setHovered(false));
+        this.addEventListener('focusin', (event) => {
+          if (event.target === this.toggleBtn) return;
+          const fromKeyboard = event.target === this ? this.matches(':focus-visible') : event.target.matches(':focus-visible');
+          if (!fromKeyboard) return;
+          this.focused = true;
+          this.freeze();
+        });
+        this.addEventListener('focusout', (event) => {
+          if (this.contains(event.relatedTarget)) return;
+          this.focused = false;
+          this.resume();
+        });
+        this.addEventListener('keydown', (event) => {
+          if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+          event.preventDefault();
+          this.go(this.index + (event.key === 'ArrowRight' ? 1 : -1), true);
+        });
+        document.addEventListener('visibilitychange', () => {
+          this.tabHidden = document.hidden;
+          if (this.tabHidden) this.freeze();
+          else this.resume();
+        });
+        this.addEventListener('loadedmetadata', (event) => this.onMeta(event), true);
+        this.bindSwipe();
+        this.show(this.index, false);
+        this.paintPlaying();
+
+        if (!this.reduce && this.dataset.autoplay === 'true' && this.slides.length > 1) {
+          this.observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                this.inView = entry.intersectionRatio >= 0.5;
+                if (this.inView) this.resume();
+                else this.freeze();
+              });
+            },
+            { threshold: [0, 0.5, 1] }
+          );
+          this.observer.observe(this);
+        }
+      }
+
+      disconnectedCallback() {
+        clearTimeout(this.timer);
+        clearTimeout(this.swapTimer);
+        this.observer?.disconnect();
+      }
+
+      bindSwipe() {
+        const panel = this.querySelector('.sgym-show__panel');
+        if (!panel) return;
+        let startX = 0;
+        let tracking = false;
+        const begin = (event) => {
+          if (event.button != null && event.button !== 0) return;
+          if (!event.target.closest('a, button')) event.preventDefault();
+          tracking = true;
+          startX = event.clientX;
+          if (event.pointerId != null && panel.setPointerCapture) {
+            try {
+              panel.setPointerCapture(event.pointerId);
+            } catch (error) {
+              /* the pointer may already be captured */
+            }
+          }
+        };
+        const end = (event) => {
+          if (!tracking) return;
+          tracking = false;
+          const delta = event.clientX - startX;
+          if (Math.abs(delta) < 40) return;
+          this.go(this.index + (delta < 0 ? 1 : -1), true);
+        };
+        panel.addEventListener('pointerdown', begin);
+        panel.addEventListener('pointerup', end);
+        panel.addEventListener('pointercancel', () => {
+          tracking = false;
+        });
+      }
+
+      toggle() {
+        if (this.reduce) return;
+        this.userPaused = !this.userPaused;
+        if (this.userPaused) this.freeze();
+        else this.resume();
+        this.paintPlaying();
+      }
+
+      setHovered(on) {
+        this.hovered = on;
+        if (on) this.freeze();
+        else this.resume();
+      }
+
+      go(next, manual) {
+        const count = this.slides.length;
+        if (!count) return;
+        const index = (next + count) % count;
+        if (manual && !this.reduce) this.userPaused = false;
+        this.show(index, true);
+        this.arm(this.durationFor(this.slides[index]), true);
+      }
+
+      show(index, swap) {
+        this.index = index;
+        this.cycleMs = 0;
+        this.remaining = 0;
+        this.slides.forEach((slide, i) => {
+          const active = i === index;
+          if (!active) {
+            slide.classList.remove('is-active');
+            slide.querySelectorAll('video').forEach((video) => {
+              video.pause();
+            });
+            return;
+          }
+          if (!slide.classList.contains('is-active')) slide.classList.add('is-active');
+        });
+        const applyCount = () => {
+          const label = `${index + 1} ${this.word} ${this.slides.length}`;
+          if (this.countEl) this.countEl.textContent = label;
+          if (this.numEl) this.numEl.textContent = String(index + 1);
+          this.counter?.classList.remove('is-swapping');
+        };
+        clearTimeout(this.swapTimer);
+        if (swap && !this.reduce) {
+          this.counter?.classList.add('is-swapping');
+          this.swapTimer = setTimeout(applyCount, 300);
+        } else {
+          applyCount();
+        }
+        const video = this.slides[index].querySelector('video');
+        if (video && this.canPlay()) {
+          try {
+            video.currentTime = 0;
+          } catch (error) {
+            /* metadata may still be loading */
+          }
+          video.play().catch(() => {});
+        }
+      }
+
+      durationFor(slide) {
+        const video = slide?.querySelector('video');
+        if (video && Number.isFinite(video.duration) && video.duration > 0) {
+          return Math.min(video.duration * 1000, 12000);
+        }
+        return this.interval;
+      }
+
+      onMeta(event) {
+        const video = event.target;
+        if (!video || video.tagName !== 'VIDEO') return;
+        const slide = video.closest('[data-sgym-slide]');
+        if (!slide || slide !== this.slides[this.index]) return;
+        const want = this.durationFor(slide);
+        if (this.cycleMs === want) return;
+        const elapsed = this.started ? performance.now() - this.started : 0;
+        if (this.cycleMs !== 0 && elapsed >= 500) return;
+        if (this.canPlay()) {
+          try {
+            video.currentTime = 0;
+          } catch (error) {
+            /* ignore seek errors while metadata settles */
+          }
+          this.arm(want, true);
+          return;
+        }
+        this.cycleMs = want;
+        this.remaining = want;
+        this.started = 0;
+        this.style.setProperty('--sgym-slide-ms', `${want}ms`);
+        if (this.arc) {
+          this.arc.style.animation = 'none';
+          void this.arc.offsetWidth;
+          this.arc.style.animation = '';
+        }
+      }
+
+      canPlay() {
+        return !this.reduce && !this.userPaused && !this.hovered && !this.focused && this.inView && this.dataset.autoplay === 'true' && this.slides.length > 1 && !this.tabHidden;
+      }
+
+      paintPlaying() {
+        const playing = this.canPlay();
+        this.classList.toggle('is-playing', this.cycleMs > 0 && !this.reduce);
+        this.classList.toggle('is-paused', this.userPaused || this.reduce);
+        this.toggleBtn?.setAttribute('aria-pressed', String(playing));
+        this.toggleBtn?.setAttribute('aria-label', playing ? 'Pause slideshow' : 'Play slideshow');
+        if (this.reduce && this.arc) this.arc.style.strokeDashoffset = '0';
+      }
+
+      arm(ms, reset) {
+        clearTimeout(this.timer);
+        this.timer = null;
+        this.cycleMs = ms;
+        this.remaining = ms;
+        this.started = performance.now();
+        this.style.setProperty('--sgym-slide-ms', `${ms}ms`);
+        if (reset && this.arc) {
+          this.arc.style.animation = 'none';
+          void this.arc.offsetWidth;
+          this.arc.style.animation = '';
+        }
+        if (this.canPlay()) this.classList.remove('is-held');
+        this.paintPlaying();
+        if (!this.canPlay()) return;
+        this.timer = setTimeout(() => this.go(this.index + 1, false), ms);
+      }
+
+      freeze() {
+        if (this.timer) {
+          this.remaining = Math.max(0, this.remaining - (performance.now() - this.started));
+          clearTimeout(this.timer);
+          this.timer = null;
+        }
+        this.slides[this.index]?.querySelector('video')?.pause();
+        if (this.cycleMs > 0) this.classList.add('is-held');
+        this.paintPlaying();
+      }
+
+      resume() {
+        if (!this.canPlay()) {
+          this.paintPlaying();
+          return;
+        }
+        const slide = this.slides[this.index];
+        const video = slide?.querySelector('video');
+        if (video && video.paused) video.play().catch(() => {});
+        if (!(this.cycleMs > 0) || !(this.remaining > 0)) {
+          this.arm(this.durationFor(slide), true);
+          return;
+        }
+        const ms = this.remaining;
+        this.started = performance.now();
+        this.classList.remove('is-held');
+        this.paintPlaying();
+        clearTimeout(this.timer);
+        this.timer = setTimeout(() => this.go(this.index + 1, false), ms);
+      }
+    }
+  );
+}
+
 function sgymReveal(root) {
   const scope = root && root.querySelectorAll ? root : document;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

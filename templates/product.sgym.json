@@ -560,6 +560,16 @@
     "story_app": {
       "type": "sgym-slideshow",
       "blocks": {
+        "video_1": {
+          "type": "video",
+          "settings": {
+            "video_asset": "sgym-live-app-bar.mp4",
+            "fallback_asset": "sgym-live-app-poster.jpg",
+            "label": "Stats",
+            "label_x": 86,
+            "label_y": 20
+          }
+        },
         "collage": {
           "type": "collage",
           "settings": {
@@ -568,17 +578,16 @@
         }
       },
       "block_order": [
+        "video_1",
         "collage"
       ],
       "settings": {
         "heading": "More than just your smart gym.",
         "text": "<p>Mit dem sGym Pro erhältst du Zugang zu einem smarten, digitalen Ökosystem, das Training, Daten und Coaching nahtlos verbindet.</p>",
-        "counter_current": "3",
         "counter_label": "OF",
-        "counter_total": "3",
         "link_label": "https://www.sportstech.de/live-app",
         "link": "https://www.sportstech.de/live-app",
-        "autoplay": false,
+        "autoplay": true,
         "interval": 6,
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
