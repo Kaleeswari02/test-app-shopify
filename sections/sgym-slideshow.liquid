@@ -20,7 +20,7 @@
             {%- endif -%}
           </div>
         </div>
-        <p class="sgym-counter">
+        <button type="button" class="sgym-counter" data-sgym-counter aria-label="{{ 'general.slider.next_slide' | t }}">
           <span class="sgym-counter__badge">
             <svg class="sgym-counter__ring" viewBox="0 0 55 55" width="55" height="55" aria-hidden="true">
               <circle cx="27.5" cy="27.5" r="25" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="1.5"></circle>
@@ -29,7 +29,7 @@
             <span data-sgym-current>1</span>
           </span>
           <span>{{ section.settings.counter_label }} <span data-sgym-total>{{ section.blocks.size }}</span></span>
-        </p>
+        </button>
         <div class="sgym-viewport" data-sgym-viewport tabindex="0">
           <ul class="sgym-track" data-sgym-track>
             {%- for block in section.blocks -%}
