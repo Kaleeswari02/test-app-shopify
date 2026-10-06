@@ -10,10 +10,11 @@
         <div class="sgym-modes__stage">
           {%- for block in section.blocks -%}
             <div class="sgym-modes__panel{% if forloop.first %} is-active{% endif %}" data-sgym-mode-panel {{ block.shopify_attributes }}>
+              {%- assign mode_alt = block.settings.title | default: block.settings.label -%}
               {% render 'sgym-picture',
                 image: block.settings.image,
                 fallback: block.settings.fallback_asset,
-                alt: block.settings.title | default: block.settings.label,
+                alt: mode_alt,
                 width: 1800,
                 height: 900,
                 sizes: '(min-width: 990px) 1100px, 100vw'

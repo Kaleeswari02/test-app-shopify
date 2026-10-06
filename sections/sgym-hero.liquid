@@ -5,10 +5,11 @@
 <div class="sgym sgym-section sgym-hero">
   <div class="sgym-hero__media">
     {%- if section.settings.image != blank or section.settings.fallback_asset != blank -%}
+      {%- assign hero_alt = section.settings.image.alt | default: section.settings.heading -%}
       {% render 'sgym-picture',
         image: section.settings.image,
         fallback: section.settings.fallback_asset,
-        alt: section.settings.image.alt | default: section.settings.heading,
+        alt: hero_alt,
         class: 'sgym-hero__img',
         width: 2400,
         height: 1022,

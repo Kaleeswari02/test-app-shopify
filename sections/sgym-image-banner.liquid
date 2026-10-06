@@ -8,12 +8,13 @@
       class="sgym-banner{% if section.settings.heading == blank %} sgym-banner--plain{% endif %}"
       data-autoplay="{% if section.settings.autoplay %}true{% else %}false{% endif %}"
     >
+      {%- assign banner_alt = section.settings.heading | default: section.settings.image.alt -%}
       {% render 'sgym-video',
         video: section.settings.video,
         video_url: section.settings.video_url,
         image: section.settings.image,
         fallback: section.settings.fallback_asset,
-        alt: section.settings.heading | default: section.settings.image.alt,
+        alt: banner_alt,
         autoplay: section.settings.autoplay,
         loop: true,
         muted: true,

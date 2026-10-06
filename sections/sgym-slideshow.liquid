@@ -29,10 +29,11 @@
           <ul class="sgym-track" data-sgym-track>
             {%- for block in section.blocks -%}
               <li class="sgym-slide" style="flex-basis: 100%;" {{ block.shopify_attributes }}>
+                {%- assign slide_alt = block.settings.label | default: section.settings.heading -%}
                 {% render 'sgym-picture',
                   image: block.settings.image,
                   fallback: block.settings.fallback_asset,
-                  alt: block.settings.label | default: section.settings.heading,
+                  alt: slide_alt,
                   width: 1600,
                   height: 900,
                   sizes: '(min-width: 990px) 1100px, 100vw'
