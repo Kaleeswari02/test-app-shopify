@@ -1,0 +1,24 @@
+{% comment %}
+  Renders a bundled sGym SVG icon as an image so mask ids stay scoped.
+
+  Accepts:
+  - name: {String} filename without extension, e.g. "star"
+  - size: {Number} width and height in px
+  - class: {String}
+  - alt: {String} empty marks the icon decorative
+{% endcomment %}
+{%- liquid
+  assign icon_size = size | default: 24
+  assign icon_file = 'sgym-' | append: name | append: '.svg'
+-%}
+<img
+  src="{{ icon_file | asset_url }}"
+  alt="{{ alt | default: '' | escape }}"
+  width="{{ icon_size }}"
+  height="{{ icon_size }}"
+  loading="lazy"
+  class="sgym-icon {{ class }}"
+  {% if alt == blank %}
+    aria-hidden="true"
+  {% endif %}
+>

@@ -1,0 +1,52 @@
+{% comment %}
+  Loads Archivo and Inter (or the section font pickers) for sGym sections only.
+  Renders inside the section that calls it. Does not change theme font settings.
+{% endcomment %}
+{%- liquid
+  assign heading_font = section.settings.heading_font
+  assign body_font = section.settings.body_font
+-%}
+{%- style -%}
+  {%- if heading_font != blank -%}
+    {{ heading_font | font_face: font_display: 'swap' }}
+    {%- assign heading_medium = heading_font | font_modify: 'weight', '500' -%}
+    {%- if heading_medium != blank -%}
+      {{ heading_medium | font_face: font_display: 'swap' }}
+    {%- endif -%}
+  {%- endif -%}
+  {%- if body_font != blank -%}
+    {{ body_font | font_face: font_display: 'swap' }}
+    {%- assign body_medium = body_font | font_modify: 'weight', '500' -%}
+    {%- assign body_bold = body_font | font_modify: 'weight', '700' -%}
+    {%- if body_medium != blank -%}
+      {{ body_medium | font_face: font_display: 'swap' }}
+    {%- endif -%}
+    {%- if body_bold != blank -%}
+      {{ body_bold | font_face: font_display: 'swap' }}
+    {%- endif -%}
+  {%- endif -%}
+
+  #shopify-section-{{ section.id }} {
+    {%- if heading_font != blank -%}
+      --sgym-font-heading-family: {{ heading_font.family }}, {{ heading_font.fallback_families }};
+      --sgym-font-heading-style: {{ heading_font.style }};
+      --sgym-font-heading-weight: {{ heading_font.weight }};
+    {%- endif -%}
+    {%- if body_font != blank -%}
+      --sgym-font-body-family: {{ body_font.family }}, {{ body_font.fallback_families }};
+      --sgym-font-body-style: {{ body_font.style }};
+      --sgym-font-body-weight: {{ body_font.weight }};
+      --sgym-font-body-weight-medium: {{ body_medium.weight | default: 500 }};
+      --sgym-font-body-weight-bold: {{ body_bold.weight | default: 700 }};
+    {%- endif -%}
+    --sgym-pad-top: {{ section.settings.padding_top | default: 0 | times: 0.75 | round: 0 }}px;
+    --sgym-pad-bottom: {{ section.settings.padding_bottom | default: 0 | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    #shopify-section-{{ section.id }} {
+      --sgym-pad-top: {{ section.settings.padding_top | default: 0 }}px;
+      --sgym-pad-bottom: {{ section.settings.padding_bottom | default: 0 }}px;
+    }
+  }
+{%- endstyle -%}

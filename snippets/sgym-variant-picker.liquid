@@ -1,0 +1,107 @@
+{% comment %}
+  Option cards. The subline is the price difference from the first variant.
+
+  Accepts:
+  - product: {Object}
+  - block: {Object}
+  - product_form_id: {String}
+  - section_id: {String}
+{% endcomment %}
+{%- unless product.has_only_default_variant -%}
+  <variant-selects
+    id="variant-selects-{{ section_id }}"
+    class="sgym-variant-selects"
+    data-section="{{ section_id }}"
+    data-product-handle="{{ product.handle }}"
+    data-product-title="{{ product.title | escape }}"
+    data-product-id="{{ product.id }}"
+    data-currency-code="{{ cart.currency.iso_code }}"
+    {% # theme-check-disable %}
+    data-selected-price-amount="{{ product.selected_or_first_available_variant.price | default: 0 | money_amount | escape }}"
+    {% # theme-check-enable %}
+    {{ block.shopify_attributes }}
+  >
+    {%- assign base_price = product.variants.first.price -%}
+    {%- assign current_variant = product.selected_or_first_available_variant -%}
+    {%- for option in product.options_with_values -%}
+      <fieldset class="sgym-options js product-form__input">
+        <legend class="sgym-options__legend">
+          <span>
+            {%- if product.options.size > 1 -%}
+              {{ option.name }}
+            {%- else -%}
+              {{ block.settings.heading | default: option.name }}
+            {%- endif -%}
+          </span>
+          <span data-selected-value>{{ option.selected_value }}</span>
+        </legend>
+        {%- for value in option.values -%}
+          {%- capture value_name -%}{{ value }}{%- endcapture -%}
+          {%- liquid
+            assign value_name = value_name | strip
+            assign matched = nil
+            for variant in product.variants
+              assign matches_value = false
+              if option.position == 1 and variant.option1 == value_name
+                assign matches_value = true
+              elsif option.position == 2 and variant.option2 == value_name
+                assign matches_value = true
+              elsif option.position == 3 and variant.option3 == value_name
+                assign matches_value = true
+              endif
+              unless matches_value
+                continue
+              endunless
+              if option.position != 1 and product.options.size > 0 and variant.option1 != current_variant.option1
+                continue
+              endif
+              if option.position != 2 and product.options.size > 1 and variant.option2 != current_variant.option2
+                continue
+              endif
+              if option.position != 3 and product.options.size > 2 and variant.option3 != current_variant.option3
+                continue
+              endif
+              assign matched = variant
+              break
+            endfor
+            assign input_id = section_id | append: '-' | append: option.position | append: '-' | append: forloop.index0
+          -%}
+          <label class="sgym-option{% if value.selected %} is-selected{% endif %}{% unless value.available %} is-unavailable{% endunless %}" for="{{ input_id }}">
+            <input
+              type="radio"
+              id="{{ input_id }}"
+              name="{{ option.name | escape }}-{{ option.position }}"
+              value="{{ value_name | escape }}"
+              form="{{ product_form_id }}"
+              {% if value.selected %}
+                checked
+              {% endif %}
+              data-product-url="{{ value.product_url }}"
+              data-option-value-id="{{ value.id }}"
+              data-option-name="{{ option.name | escape }}"
+            >
+            <span class="sgym-option__name">{{ value_name }}</span>
+            <span class="sgym-option__meta">
+              {%- if matched -%}
+                {%- assign diff = matched.price | minus: base_price -%}
+                {%- if diff > 0 -%}
+                  + {{ diff | money_without_trailing_zeros }}
+                {%- elsif diff < 0 -%}
+                  {{ diff | money_without_trailing_zeros }}
+                {%- else -%}
+                  {{ block.settings.included_label }}
+                {%- endif -%}
+              {%- endif -%}
+              {%- unless value.available -%}
+                <span class="visually-hidden">{{ 'products.product.variant_sold_out_or_unavailable' | t }}</span>
+              {%- endunless -%}
+            </span>
+          </label>
+        {%- endfor -%}
+      </fieldset>
+    {%- endfor -%}
+    <script type="application/json" data-selected-variant>
+      {{ product.selected_or_first_available_variant | json }}
+    </script>
+  </variant-selects>
+{%- endunless -%}

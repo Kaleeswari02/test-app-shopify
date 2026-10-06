@@ -1,0 +1,88 @@
+{{ 'sgym.css' | asset_url | stylesheet_tag }}
+{% render 'sgym-fonts' %}
+<script src="{{ 'sgym-carousel.js' | asset_url }}" defer="defer"></script>
+
+<div class="sgym sgym-section">
+  <div class="sgym-wrap">
+    <div class="sgym-slide-card">
+      <sgym-carousel
+        data-autoplay="{% if section.settings.autoplay %}true{% else %}false{% endif %}"
+        data-interval="{{ section.settings.interval | times: 1000 }}"
+        data-loop="true"
+      >
+        <div class="sgym-slide-card__top">
+          <div>
+            {%- if section.settings.heading != blank -%}
+              <h2>{{ section.settings.heading }}</h2>
+            {%- endif -%}
+            {%- if section.settings.text != blank -%}
+              <div class="sgym-sub rte">{{ section.settings.text }}</div>
+            {%- endif -%}
+          </div>
+          <p class="sgym-counter">
+            <span data-sgym-current>1</span>
+            {{ section.settings.counter_label }}
+            <span data-sgym-total>{{ section.blocks.size }}</span>
+          </p>
+        </div>
+        <div class="sgym-viewport" data-sgym-viewport tabindex="0">
+          <ul class="sgym-track" data-sgym-track>
+            {%- for block in section.blocks -%}
+              <li class="sgym-slide" style="flex-basis: 100%;" {{ block.shopify_attributes }}>
+                {% render 'sgym-picture',
+                  image: block.settings.image,
+                  fallback: block.settings.fallback_asset,
+                  alt: block.settings.label | default: section.settings.heading,
+                  width: 1600,
+                  height: 900,
+                  sizes: '(min-width: 990px) 1100px, 100vw'
+                %}
+                {%- if block.settings.label != blank -%}
+                  <span class="sgym-slide__label">{{ block.settings.label }}</span>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+        <div class="sgym-dots" data-sgym-dots></div>
+      </sgym-carousel>
+      {%- if section.settings.link_label != blank -%}
+        <a class="sgym-slide-card__link" href="{{ section.settings.link }}">{{ section.settings.link_label }}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "sGym slideshow",
+  "tag": "section",
+  "class": "sgym-slideshow-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "More than just your smart gym." },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Mit dem sGym Pro erhältst du Zugang zu einem smarten, digitalen Ökosystem, das Training, Daten und Coaching nahtlos verbindet.</p>" },
+    { "type": "text", "id": "counter_label", "label": "Counter word", "default": "OF" },
+    { "type": "text", "id": "link_label", "label": "Link label", "default": "https://www.sportstech.de/live-app" },
+    { "type": "url", "id": "link", "label": "Link" },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": false, "info": "Autoplay is disabled when the visitor prefers reduced motion." },
+    { "type": "range", "id": "interval", "min": 3, "max": 10, "step": 1, "unit": "s", "label": "Autoplay interval", "default": 5 },
+    { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
+    { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Top padding", "default": 20 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Bottom padding", "default": 20 }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "fallback_asset", "label": "Bundled image filename" },
+        { "type": "text", "id": "label", "label": "Label", "default": "Workouts" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "sGym slideshow", "category": "sGym" }]
+}
+{% endschema %}

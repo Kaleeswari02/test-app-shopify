@@ -1,0 +1,41 @@
+{% comment %}
+  Amber star row. Filled width follows the numeric rating.
+
+  Accepts:
+  - rating: {Number}
+  - scale: {Number}
+  - size: {Number}
+  - class: {String}
+{% endcomment %}
+{%- liquid
+  assign star_scale = scale | default: 5
+  assign star_rating = rating | default: 0
+  assign star_size = size | default: 14
+  if star_scale == 0
+    assign star_scale = 5
+  endif
+  assign star_fill = star_rating | times: 100.0 | divided_by: star_scale
+  if star_fill > 100
+    assign star_fill = 100
+  endif
+  if star_fill < 0
+    assign star_fill = 0
+  endif
+-%}
+<span
+  class="sgym-stars {{ class }}"
+  style="--sgym-star-size: {{ star_size }}px; --sgym-star-fill: {{ star_fill }}%;"
+  role="img"
+  aria-label="{{ 'accessibility.star_reviews_info' | t: rating_value: star_rating, rating_max: star_scale }}"
+>
+  <span class="sgym-stars__row" aria-hidden="true">
+    {%- for i in (1..5) -%}
+      {% render 'sgym-icon', name: 'star-half-outline', size: star_size %}
+    {%- endfor -%}
+  </span>
+  <span class="sgym-stars__row sgym-stars__row--fill" aria-hidden="true">
+    {%- for i in (1..5) -%}
+      {% render 'sgym-icon', name: 'star', size: star_size %}
+    {%- endfor -%}
+  </span>
+</span>

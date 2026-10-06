@@ -1,0 +1,97 @@
+{{ 'sgym.css' | asset_url | stylesheet_tag }}
+{% render 'sgym-fonts' %}
+
+{%- liquid
+  assign mf_parts = section.settings.metafield | split: '.'
+  assign specs_mf = product.metafields[mf_parts.first][mf_parts.last]
+  assign use_metafield = false
+  if section.settings.prefer_metafield and specs_mf != blank
+    assign use_metafield = true
+  endif
+-%}
+
+<div class="sgym sgym-section" id="{{ section.settings.anchor | default: 'sgym-specs' }}">
+  <div class="sgym-wrap">
+    {% render 'sgym-heading', title: section.settings.heading %}
+    <div class="sgym-spec-card">
+      {%- if use_metafield -%}
+        <details open>
+          <summary class="sgym-acc-summary">
+            <span>{{ section.settings.metafield_title }}</span>
+            {% render 'sgym-icon', name: 'faq-plus-circle', size: 24, class: 'sgym-icon--closed' %}
+            {% render 'sgym-icon', name: 'faq-minus-circle', size: 24, class: 'sgym-icon--open' %}
+          </summary>
+          <div class="sgym-richtext rte">
+            {%- if specs_mf.type == 'rich_text_field' or specs_mf.type == 'multi_line_text_field' -%}
+              {{ specs_mf | metafield_tag }}
+            {%- else -%}
+              {{ specs_mf.value | default: specs_mf }}
+            {%- endif -%}
+          </div>
+        </details>
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          <details {% if forloop.first and block.settings.open %}open{% elsif block.settings.open %}open{% endif %} {{ block.shopify_attributes }}>
+            <summary class="sgym-acc-summary">
+              <span>{{ block.settings.title }}</span>
+              {% render 'sgym-icon', name: 'faq-plus-circle', size: 24, class: 'sgym-icon--closed' %}
+              {% render 'sgym-icon', name: 'faq-minus-circle', size: 24, class: 'sgym-icon--open' %}
+            </summary>
+            {%- if block.settings.rows != blank -%}
+              <table class="sgym-spec-table">
+                <tbody>
+                  {%- assign rows = block.settings.rows | newline_to_br | replace: '<br />', '|||' | replace: '<br>', '|||' | split: '|||' -%}
+                  {%- for row in rows -%}
+                    {%- assign cells = row | split: '|' -%}
+                    {%- if cells.size > 1 -%}
+                      <tr>
+                        <th scope="row">{{ cells[0] | strip }}</th>
+                        <td>{{ cells[1] | strip }}</td>
+                      </tr>
+                    {%- endif -%}
+                  {%- endfor -%}
+                </tbody>
+              </table>
+            {%- elsif block.settings.content != blank -%}
+              <div class="sgym-richtext rte">{{ block.settings.content }}</div>
+            {%- endif -%}
+          </details>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "sGym specifications",
+  "tag": "section",
+  "class": "sgym-specs-section",
+  "enabled_on": { "templates": ["product"] },
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Technische Daten" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "sgym-specs" },
+    { "type": "checkbox", "id": "prefer_metafield", "label": "Use product metafield when set", "default": true },
+    { "type": "text", "id": "metafield", "label": "Metafield", "default": "custom.specs", "info": "namespace.key. Rich text or multi-line text replaces the blocks when it has a value." },
+    { "type": "text", "id": "metafield_title", "label": "Metafield group title", "default": "Technische Daten" },
+    { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
+    { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Top padding", "default": 40 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Bottom padding", "default": 20 }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Group",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title", "default": "Abmessung allgemein" },
+        { "type": "checkbox", "id": "open", "label": "Open by default", "default": false },
+        { "type": "textarea", "id": "rows", "label": "Rows", "info": "One row per line, written as Label | Value." },
+        { "type": "richtext", "id": "content", "label": "Rich text", "info": "Used when Rows is empty." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "sGym specifications", "category": "sGym" }]
+}
+{% endschema %}

@@ -1,0 +1,101 @@
+{{ 'sgym.css' | asset_url | stylesheet_tag }}
+{% render 'sgym-fonts' %}
+<script src="{{ 'sgym-carousel.js' | asset_url }}" defer="defer"></script>
+
+<div class="sgym sgym-section sgym-showcase">
+  <div class="sgym-wrap">
+    {%- if section.settings.kicker != blank -%}
+      <p class="sgym-showcase__kicker">{{ section.settings.kicker }}</p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 class="sgym-showcase__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {% render 'sgym-picture',
+      image: section.settings.image,
+      fallback: section.settings.fallback_asset,
+      alt: section.settings.image.alt | default: section.settings.heading,
+      class: 'sgym-showcase__cutout',
+      width: 1500,
+      height: 1500,
+      sizes: '(min-width: 990px) 920px, 100vw'
+    %}
+    <sgym-carousel class="sgym-carousel sgym-carousel--dots-mobile" data-loop="true">
+      <div class="sgym-carousel__head">
+        <h3 class="sgym-title">{{ section.settings.carousel_heading }}</h3>
+        <div class="sgym-carousel__arrows">
+          <button type="button" class="sgym-arrow" data-sgym-prev aria-label="{{ 'general.slider.previous_slide' | t }}">
+            <img src="{{ 'sgym-carousel-prev-dark.svg' | asset_url }}" alt="" width="44" height="44">
+          </button>
+          <button type="button" class="sgym-arrow" data-sgym-next aria-label="{{ 'general.slider.next_slide' | t }}">
+            <img src="{{ 'sgym-carousel-prev-dark.svg' | asset_url }}" alt="" width="44" height="44">
+          </button>
+        </div>
+      </div>
+      <div class="sgym-viewport" data-sgym-viewport tabindex="0">
+        <ul class="sgym-track" data-sgym-track>
+          {%- for block in section.blocks -%}
+            <li class="sgym-feature-card" {{ block.shopify_attributes }}>
+              <div class="sgym-feature-card__media">
+                {% render 'sgym-video',
+                  video: block.settings.video,
+                  image: block.settings.image,
+                  fallback: block.settings.fallback_asset,
+                  alt: block.settings.title,
+                  autoplay: false,
+                  controls: false,
+                  width: 890,
+                  height: 778,
+                  sizes: '300px',
+                  class: 'sgym-feature-card__img'
+                %}
+              </div>
+              <div class="sgym-feature-card__body">
+                {%- if block.settings.title != blank -%}
+                  <h3>{{ block.settings.title }}</h3>
+                {%- endif -%}
+                {%- if block.settings.text != blank -%}
+                  <div class="rte">{{ block.settings.text }}</div>
+                {%- endif -%}
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+      <div class="sgym-dots" data-sgym-dots></div>
+    </sgym-carousel>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "sGym feature showcase",
+  "tag": "section",
+  "class": "sgym-feature-showcase-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "sGym Pro Design" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Engineered to the last detail" },
+    { "type": "image_picker", "id": "image", "label": "Cutout image" },
+    { "type": "text", "id": "fallback_asset", "label": "Bundled cutout filename", "default": "sgym-product-cutout-sgym-pro.png" },
+    { "type": "text", "id": "carousel_heading", "label": "Carousel heading", "default": "Key Features" },
+    { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
+    { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 120, "step": 2, "unit": "px", "label": "Top padding", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 120, "step": 2, "unit": "px", "label": "Bottom padding", "default": 48 }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Feature card",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "fallback_asset", "label": "Bundled image filename" },
+        { "type": "video", "id": "video", "label": "Video" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Feature" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Describe the feature.</p>" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "sGym feature showcase", "category": "sGym" }]
+}
+{% endschema %}

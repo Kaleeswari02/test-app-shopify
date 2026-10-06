@@ -1,0 +1,49 @@
+{% comment %}
+  Merchant image, or a bundled fallback asset when the picker is empty.
+
+  Accepts:
+  - image: {Image}
+  - fallback: {String} asset filename
+  - alt: {String}
+  - class: {String}
+  - sizes: {String}
+  - widths: {String}
+  - loading: {String}
+  - width: {Number} used for the fallback asset
+  - height: {Number}
+  - fetchpriority: {String}
+{% endcomment %}
+{%- liquid
+  assign picture_loading = loading | default: 'lazy'
+  assign picture_alt = alt
+  if picture_alt == blank and image != blank
+    assign picture_alt = image.alt
+  endif
+  assign picture_widths = widths | default: '375, 550, 750, 1100, 1500, 2000'
+  assign picture_sizes = sizes | default: '100vw'
+-%}
+{%- if image != blank -%}
+  {{
+    image
+    | image_url: width: 2400
+    | image_tag:
+      class: class,
+      widths: picture_widths,
+      sizes: picture_sizes,
+      alt: picture_alt,
+      loading: picture_loading,
+      fetchpriority: fetchpriority
+  }}
+{%- elsif fallback != blank -%}
+  <img
+    src="{{ fallback | asset_url }}"
+    alt="{{ picture_alt | escape }}"
+    width="{{ width | default: 1600 }}"
+    height="{{ height | default: 900 }}"
+    loading="{{ picture_loading }}"
+    class="{{ class }}"
+    {% if fetchpriority != blank %}
+      fetchpriority="{{ fetchpriority }}"
+    {% endif %}
+  >
+{%- endif -%}

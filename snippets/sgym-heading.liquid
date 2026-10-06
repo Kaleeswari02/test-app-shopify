@@ -1,0 +1,30 @@
+{% comment %}
+  Centred section heading used by the storytelling sections.
+
+  Accepts:
+  - eyebrow: {String}
+  - title: {String}
+  - text: {String}
+  - title_tag: {String} h2 default
+  - class: {String}
+  - title_class: {String}
+{% endcomment %}
+{%- if eyebrow != blank or title != blank or text != blank -%}
+  <div class="sgym-intro {{ class }}">
+    {%- if eyebrow != blank -%}
+      <p class="sgym-eyebrow">{{ eyebrow }}</p>
+    {%- endif -%}
+    {%- if title != blank -%}
+      {%- if title_tag == 'h1' -%}
+        <h1 class="sgym-title {{ title_class }}">{{ title }}</h1>
+      {%- elsif title_tag == 'h3' -%}
+        <h3 class="sgym-title {{ title_class }}">{{ title }}</h3>
+      {%- else -%}
+        <h2 class="sgym-title {{ title_class }}">{{ title }}</h2>
+      {%- endif -%}
+    {%- endif -%}
+    {%- if text != blank -%}
+      <div class="sgym-sub rte">{{ text }}</div>
+    {%- endif -%}
+  </div>
+{%- endif -%}

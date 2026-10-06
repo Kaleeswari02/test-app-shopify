@@ -1,0 +1,76 @@
+{{ 'sgym.css' | asset_url | stylesheet_tag }}
+{% render 'sgym-fonts' %}
+<script src="{{ 'sgym-ui.js' | asset_url }}" defer="defer"></script>
+
+<div class="sgym sgym-section">
+  <div class="sgym-wrap">
+    <div class="sgym-split sgym-split--{{ section.settings.scheme }} sgym-split--image-{{ section.settings.image_position }}">
+      <div class="sgym-split__copy">
+        {%- if section.settings.heading != blank -%}
+          <h2>{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="rte">{{ section.settings.text }}</div>
+        {%- endif -%}
+        {%- if section.settings.link_label != blank -%}
+          <p style="margin-top: 16px;"><a href="{{ section.settings.link }}">{{ section.settings.link_label }}</a></p>
+        {%- endif -%}
+      </div>
+      <sgym-inline-video class="sgym-split__media sgym-inline-video" data-autoplay="{% if section.settings.autoplay %}true{% else %}false{% endif %}">
+        {% render 'sgym-video',
+          video: section.settings.video,
+          video_url: section.settings.video_url,
+          image: section.settings.image,
+          fallback: section.settings.fallback_asset,
+          alt: section.settings.heading,
+          autoplay: section.settings.autoplay,
+          loop: true,
+          muted: true,
+          controls: false,
+          width: 1800,
+          height: 1017,
+          sizes: '(min-width: 990px) 640px, 100vw'
+        %}
+        {%- if section.settings.video != blank -%}
+          <button type="button" class="sgym-inline-video__btn" data-sgym-pause aria-label="{{ section.settings.pause_label }}" aria-pressed="true">
+            {% render 'sgym-icon', name: 'play-circle-64', size: 28 %}
+          </button>
+        {%- endif -%}
+      </sgym-inline-video>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "sGym media with text",
+  "tag": "section",
+  "class": "sgym-media-text-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "One system. Endless variety." },
+    { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Your entire workout repertoire in a single machine. More exercises. More variety. More progress.</p>" },
+    { "type": "text", "id": "link_label", "label": "Link label" },
+    { "type": "url", "id": "link", "label": "Link" },
+    { "type": "select", "id": "scheme", "label": "Color scheme", "default": "dark", "options": [
+      { "value": "dark", "label": "Dark" },
+      { "value": "light", "label": "Light" }
+    ] },
+    { "type": "select", "id": "image_position", "label": "Image position", "default": "right", "options": [
+      { "value": "right", "label": "Right" },
+      { "value": "left", "label": "Left" }
+    ] },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "fallback_asset", "label": "Bundled image filename", "default": "sgym-story-combine-rowing-machine.jpg" },
+    { "type": "video", "id": "video", "label": "Video" },
+    { "type": "video_url", "id": "video_url", "label": "Video URL", "accept": ["youtube", "vimeo"] },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay muted", "default": true, "info": "Skipped when the visitor prefers reduced motion." },
+    { "type": "text", "id": "pause_label", "label": "Pause label", "default": "Pause video" },
+    { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
+    { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Top padding", "default": 20 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Bottom padding", "default": 20 }
+  ],
+  "presets": [{ "name": "sGym media with text", "category": "sGym" }]
+}
+{% endschema %}

@@ -1,0 +1,41 @@
+{% comment %}
+  Sale price, compare-at price, and savings for the sGym buy box.
+
+  Accepts:
+  - product: {Object}
+  - block: {Object}
+  - section_id: {String}
+{% endcomment %}
+{%- liquid
+  assign target = product.selected_or_first_available_variant
+  assign price = target.price
+  assign compare_at = target.compare_at_price
+  assign on_sale = false
+  if compare_at > price
+    assign on_sale = true
+    assign savings = compare_at | minus: price
+  endif
+-%}
+<div id="price-{{ section_id }}" class="sgym-price" {{ block.shopify_attributes }}>
+  <div class="sgym-price__row">
+    <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
+    <span class="sgym-price__current">
+      {{ price | money }}
+      {%- if block.settings.show_asterisk -%}<sup aria-hidden="true">*</sup>{%- endif -%}
+    </span>
+    {%- if on_sale -%}
+      <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+      <s class="sgym-price__compare">{{ compare_at | money }}</s>
+      <span class="sgym-price__save">
+        {{ savings | money }}
+        {{ block.settings.savings_label }}
+      </span>
+    {%- endif -%}
+  </div>
+  {%- if block.settings.tax_note != blank -%}
+    <p class="sgym-price__tax">{{ block.settings.tax_note }}</p>
+  {%- endif -%}
+  {%- if target.unit_price_measurement -%}
+    {%- render 'unit-price', price: target.unit_price, measurement: target.unit_price_measurement -%}
+  {%- endif -%}
+</div>
