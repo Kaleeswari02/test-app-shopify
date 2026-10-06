@@ -1,0 +1,717 @@
+{{ 'sgym.css' | asset_url | stylesheet_tag }}
+{{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+{% render 'sgym-fonts' %}
+
+{%- liquid
+  assign first_3d_model = product.media | where: 'media_type', 'model' | first
+  assign product_form_id = 'product-form-' | append: section.id
+-%}
+
+{%- if first_3d_model -%}
+  {{ 'component-product-model.css' | asset_url | stylesheet_tag }}
+  <link
+    id="ModelViewerStyle"
+    rel="stylesheet"
+    href="https://cdn.shopify.com/shopifycloud/model-viewer-ui/assets/v1.0/model-viewer-ui.css"
+    media="print"
+    onload="this.media='all'"
+  >
+{%- endif -%}
+
+<script src="{{ 'product-info.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'sgym-gallery.js' | asset_url }}" defer="defer"></script>
+
+<product-info
+  id="SgymProduct-{{ section.id }}"
+  class="sgym sgym-section sgym-product"
+  data-section="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-update-url="true"
+  data-url="{{ product.url }}"
+>
+  {%- if product != blank -%}
+    <product-component view-event-payload="{{ product | standard_event_data: 'view', context: 'page' | escape }}">
+  {%- endif -%}
+  <div class="sgym-product__layout">
+    <div class="sgym-product__media">
+      {% render 'sgym-gallery', product: product, section: section %}
+    </div>
+    <div class="sgym-product__info">
+      {%- if section.blocks.size == 0 and product != blank -%}
+        <h1 class="sgym-product__title">{{ product.title }}</h1>
+      {%- endif -%}
+
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign next_type = ''
+          assign prev_type = ''
+          unless forloop.last
+            assign next_type = section.blocks[forloop.index].type
+          endunless
+          unless forloop.first
+            assign prev_index = forloop.index0 | minus: 1
+            assign prev_type = section.blocks[prev_index].type
+          endunless
+        -%}
+
+        {%- case block.type -%}
+          {%- when 'title' -%}
+            <h1 class="sgym-product__title" {{ block.shopify_attributes }}>{{ product.title | escape }}</h1>
+
+          {%- when 'rating' -%}
+            {%- if product.metafields.reviews.rating.value != blank -%}
+              <div class="sgym-rating" {{ block.shopify_attributes }}>
+                {% render 'sgym-stars',
+                  rating: product.metafields.reviews.rating.value.rating,
+                  scale: product.metafields.reviews.rating.value.scale_max,
+                  size: 14
+                %}
+                <span>{{ product.metafields.reviews.rating.value.rating }}</span>
+                <span class="sgym-rating__count">
+                  {{ product.metafields.reviews.rating_count }}
+                  {{ block.settings.count_label }}
+                  <span class="visually-hidden">{{ 'accessibility.total_reviews' | t }}</span>
+                </span>
+              </div>
+            {%- endif -%}
+
+          {%- when 'description' -%}
+            {%- liquid
+              assign desc_parts = block.settings.metafield | split: '.'
+              assign short_mf = product.metafields[desc_parts.first][desc_parts.last]
+            -%}
+            <div class="sgym-product__description rte" {{ block.shopify_attributes }}>
+              {%- if short_mf != blank -%}
+                {%- if short_mf.type == 'rich_text_field' -%}
+                  {{ short_mf | metafield_tag }}
+                {%- else -%}
+                  {{ short_mf.value | default: short_mf }}
+                {%- endif -%}
+              {%- elsif product.description != blank -%}
+                {{ product.description | strip_html | truncate: block.settings.truncate }}
+              {%- endif -%}
+            </div>
+
+          {%- when 'info_row' -%}
+            {%- if prev_type != 'info_row' -%}
+              <div class="sgym-info">
+            {%- endif -%}
+            <div class="sgym-info__item" {{ block.shopify_attributes }}>
+              {%- if block.settings.behavior == 'link' -%}
+                <a class="sgym-info__link" href="{{ block.settings.link | default: block.settings.anchor | default: '#' }}">
+                  <span>{{ block.settings.title }}</span>
+                  {% render 'sgym-icon', name: 'chevron-right', size: 18 %}
+                </a>
+              {%- else -%}
+                <details {% if block.settings.open %}open{% endif %}>
+                  <summary class="sgym-info__summary">
+                    <span>{{ block.settings.title }}</span>
+                    {% render 'sgym-icon', name: 'chevron-down', size: 18 %}
+                  </summary>
+                  <div class="sgym-info__body rte">{{ block.settings.content }}</div>
+                </details>
+              {%- endif -%}
+            </div>
+            {%- if next_type != 'info_row' -%}
+              </div>
+            {%- endif -%}
+
+          {%- when 'price' -%}
+            {% render 'sgym-price', product: product, block: block, section_id: section.id %}
+
+          {%- when 'feature' -%}
+            {%- if prev_type != 'feature' -%}
+              <div class="sgym-features" role="list">
+            {%- endif -%}
+            <div class="sgym-features__item" role="listitem" {{ block.shopify_attributes }}>
+              {%- if block.settings.custom_icon != blank -%}
+                {{
+                  block.settings.custom_icon
+                  | image_url: width: 48
+                  | image_tag: widths: '24, 48', sizes: '24px', alt: '', loading: 'lazy'
+                }}
+              {%- elsif block.settings.icon != 'none' -%}
+                {% render 'sgym-icon', name: block.settings.icon, size: 24 %}
+              {%- endif -%}
+              {%- if block.settings.value != blank -%}
+                <p class="sgym-features__value">{{ block.settings.value }}</p>
+              {%- endif -%}
+              {%- if block.settings.label != blank -%}
+                <p class="sgym-features__label">{{ block.settings.label }}</p>
+              {%- endif -%}
+            </div>
+            {%- if next_type != 'feature' -%}
+              </div>
+            {%- endif -%}
+
+          {%- when 'variant_picker' -%}
+            {% render 'sgym-variant-picker',
+              product: product,
+              block: block,
+              product_form_id: product_form_id,
+              section_id: section.id
+            %}
+
+          {%- when 'buy_buttons' -%}
+            {% render 'sgym-buy-buttons',
+              product: product,
+              block: block,
+              product_form_id: product_form_id,
+              section_id: section.id
+            %}
+            {%- if block.settings.label != blank -%}
+              <script>
+                if (window.variantStrings) window.variantStrings.addToCart = {{ block.settings.label | json }};
+              </script>
+            {%- endif -%}
+
+          {%- when 'trust_item' -%}
+            {%- if prev_type != 'trust_item' -%}
+              <div class="sgym-trustrow">
+            {%- endif -%}
+            <div class="sgym-trustrow__item" {{ block.shopify_attributes }}>
+              {%- if block.settings.custom_icon != blank -%}
+                {{
+                  block.settings.custom_icon
+                  | image_url: width: 40
+                  | image_tag: widths: '20, 40', sizes: '20px', alt: '', loading: 'lazy'
+                }}
+              {%- elsif block.settings.icon != 'none' -%}
+                {% render 'sgym-icon', name: block.settings.icon, size: 20 %}
+              {%- endif -%}
+              <p>{{ block.settings.title }}</p>
+            </div>
+            {%- if next_type != 'trust_item' -%}
+              </div>
+            {%- endif -%}
+
+          {%- when 'trustpilot' -%}
+            <div class="sgym-trustpilot" {{ block.shopify_attributes }}>
+              {% render 'sgym-icon', name: 'trustpilot-logo', size: 92, class: 'sgym-trustpilot__logo' %}
+              <div class="sgym-trustpilot__stars" aria-hidden="true">
+                {%- for i in (1..5) -%}
+                  {% render 'sgym-icon', name: 'trustpilot-star', size: 18 %}
+                {%- endfor -%}
+              </div>
+              {%- if block.settings.label != blank -%}
+                <p class="sgym-trustpilot__label">{{ block.settings.label }}</p>
+              {%- endif -%}
+              {%- if block.settings.count != blank -%}
+                <p class="sgym-trustpilot__count">{{ block.settings.count }}</p>
+              {%- endif -%}
+            </div>
+
+          {%- when 'question_box' -%}
+            <div class="sgym-ask" {{ block.shopify_attributes }}>
+              {%- if block.settings.heading != blank -%}
+                <p class="sgym-ask__title">{{ block.settings.heading }}</p>
+              {%- endif -%}
+              {%- if next_type == 'question_chip' -%}
+                <div class="sgym-ask__chips">
+              {%- else -%}
+                <form class="sgym-ask__form" action="{{ block.settings.form_anchor | default: '#sgym-faq' }}">
+                  <label class="visually-hidden" for="SgymAsk-{{ section.id }}">{{ block.settings.placeholder }}</label>
+                  <input id="SgymAsk-{{ section.id }}" type="search" name="q" placeholder="{{ block.settings.placeholder | escape }}">
+                  <button type="button" class="sgym-ask__mic" disabled aria-label="{{ block.settings.mic_label }}">
+                    {% render 'sgym-icon', name: 'mic', size: 18 %}
+                  </button>
+                  <button type="submit" class="sgym-ask__send" aria-label="{{ block.settings.send_label }}">
+                    {% render 'sgym-icon', name: 'send', size: 18 %}
+                  </button>
+                </form>
+                </div>
+              {%- endif -%}
+
+          {%- when 'question_chip' -%}
+            {%- liquid
+              assign ask_box = section.blocks | where: 'type', 'question_box' | first
+            -%}
+            {%- if prev_type != 'question_chip' and prev_type != 'question_box' -%}
+              <div class="sgym-ask"><div class="sgym-ask__chips">
+            {%- endif -%}
+            <a class="sgym-chip" href="{{ block.settings.link | default: block.settings.anchor | default: '#sgym-faq' }}" {{ block.shopify_attributes }}>
+              {% render 'sgym-icon', name: 'question-bubble', size: 18 %}
+              <span>{{ block.settings.label }}</span>
+            </a>
+            {%- if next_type != 'question_chip' -%}
+                </div>
+                <form class="sgym-ask__form" action="{{ ask_box.settings.form_anchor | default: '#sgym-faq' }}">
+                  <label class="visually-hidden" for="SgymAsk-{{ section.id }}">{{ ask_box.settings.placeholder | default: block.settings.label }}</label>
+                  <input id="SgymAsk-{{ section.id }}" type="search" name="q" placeholder="{{ ask_box.settings.placeholder | escape }}">
+                  <button type="button" class="sgym-ask__mic" disabled aria-label="{{ ask_box.settings.mic_label }}">
+                    {% render 'sgym-icon', name: 'mic', size: 18 %}
+                  </button>
+                  <button type="submit" class="sgym-ask__send" aria-label="{{ ask_box.settings.send_label }}">
+                    {% render 'sgym-icon', name: 'send', size: 18 %}
+                  </button>
+                </form>
+              </div>
+            {%- endif -%}
+
+          {%- when 'footnote' -%}
+            {%- liquid
+              assign note = product.selected_or_first_available_variant.metafields.custom.best_price
+              if note == blank
+                assign note = product.metafields.custom.best_price
+              endif
+              if note.type == 'money'
+                assign note_text = note.value | money
+              elsif note != blank
+                assign note_text = note.value | default: note
+              else
+                assign note_text = block.settings.text
+              endif
+            -%}
+            {%- if note_text != blank -%}
+              <p class="sgym-footnote" data-sgym-footnote {{ block.shopify_attributes }}>{{ note_text }}</p>
+            {%- endif -%}
+
+          {%- when '@app' -%}
+            {% render block %}
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+  {%- if product != blank -%}
+    <script type="application/ld+json">
+      {{ product | structured_data }}
+    </script>
+    </product-component>
+  {%- endif -%}
+
+  {%- if first_3d_model -%}
+    <script type="application/json" id="ProductJSON-{{ product.id }}">
+      {{ product.media | where: 'media_type', 'model' | json }}
+    </script>
+    <script src="{{ 'product-model.js' | asset_url }}" defer="defer"></script>
+  {%- endif -%}
+</product-info>
+
+{% schema %}
+{
+  "name": "sGym product",
+  "tag": "section",
+  "class": "sgym-main-product-section",
+  "enabled_on": {
+    "templates": ["product"]
+  },
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "view_360_label",
+      "label": "360 button label",
+      "default": "360 VIEW",
+      "info": "Shown when a media alt contains 360 or spin, or when a 3D model exists."
+    },
+    {
+      "type": "text",
+      "id": "view_ar_label",
+      "label": "AR button label",
+      "default": "IN DEINEM RAUM ANSEHEN",
+      "info": "Shown only when the product has a 3D model."
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_video_looping",
+      "label": "Loop product videos",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "archivo_n7"
+    },
+    {
+      "type": "font_picker",
+      "id": "body_font",
+      "label": "Body font",
+      "default": "inter_n4"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "rating",
+      "name": "Rating",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "count_label",
+          "label": "Review count label",
+          "default": "Bewertungen",
+          "info": "Hidden when product.metafields.reviews.rating is empty."
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "metafield",
+          "label": "Short description metafield",
+          "default": "custom.short_description",
+          "info": "namespace.key. Falls back to the product description."
+        },
+        {
+          "type": "range",
+          "id": "truncate",
+          "min": 80,
+          "max": 400,
+          "step": 10,
+          "label": "Description length",
+          "default": 220
+        }
+      ]
+    },
+    {
+      "type": "info_row",
+      "name": "Info row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Highlights"
+        },
+        {
+          "type": "select",
+          "id": "behavior",
+          "label": "Behavior",
+          "default": "expand",
+          "options": [
+            { "value": "expand", "label": "Expand" },
+            { "value": "link", "label": "Link" }
+          ]
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content",
+          "default": "<p>Add the details shoppers should see.</p>"
+        },
+        {
+          "type": "checkbox",
+          "id": "open",
+          "label": "Open by default",
+          "default": false
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "anchor",
+          "label": "Anchor",
+          "info": "Used when Link is empty. Example: #sgym-specs",
+          "default": "#sgym-specs"
+        }
+      ]
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "savings_label",
+          "label": "Savings label",
+          "default": "gespart"
+        },
+        {
+          "type": "text",
+          "id": "tax_note",
+          "label": "Tax note",
+          "default": "Inkl. MwSt. · Lieferung im Preis enthalten"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_asterisk",
+          "label": "Show price asterisk",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "feat-exercises",
+          "options": [
+            { "value": "feat-exercises", "label": "Exercises" },
+            { "value": "feat-resistance", "label": "Resistance" },
+            { "value": "feat-footprint", "label": "Footprint" },
+            { "value": "feat-display", "label": "Display" },
+            { "value": "feat-fullbody", "label": "Full body" },
+            { "value": "none", "label": "None" }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "400+"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Übungsvarianten"
+        }
+      ]
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant picker",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Produktoptionen"
+        },
+        {
+          "type": "text",
+          "id": "included_label",
+          "label": "Included label",
+          "default": "Im Preis enthalten",
+          "info": "Shown when the option price matches the first variant."
+        }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Button label",
+          "default": "Zum Warenkorb hinzufügen"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "label": "Show dynamic checkout buttons",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_stock",
+          "label": "Show stock line",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "in_stock_text",
+          "label": "In stock text",
+          "default": "Sofort verfügbar"
+        },
+        {
+          "type": "text",
+          "id": "out_of_stock_text",
+          "label": "Out of stock text",
+          "default": "Ausverkauft"
+        },
+        {
+          "type": "text",
+          "id": "delivery_text",
+          "label": "Delivery text",
+          "default": "in 1-4 Werktagen geliefert",
+          "info": "Overridden by variant or product metafield custom.delivery_estimate when set."
+        }
+      ]
+    },
+    {
+      "type": "trust_item",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "default": "trust-box",
+          "options": [
+            { "value": "trust-box", "label": "Shipping" },
+            { "value": "trust-shield", "label": "Warranty" },
+            { "value": "trust-users", "label": "Customers" },
+            { "value": "none", "label": "None" }
+          ]
+        },
+        {
+          "type": "image_picker",
+          "id": "custom_icon",
+          "label": "Custom icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Label",
+          "default": "Kostenloser Versand"
+        }
+      ]
+    },
+    {
+      "type": "trustpilot",
+      "name": "Trustpilot",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Score label",
+          "default": "Hervorragend"
+        },
+        {
+          "type": "text",
+          "id": "count",
+          "label": "Review count",
+          "default": "Über 8.000 Bewertungen",
+          "info": "Static text. This block does not call the Trustpilot API."
+        }
+      ]
+    },
+    {
+      "type": "question_box",
+      "name": "Question box",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Hast du eine Frage zum Produkt?"
+        },
+        {
+          "type": "text",
+          "id": "placeholder",
+          "label": "Input placeholder",
+          "default": "Stell eine Frage..."
+        },
+        {
+          "type": "text",
+          "id": "form_anchor",
+          "label": "Form destination",
+          "default": "#sgym-faq",
+          "info": "The input is not a live chat. It links to this anchor or URL path."
+        },
+        {
+          "type": "text",
+          "id": "mic_label",
+          "label": "Microphone label",
+          "default": "Voice input is not available"
+        },
+        {
+          "type": "text",
+          "id": "send_label",
+          "label": "Send label",
+          "default": "Send question"
+        }
+      ]
+    },
+    {
+      "type": "question_chip",
+      "name": "Question chip",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Welche Trainingsmodi bietet das Gerät?"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "anchor",
+          "label": "Anchor",
+          "default": "#sgym-faq",
+          "info": "Used when Link is empty."
+        }
+      ]
+    },
+    {
+      "type": "footnote",
+      "name": "Footnote",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "* 30-Tage-Bestpreis: 2.549,00 €",
+          "info": "Overridden by metafield custom.best_price on the variant or product."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "sGym product",
+      "category": "sGym",
+      "blocks": [
+        { "type": "title" },
+        { "type": "rating" },
+        { "type": "description" },
+        { "type": "price" },
+        { "type": "variant_picker" },
+        { "type": "buy_buttons" }
+      ]
+    }
+  ]
+}
+{% endschema %}

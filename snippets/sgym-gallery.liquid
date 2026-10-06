@@ -1,0 +1,177 @@
+{% comment %}
+  Vertical thumbnail gallery for product.media.
+  360 and AR controls render only when a spin asset or 3D model exists.
+
+  Accepts:
+  - product: {Object}
+  - section: {Object}
+{% endcomment %}
+{%- liquid
+  assign active_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+  assign spin_media = nil
+  assign model_media = nil
+  for media in product.media
+    assign alt_down = media.alt | downcase
+    if spin_media == nil
+      if alt_down contains '360' or alt_down contains 'spin'
+        assign spin_media = media
+      endif
+    endif
+    if model_media == nil and media.media_type == 'model'
+      assign model_media = media
+    endif
+  endfor
+  assign spin_target = spin_media | default: model_media
+-%}
+<sgym-gallery class="sgym-gallery" data-section="{{ section.id }}">
+  {%- if product.media.size > 0 -%}
+    <div class="sgym-gallery__frame">
+      <ul class="sgym-gallery__thumbs" role="list">
+        {%- for media in product.media -%}
+          <li>
+            <button
+              type="button"
+              class="sgym-gallery__thumb"
+              data-sgym-thumb
+              aria-label="{{ 'products.product.media.load_image' | t: index: forloop.index }}"
+              {% if active_media.id == media.id or active_media == nil and forloop.first %}
+                aria-current="true"
+              {% endif %}
+            >
+              {{
+                media.preview_image
+                | image_url: width: 160
+                | image_tag: widths: '96, 160', sizes: '48px', alt: '', loading: 'lazy'
+              }}
+              {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                <span class="sgym-gallery__play">{% render 'sgym-icon', name: 'play', size: 10 %}</span>
+              {%- endif -%}
+            </button>
+          </li>
+        {%- endfor -%}
+      </ul>
+      <div class="sgym-gallery__stage">
+        {%- for media in product.media -%}
+          {%- liquid
+            assign is_active = false
+            if active_media.id == media.id or active_media == nil and forloop.first
+              assign is_active = true
+            endif
+          -%}
+          <div
+            class="sgym-gallery__slide{% if is_active %} is-active{% endif %}"
+            data-media-id="{{ media.id }}"
+            data-media-type="{{ media.media_type }}"
+            {% unless is_active %}
+              hidden
+            {% endunless %}
+          >
+            {%- case media.media_type -%}
+              {%- when 'image' -%}
+                {%- liquid
+                  if is_active
+                    assign gallery_loading = 'eager'
+                  else
+                    assign gallery_loading = 'lazy'
+                  endif
+                -%}
+                {{
+                  media.preview_image
+                  | image_url: width: 1600
+                  | image_tag:
+                    widths: '400, 700, 1000, 1400, 1600',
+                    sizes: '(min-width: 990px) 664px, 100vw',
+                    alt: media.alt,
+                    loading: gallery_loading
+                }}
+              {%- when 'model' -%}
+                <product-model class="deferred-media">
+                  <button
+                    id="Deferred-Poster-{{ section.id }}-{{ media.id }}"
+                    class="sgym-gallery__poster"
+                    type="button"
+                    aria-label="{{ 'products.product.media.play_model' | t }}"
+                  >
+                    {{
+                      media.preview_image
+                      | image_url: width: 1400
+                      | image_tag: widths: '400, 800, 1400', sizes: '(min-width: 990px) 664px, 100vw', alt: media.alt, loading: 'lazy'
+                    }}
+                  </button>
+                  <template>
+                    {{ media | media_tag: image_size: '2048x', toggleable: true }}
+                  </template>
+                </product-model>
+              {%- else -%}
+                <deferred-media>
+                  <button
+                    id="Deferred-Poster-{{ section.id }}-{{ media.id }}"
+                    class="sgym-gallery__poster"
+                    type="button"
+                    aria-label="{{ 'products.product.media.play_video' | t }}"
+                  >
+                    {{
+                      media.preview_image
+                      | image_url: width: 1400
+                      | image_tag: widths: '400, 800, 1400', sizes: '(min-width: 990px) 664px, 100vw', alt: media.alt, loading: 'lazy'
+                    }}
+                    <span class="sgym-gallery__play">{% render 'sgym-icon', name: 'play-button', size: 44 %}</span>
+                  </button>
+                  <template>
+                    {%- if media.media_type == 'external_video' -%}
+                      {%- assign video_class = 'js-' | append: media.host -%}
+                      {%- if media.host == 'youtube' -%}
+                        {{ media | external_video_url: autoplay: true, loop: section.settings.enable_video_looping, playlist: media.external_id | external_video_tag: class: video_class, loading: 'lazy' }}
+                      {%- else -%}
+                        {{ media | external_video_url: autoplay: true, loop: section.settings.enable_video_looping | external_video_tag: class: video_class, loading: 'lazy' }}
+                      {%- endif -%}
+                    {%- else -%}
+                      {{ media | media_tag: image_size: '2048x', autoplay: true, loop: section.settings.enable_video_looping, controls: true, preload: 'none' }}
+                    {%- endif -%}
+                  </template>
+                </deferred-media>
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+        {%- if product.media.size > 1 -%}
+          <button type="button" class="sgym-gallery__nav sgym-gallery__nav--prev" data-sgym-gallery-prev aria-label="{{ 'general.slider.previous_slide' | t }}">
+            {% render 'sgym-icon', name: 'slider-arrow', size: 18 %}
+          </button>
+          <button type="button" class="sgym-gallery__nav sgym-gallery__nav--next" data-sgym-gallery-next aria-label="{{ 'general.slider.next_slide' | t }}">
+            {% render 'sgym-icon', name: 'slider-arrow', size: 18 %}
+          </button>
+        {%- endif -%}
+      </div>
+    </div>
+    <p class="visually-hidden" aria-live="polite" data-sgym-gallery-status></p>
+    {%- if spin_target or model_media -%}
+      <div class="sgym-gallery__tools">
+        {%- if spin_target -%}
+          <button type="button" class="sgym-outline" data-sgym-jump data-media-id="{{ spin_target.id }}">
+            {% render 'sgym-icon', name: 'icon-360', size: 20 %}
+            {{ section.settings.view_360_label }}
+          </button>
+        {%- endif -%}
+        {%- if model_media -%}
+          <button type="button" class="sgym-outline" data-sgym-ar>
+            {% render 'sgym-icon', name: 'icon-view-in-ar', size: 20 %}
+            {{ section.settings.view_ar_label }}
+          </button>
+          <button
+            class="visually-hidden"
+            type="button"
+            aria-label="{{ 'products.product.xr_button_label' | t }}"
+            data-shopify-xr
+            data-shopify-model3d-id="{{ model_media.id }}"
+            data-shopify-title="{{ product.title | escape }}"
+            data-shopify-xr-hidden
+          >
+            {{ 'products.product.xr_button' | t }}
+          </button>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- else -%}
+    {{ 'product-apparel-1' | placeholder_svg_tag: 'sgym-gallery__stage' }}
+  {%- endif -%}
+</sgym-gallery>

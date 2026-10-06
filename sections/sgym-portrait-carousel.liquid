@@ -1,0 +1,82 @@
+{{ 'sgym.css' | asset_url | stylesheet_tag }}
+{% render 'sgym-fonts' %}
+<script src="{{ 'sgym-carousel.js' | asset_url }}" defer="defer"></script>
+
+<div class="sgym sgym-section sgym-coach">
+  <div class="sgym-wrap">
+    <div class="sgym-intro">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="sgym-pill-tag" style="background: #fff; color: #1e1e1e; border: 1px solid rgba(0,0,0,.08);">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      {%- if section.settings.heading != blank -%}
+        <h2 class="sgym-title">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <div class="sgym-sub rte">{{ section.settings.subheading }}</div>
+      {%- endif -%}
+    </div>
+    <sgym-carousel class="sgym-carousel" data-loop="true">
+      <div class="sgym-viewport" data-sgym-viewport tabindex="0">
+        <ul class="sgym-track" data-sgym-track>
+          {%- for block in section.blocks -%}
+            <li {{ block.shopify_attributes }}>
+              <article class="sgym-coach-card">
+                {% render 'sgym-picture',
+                  image: block.settings.image,
+                  fallback: block.settings.fallback_asset,
+                  alt: block.settings.name,
+                  width: 1200,
+                  height: 1800,
+                  sizes: '280px',
+                  class: 'sgym-coach-card__img'
+                %}
+                <div class="sgym-coach-card__shade">
+                  {%- if section.settings.card_label != blank -%}
+                    <p class="sgym-coach-card__label">{{ section.settings.card_label }}</p>
+                  {%- endif -%}
+                  <h3>{{ block.settings.name }}</h3>
+                  {%- if block.settings.text != blank -%}
+                    <p>{{ block.settings.text }}</p>
+                  {%- endif -%}
+                </div>
+              </article>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+      <div class="sgym-dots" data-sgym-dots></div>
+    </sgym-carousel>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "sGym portrait carousel",
+  "tag": "section",
+  "class": "sgym-portrait-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Trainer" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Meet your coach" },
+    { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p>Our trainers support you through every workout with expertise, motivation and power.</p>" },
+    { "type": "text", "id": "card_label", "label": "Card label", "default": "TRAINER" },
+    { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
+    { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Top padding", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Bottom padding", "default": 48 }
+  ],
+  "blocks": [
+    {
+      "type": "person",
+      "name": "Portrait",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "fallback_asset", "label": "Bundled image filename" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Carlo" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Boost your workout with dynamic rides for all levels." }
+      ]
+    }
+  ],
+  "presets": [{ "name": "sGym portrait carousel", "category": "sGym" }]
+}
+{% endschema %}

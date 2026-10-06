@@ -1,0 +1,90 @@
+{{ 'sgym.css' | asset_url | stylesheet_tag }}
+{% render 'sgym-fonts' %}
+
+{%- liquid
+  assign rating = product.metafields.reviews.rating.value
+  assign rating_count = product.metafields.reviews.rating_count
+  assign distribution = product.metafields.reviews.rating_distribution.value
+-%}
+
+<div class="sgym sgym-section sgym-reviews" id="{{ section.settings.anchor | default: 'sgym-reviews' }}">
+  <div class="sgym-wrap">
+    {% render 'sgym-heading', title: section.settings.heading %}
+    {%- if rating != blank -%}
+      <div class="sgym-reviews__score">
+        <div class="sgym-reviews__value">{{ rating.rating }}</div>
+        {% render 'sgym-stars', rating: rating.rating, scale: rating.scale_max, size: 18 %}
+        <p class="sgym-reviews__meta">
+          {{ rating_count }}
+          {{ section.settings.count_label }}
+        </p>
+        {%- if distribution != blank -%}
+          <div class="sgym-reviews__bars">
+            {%- for score in (1..5) reversed -%}
+              {%- liquid
+                assign score_key = score | append: ''
+                assign score_count = distribution[score_key] | default: 0
+                assign score_pct = 0
+                if rating_count != blank and rating_count > 0
+                  assign score_pct = score_count | times: 100.0 | divided_by: rating_count
+                endif
+              -%}
+              <div class="sgym-reviews__bar">
+                <span>{{ score }}</span>
+                <span class="sgym-reviews__track"><span style="width: {{ score_pct }}%;"></span></span>
+                <span>{{ score_pct | round }}%</span>
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+    <div class="sgym-reviews__app">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when '@app' -%}
+            <div {{ block.shopify_attributes }}>{% render block %}</div>
+          {%- when 'note' -%}
+            {%- if block.settings.text != blank -%}
+              <div class="sgym-editor-note rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+            {%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+    {%- if request.design_mode and section.blocks.size == 0 -%}
+      <p class="sgym-editor-note">Add a reviews app block to show the review list. Summary stars use the reviews.rating metafield and stay hidden when it is empty.</p>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "sGym reviews",
+  "tag": "section",
+  "class": "sgym-reviews-section",
+  "enabled_on": { "templates": ["product"] },
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Kundenrezensionen" },
+    { "type": "text", "id": "count_label", "label": "Count label", "default": "Bewertungen" },
+    { "type": "text", "id": "anchor", "label": "Anchor id", "default": "sgym-reviews" },
+    { "type": "paragraph", "content": "The average and count come from product.metafields.reviews.rating and reviews.rating_count. Distribution bars render only when reviews.rating_distribution is set. Add a reviews app block for the review list. This section does not invent reviews." },
+    { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
+    { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Top padding", "default": 48 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Bottom padding", "default": 24 }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "note",
+      "name": "Note",
+      "limit": 1,
+      "settings": [
+        { "type": "richtext", "id": "text", "label": "Text" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "sGym reviews", "category": "sGym" }]
+}
+{% endschema %}

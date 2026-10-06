@@ -1,0 +1,630 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "sgym-hero",
+      "settings": {
+        "fallback_asset": "sgym-hero-banner.jpg",
+        "heading": "sGym Pro",
+        "subheading": "The next generation of strength training",
+        "button_label": "WATCH VIDEO",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "main": {
+      "type": "sgym-main-product",
+      "blocks": {
+        "title": { "type": "title", "settings": {} },
+        "rating": {
+          "type": "rating",
+          "settings": { "count_label": "Bewertungen" }
+        },
+        "description": {
+          "type": "description",
+          "settings": { "metafield": "custom.short_description", "truncate": 220 }
+        },
+        "info_highlights": {
+          "type": "info_row",
+          "settings": {
+            "title": "Highlights",
+            "behavior": "expand",
+            "content": "<p>Krafttraining mit elektrischem Widerstand bis 120 kg und über 400 Übungen, geführt über das 21\" Display – dazu Klimmzug, Dip-Station und unter 1,5 m² Stellfläche.</p>",
+            "open": false
+          }
+        },
+        "info_specs": {
+          "type": "info_row",
+          "settings": {
+            "title": "Technische Daten",
+            "behavior": "link",
+            "anchor": "#sgym-specs"
+          }
+        },
+        "info_delivery": {
+          "type": "info_row",
+          "settings": {
+            "title": "Lieferung, Garantie & Service",
+            "behavior": "link",
+            "anchor": "#sgym-faq"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {
+            "savings_label": "gespart",
+            "tax_note": "Inkl. MwSt. · Lieferung im Preis enthalten",
+            "show_asterisk": true
+          }
+        },
+        "feat_1": {
+          "type": "feature",
+          "settings": { "icon": "feat-exercises", "value": "400+", "label": "Übungsvarianten" }
+        },
+        "feat_2": {
+          "type": "feature",
+          "settings": { "icon": "feat-resistance", "value": "120 kg", "label": "Elektrischer Widerstand" }
+        },
+        "feat_3": {
+          "type": "feature",
+          "settings": { "icon": "feat-footprint", "value": "Nur 2 m²", "label": "Stellfläche" }
+        },
+        "feat_4": {
+          "type": "feature",
+          "settings": { "icon": "feat-display", "value": "21\" Display", "label": "mit Sportstech Live App" }
+        },
+        "feat_5": {
+          "type": "feature",
+          "settings": { "icon": "feat-fullbody", "value": "Ganzkörpertraining", "label": "Kraft, Cardio & Mobility" }
+        },
+        "variants": {
+          "type": "variant_picker",
+          "settings": { "heading": "Produktoptionen", "included_label": "Im Preis enthalten" }
+        },
+        "buy": {
+          "type": "buy_buttons",
+          "settings": {
+            "label": "Zum Warenkorb hinzufügen",
+            "show_dynamic_checkout": false,
+            "show_stock": true,
+            "in_stock_text": "Sofort verfügbar",
+            "out_of_stock_text": "Ausverkauft",
+            "delivery_text": "in 1-4 Werktagen geliefert"
+          }
+        },
+        "trust_1": {
+          "type": "trust_item",
+          "settings": { "icon": "trust-box", "title": "Kostenloser Versand" }
+        },
+        "trust_2": {
+          "type": "trust_item",
+          "settings": { "icon": "trust-shield", "title": "2 Jahre Garantie" }
+        },
+        "trust_3": {
+          "type": "trust_item",
+          "settings": { "icon": "trust-users", "title": "4 Millionen Kunden" }
+        },
+        "trustpilot": {
+          "type": "trustpilot",
+          "settings": { "label": "Hervorragend", "count": "Über 8.000 Bewertungen" }
+        },
+        "ask": {
+          "type": "question_box",
+          "settings": {
+            "heading": "Hast du eine Frage zum Produkt?",
+            "placeholder": "Stell eine Frage...",
+            "form_anchor": "#sgym-faq"
+          }
+        },
+        "chip_1": {
+          "type": "question_chip",
+          "settings": {
+            "label": "Welche Trainingsmodi bietet das Gerät?",
+            "anchor": "#sgym-faq"
+          }
+        },
+        "chip_2": {
+          "type": "question_chip",
+          "settings": {
+            "label": "Wie hoch ist der maximale Widerstand?",
+            "anchor": "#sgym-faq"
+          }
+        },
+        "footnote": {
+          "type": "footnote",
+          "settings": { "text": "* 30-Tage-Bestpreis: 2.549,00 €" }
+        }
+      },
+      "block_order": [
+        "title",
+        "rating",
+        "description",
+        "info_highlights",
+        "info_specs",
+        "info_delivery",
+        "price",
+        "feat_1",
+        "feat_2",
+        "feat_3",
+        "feat_4",
+        "feat_5",
+        "variants",
+        "buy",
+        "trust_1",
+        "trust_2",
+        "trust_3",
+        "trustpilot",
+        "ask",
+        "chip_1",
+        "chip_2",
+        "footnote"
+      ],
+      "settings": {
+        "view_360_label": "360 VIEW",
+        "view_ar_label": "IN DEINEM RAUM ANSEHEN",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "recommended": {
+      "type": "sgym-media-strip",
+      "blocks": {
+        "thumb_1": { "type": "media", "settings": {} },
+        "thumb_2": { "type": "media", "settings": {} },
+        "thumb_3": { "type": "media", "settings": {} },
+        "thumb_4": { "type": "media", "settings": {} },
+        "thumb_5": { "type": "media", "settings": {} }
+      },
+      "block_order": ["thumb_1", "thumb_2", "thumb_3", "thumb_4", "thumb_5"],
+      "settings": {
+        "heading": "Recommended by #SashaHuber",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "features": {
+      "type": "sgym-feature-showcase",
+      "blocks": {
+        "safety": {
+          "type": "card",
+          "settings": {
+            "fallback_asset": "sgym-key-feature-safety-spotter.jpg",
+            "title": "Safety Spotter",
+            "text": "<p>Use the integrated barbell safety spotter to adjust the resistance and automatically cut it off in case of overload – perfect for drop sets.</p>"
+          }
+        },
+        "pulley": {
+          "type": "card",
+          "settings": {
+            "fallback_asset": "sgym-key-feature-cable-pulley.jpg",
+            "title": "Versatile Cable Pulley",
+            "text": "<p>The 12-step cable pulley with side floor-plate mounting gives you a wide range of pull, push and rotational exercises.</p>"
+          }
+        },
+        "lowering": {
+          "type": "card",
+          "settings": {
+            "fallback_asset": "sgym-key-feature-auto-lowering.jpg",
+            "title": "Auto-Lowering Function",
+            "text": "<p>The base plate takes up less than 1.5 m², lowers automatically and can be moved easily thanks to transport wheels.</p>"
+          }
+        },
+        "resistance": {
+          "type": "card",
+          "settings": {
+            "fallback_asset": "sgym-product-cutout-sgym-pro.png",
+            "title": "120 Kg Widerstand",
+            "text": "<p>Die elektrischen Motoren liefern bis zu 120 kg präzisen Widerstand.</p>"
+          }
+        }
+      },
+      "block_order": ["safety", "pulley", "lowering", "resistance"],
+      "settings": {
+        "kicker": "sGym Pro Design",
+        "heading": "Engineered to the last detail",
+        "fallback_asset": "sgym-product-cutout-sgym-pro.png",
+        "carousel_heading": "Key Features",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "tabs": {
+      "type": "sgym-tabs-image",
+      "blocks": {
+        "workouts": {
+          "type": "tab",
+          "settings": {
+            "title": "Workouts",
+            "text": "<p>The sGym Pro gives you a complete full-body workout with a wide range of exercises – from bench press to dips.</p>",
+            "fallback_asset": "sgym-app-screen-workout-1.jpg"
+          }
+        },
+        "plans": {
+          "type": "tab",
+          "settings": {
+            "title": "Workout Plans",
+            "text": "<p>Follow guided plans that progress with you, from first sessions to structured strength blocks.</p>",
+            "fallback_asset": "sgym-app-screen-workout-2.jpg"
+          }
+        },
+        "modes": {
+          "type": "tab",
+          "settings": {
+            "title": "Training Modes",
+            "text": "<p>Switch between solo and partner setups, with resistance that matches the way you train.</p>",
+            "fallback_asset": "sgym-app-screen-workout-2.jpg"
+          }
+        }
+      },
+      "block_order": ["workouts", "plans", "modes"],
+      "settings": {
+        "heading": "Endless possibilities for your strength training",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "story_system": {
+      "type": "sgym-media-text",
+      "settings": {
+        "heading": "One system. Endless variety.",
+        "text": "<p>Your entire workout repertoire in a single machine. More exercises. More variety. More progress.</p>",
+        "scheme": "dark",
+        "image_position": "right",
+        "fallback_asset": "sgym-story-combine-rowing-machine.jpg",
+        "autoplay": true,
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "story_elegant": {
+      "type": "sgym-image-banner",
+      "settings": {
+        "fallback_asset": "sgym-story-elegant-compact-unique.jpg",
+        "fallback_width": 1800,
+        "fallback_height": 1500,
+        "heading": "Elegant. Compact. Unique.",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "story_combine": {
+      "type": "sgym-content-cards",
+      "blocks": {
+        "bench": {
+          "type": "card",
+          "settings": {
+            "fallback_asset": "sgym-story-combine-weight-bench.jpg",
+            "title": "Weight bench",
+            "badge": "COMING SOON",
+            "text": "<p>The incline and flat bench, loadable up to 360 kg, gives you stable support in every exercise and expands your training options.</p>"
+          }
+        },
+        "rower": {
+          "type": "card",
+          "settings": {
+            "fallback_asset": "sgym-story-combine-rowing-machine.jpg",
+            "title": "Rowing machine",
+            "badge": "COMING SOON",
+            "text": "<p>Combine cardio and strength for a holistic training experience.</p>"
+          }
+        }
+      },
+      "block_order": ["bench", "rower"],
+      "settings": {
+        "heading": "Combine & benefit!",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "story_app": {
+      "type": "sgym-slideshow",
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": { "fallback_asset": "sgym-app-screen-workout-1.jpg", "label": "Workouts" }
+        },
+        "slide_2": {
+          "type": "slide",
+          "settings": { "fallback_asset": "sgym-app-screen-workout-2.jpg", "label": "Trainingsdaten" }
+        },
+        "slide_3": {
+          "type": "slide",
+          "settings": { "fallback_asset": "sgym-app-screen-workout-1.jpg", "label": "Stats" }
+        }
+      },
+      "block_order": ["slide_1", "slide_2", "slide_3"],
+      "settings": {
+        "heading": "More than just your smart gym.",
+        "text": "<p>Mit dem sGym Pro erhältst du Zugang zu einem smarten, digitalen Ökosystem, das Training, Daten und Coaching nahtlos verbindet.</p>",
+        "counter_label": "OF",
+        "link_label": "https://www.sportstech.de/live-app",
+        "link": "https://www.sportstech.de/live-app",
+        "autoplay": false,
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "story_modes": {
+      "type": "sgym-mode-switcher",
+      "blocks": {
+        "partner": {
+          "type": "mode",
+          "settings": {
+            "label": "Partnermodus:",
+            "title": "PARTNER MODUS:",
+            "text": "Train as a duo, double your progress.",
+            "fallback_asset": "sgym-story-dynamic-modes-partner.jpg"
+          }
+        },
+        "light": {
+          "type": "mode",
+          "settings": {
+            "label": "Light mode",
+            "title": "LIGHT MODE:",
+            "text": "Train with guided resistance that stays smooth and consistent.",
+            "fallback_asset": "sgym-story-dynamic-modes-alt.jpg"
+          }
+        },
+        "weighted": {
+          "type": "mode",
+          "settings": {
+            "label": "Weighted mode",
+            "title": "WEIGHTED MODE:",
+            "text": "Add load and build strength with precise electric resistance.",
+            "fallback_asset": "sgym-story-dynamic-modes-alt.jpg"
+          }
+        }
+      },
+      "block_order": ["partner", "light", "weighted"],
+      "settings": {
+        "heading": "Dynamic training modes",
+        "subheading": "<p>Whether you train solo or with a partner – you'll always find the right setup for your goals.</p>",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "accessories": {
+      "type": "sgym-product-carousel",
+      "blocks": {
+        "acc_1": { "type": "card", "settings": { "title": "Safety spotter", "fallback_asset": "sgym-acc-safety-spotter.png" } },
+        "acc_2": { "type": "card", "settings": { "title": "Ankle strap", "fallback_asset": "sgym-acc-ankle-strap.png" } },
+        "acc_3": { "type": "card", "settings": { "title": "Triceps rope", "fallback_asset": "sgym-acc-triceps-rope.png" } },
+        "acc_4": { "type": "card", "settings": { "title": "Single handles", "fallback_asset": "sgym-acc-single-handles.png" } },
+        "acc_5": { "type": "card", "settings": { "title": "Floor protection mat", "fallback_asset": "sgym-acc-floor-mat.png" } },
+        "acc_6": { "type": "card", "settings": { "title": "Pull-Up", "fallback_asset": "sgym-acc-pull-up.png" } }
+      },
+      "block_order": ["acc_1", "acc_2", "acc_3", "acc_4", "acc_5", "acc_6"],
+      "settings": {
+        "eyebrow": "Equipment",
+        "heading": "The right accessories for every workout",
+        "subheading": "<p>Complete training setup for optimal results.</p>",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "lifestyle": {
+      "type": "sgym-image-banner",
+      "settings": {
+        "fallback_asset": "sgym-lifestyle-banner-living-room.jpg",
+        "fallback_width": 1800,
+        "fallback_height": 1360,
+        "show_play_button": true,
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "influencer": {
+      "type": "sgym-video-feature",
+      "settings": {
+        "show_stars": true,
+        "eyebrow": "No Excuses with #SaschaHuber!",
+        "heading": "Recommended by one of the biggest home fitness influencers in the German-speaking world.",
+        "fallback_asset": "sgym-influencer-sascha-huber-video-poster.jpg",
+        "autoplay": true,
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "guarantees": {
+      "type": "sgym-icon-columns",
+      "blocks": {
+        "trial": {
+          "type": "column",
+          "settings": {
+            "icon": "guarantee-calendar-clock",
+            "title": "30-day trial",
+            "text": "Money-back guarantee."
+          }
+        },
+        "shipping": {
+          "type": "column",
+          "settings": {
+            "icon": "guarantee-delivery-truck",
+            "title": "Free shipping & returns",
+            "text": "Fast, hassle-free and completely free."
+          }
+        },
+        "warranty": {
+          "type": "column",
+          "settings": {
+            "icon": "guarantee-receipt",
+            "title": "2-year warranty",
+            "text": "Guaranteed safe and worry-free training."
+          }
+        }
+      },
+      "block_order": ["trial", "shipping", "warranty"],
+      "settings": {
+        "heading": "The shop you can trust",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "coaches": {
+      "type": "sgym-portrait-carousel",
+      "blocks": {
+        "carlo": {
+          "type": "person",
+          "settings": {
+            "name": "Carlo",
+            "text": "Boost your workout with dynamic rides for all levels.",
+            "fallback_asset": "sgym-coach-carlo.jpg"
+          }
+        },
+        "lina": {
+          "type": "person",
+          "settings": {
+            "name": "Lina",
+            "text": "Full power with full-body cycling & relaxing walking workouts!",
+            "fallback_asset": "sgym-coach-lina.jpg"
+          }
+        },
+        "time": {
+          "type": "person",
+          "settings": {
+            "name": "Time",
+            "text": "Exciting cycling challenges to reach your next fitness level!",
+            "fallback_asset": "sgym-coach-time.jpg"
+          }
+        },
+        "lauren": {
+          "type": "person",
+          "settings": {
+            "name": "Lauren",
+            "text": "Cycling and running for more endurance & full-body workouts.",
+            "fallback_asset": "sgym-coach-lauren.jpg"
+          }
+        }
+      },
+      "block_order": ["carlo", "lina", "time", "lauren"],
+      "settings": {
+        "eyebrow": "Trainer",
+        "heading": "Meet your coach",
+        "subheading": "<p>Our trainers support you through every workout with expertise, motivation and power.</p>",
+        "card_label": "TRAINER",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "reviews": {
+      "type": "sgym-reviews",
+      "settings": {
+        "heading": "Kundenrezensionen",
+        "count_label": "Bewertungen",
+        "anchor": "sgym-reviews",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "specs": {
+      "type": "sgym-specs",
+      "blocks": {
+        "dimensions": {
+          "type": "group",
+          "settings": {
+            "title": "Abmessung allgemein",
+            "open": true,
+            "rows": "Rahmen | Stahl Q195, schwarz beschichtet\nLorem ipsum dolor sit | 155 × 61.5 × 153 cm\nAgna aliquyam erat | 68,4 kg\nTakimata sanctus | 120 kg\nAt vero eos | 14 Jahre\nLorem ipsum dolor sit | 1.60 ... 1.90 m\nAgna aliquyam erat | 2.70 m\nTakimata sanctus | 60 cm"
+          }
+        },
+        "console": {
+          "type": "group",
+          "settings": { "title": "Konsole", "open": false }
+        },
+        "general": {
+          "type": "group",
+          "settings": { "title": "Allgemeine Informationen", "open": false }
+        },
+        "screen": {
+          "type": "group",
+          "settings": { "title": "Bildschirm-Anzeige", "open": false }
+        }
+      },
+      "block_order": ["dimensions", "console", "general", "screen"],
+      "settings": {
+        "heading": "Technische Daten",
+        "anchor": "sgym-specs",
+        "prefer_metafield": true,
+        "metafield": "custom.specs",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    },
+    "faq": {
+      "type": "sgym-faq",
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "What is sBike?",
+            "answer": "<p>The sBike is our latest generation of speed bikes - innovative, limitless, thrilling. With the combination of a powerful bike and an interactive fitness app, you can push your fitness to the next level. Stream thrilling workouts via the integrated app and start your health style journey with your first ride. Next Level Fitness has a new name: sBike</p>",
+            "open": true
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "What special features does the sBike have?",
+            "answer": "<p>Replace this Figma placeholder with the sGym Pro answer.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "How does the sBike Lite differ from the sBike?",
+            "answer": "<p>Replace this Figma placeholder with the sGym Pro answer.</p>"
+          }
+        },
+        "q4": {
+          "type": "question",
+          "settings": {
+            "question": "What unique feature does the sBike offer for monitoring heart rate during exercise?",
+            "answer": "<p>Replace this Figma placeholder with the sGym Pro answer.</p>"
+          }
+        },
+        "q5": {
+          "type": "question",
+          "settings": {
+            "question": "Is the sBike suitable for a wide range of body sizes?",
+            "answer": "<p>Replace this Figma placeholder with the sGym Pro answer.</p>"
+          }
+        }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5"],
+      "settings": {
+        "heading": "FAQ's",
+        "anchor": "sgym-faq",
+        "heading_font": "archivo_n7",
+        "body_font": "inter_n4"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "main",
+    "recommended",
+    "features",
+    "tabs",
+    "story_system",
+    "story_elegant",
+    "story_combine",
+    "story_app",
+    "story_modes",
+    "accessories",
+    "lifestyle",
+    "influencer",
+    "guarantees",
+    "coaches",
+    "reviews",
+    "specs",
+    "faq"
+  ]
+}

@@ -1,0 +1,92 @@
+{{ 'sgym.css' | asset_url | stylesheet_tag }}
+{% render 'sgym-fonts' %}
+<script src="{{ 'sgym-ui.js' | asset_url }}" defer="defer"></script>
+
+<div class="sgym sgym-section sgym-hero">
+  <div class="sgym-hero__media">
+    {%- if section.settings.image != blank or section.settings.fallback_asset != blank -%}
+      {% render 'sgym-picture',
+        image: section.settings.image,
+        fallback: section.settings.fallback_asset,
+        alt: section.settings.image.alt | default: section.settings.heading,
+        class: 'sgym-hero__img',
+        width: 2400,
+        height: 1022,
+        loading: 'eager',
+        fetchpriority: 'high',
+        sizes: '100vw',
+        widths: '750, 1100, 1500, 2000, 2400'
+      %}
+    {%- else -%}
+      {{ 'lifestyle-1' | placeholder_svg_tag: 'sgym-hero__img' }}
+    {%- endif -%}
+  </div>
+  <div class="sgym-hero__shade" style="opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};"></div>
+  <div class="sgym-hero__content">
+    <div class="sgym-hero__copy">
+      {%- if section.settings.heading != blank -%}
+        <h1 class="sgym-hero__title">{{ section.settings.heading }}</h1>
+      {%- endif -%}
+      {%- if section.settings.subheading != blank -%}
+        <p class="sgym-hero__sub">{{ section.settings.subheading }}</p>
+      {%- endif -%}
+    </div>
+    <sgym-dialog class="sgym-hero__actions">
+      {%- if section.settings.button_label != blank -%}
+        <button type="button" class="sgym-watch" data-sgym-open>
+          {{ section.settings.button_label }}
+        </button>
+      {%- endif -%}
+      <button type="button" class="sgym-hero__play" data-sgym-open aria-label="{% if section.settings.button_label != blank %}{{ section.settings.button_label | escape }}{% else %}{{ 'products.product.media.play_video' | t }}{% endif %}">
+        {% render 'sgym-icon', name: 'play-circle-64', size: 64 %}
+      </button>
+      <dialog class="sgym-dialog">
+        <button type="button" class="sgym-dialog__close" data-sgym-close aria-label="{{ 'accessibility.close' | t }}">
+          &times;
+        </button>
+        <div class="sgym-dialog__frame">
+          {%- if section.settings.video != blank or section.settings.video_url != blank -%}
+            {% render 'sgym-video',
+              video: section.settings.video,
+              video_url: section.settings.video_url,
+              autoplay: true,
+              loop: section.settings.loop,
+              muted: false,
+              controls: true,
+              alt: section.settings.heading,
+              class: 'sgym-dialog__video'
+            %}
+          {%- else -%}
+            <p class="sgym-dialog__empty">{{ section.settings.empty_video }}</p>
+          {%- endif -%}
+        </div>
+      </dialog>
+    </sgym-dialog>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "sGym hero",
+  "tag": "section",
+  "class": "sgym-hero-section",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "fallback_asset", "label": "Bundled image filename", "default": "sgym-hero-banner.jpg", "info": "Used until an image is picked. File must be in theme assets." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "sGym Pro" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "The next generation of strength training" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "WATCH VIDEO" },
+    { "type": "video", "id": "video", "label": "Video" },
+    { "type": "video_url", "id": "video_url", "label": "Video URL", "accept": ["youtube", "vimeo"] },
+    { "type": "checkbox", "id": "loop", "label": "Loop video", "default": false },
+    { "type": "text", "id": "empty_video", "label": "Empty video message", "default": "Add a video in the theme editor." },
+    { "type": "range", "id": "overlay_opacity", "min": 0, "max": 100, "step": 5, "unit": "%", "label": "Overlay opacity", "default": 100 },
+    { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
+    { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Top padding", "default": 0 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Bottom padding", "default": 0 }
+  ],
+  "presets": [{ "name": "sGym hero", "category": "sGym" }]
+}
+{% endschema %}

@@ -1,0 +1,95 @@
+{% comment %}
+  Add to cart using the theme product-form element and cart routes.
+
+  Accepts:
+  - product: {Object}
+  - block: {Object}
+  - product_form_id: {String}
+  - section_id: {String}
+{% endcomment %}
+<div class="sgym-buy" {{ block.shopify_attributes }}>
+  {%- if product != blank -%}
+    <product-form class="product-form" data-section-id="{{ section_id }}">
+      <div class="sgym-form-error product-form__error-message-wrapper" role="alert" hidden>
+        <span class="product-form__error-message"></span>
+      </div>
+      {%- form 'product',
+        product,
+        id: product_form_id,
+        class: 'form',
+        novalidate: 'novalidate',
+        data-type: 'add-to-cart-form'
+      -%}
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+          {% if product.selected_or_first_available_variant.available == false or product.selected_or_first_available_variant == null %}
+            disabled
+          {% endif %}
+          class="product-variant-id"
+        >
+        <div class="product-form__buttons">
+          <button
+            id="ProductSubmitButton-{{ section_id }}"
+            type="submit"
+            name="add"
+            class="sgym-atc"
+            {% if product.selected_or_first_available_variant.available == false or product.selected_or_first_available_variant == null %}
+              disabled
+              aria-disabled="true"
+            {% endif %}
+          >
+            <span>
+              {%- if product.selected_or_first_available_variant == null -%}
+                {{ 'products.product.unavailable' | t }}
+              {%- elsif product.selected_or_first_available_variant.available == false -%}
+                {{ 'products.product.sold_out' | t }}
+              {%- elsif block.settings.label != blank -%}
+                {{ block.settings.label }}
+              {%- else -%}
+                {{ 'products.product.add_to_cart' | t }}
+              {%- endif -%}
+            </span>
+            {%- render 'loading-spinner' -%}
+          </button>
+          {%- if block.settings.show_dynamic_checkout and product.gift_card? == false -%}
+            {{ form | payment_button }}
+          {%- endif -%}
+        </div>
+      {%- endform -%}
+    </product-form>
+
+    {%- if block.settings.show_stock -%}
+      {%- liquid
+        assign stock_variant = product.selected_or_first_available_variant
+        assign delivery = stock_variant.metafields.custom.delivery_estimate.value | default: product.metafields.custom.delivery_estimate.value | default: block.settings.delivery_text
+      -%}
+      <p
+        id="Inventory-{{ section_id }}"
+        class="sgym-stock{% unless stock_variant.available %} is-out{% endunless %}"
+      >
+        <span class="sgym-stock__state">
+          {%- if stock_variant.available -%}
+            {% render 'sgym-icon', name: 'stock-dot', size: 7 %}
+            {{ block.settings.in_stock_text }}
+          {%- else -%}
+            {%- if block.settings.out_of_stock_text != blank -%}
+              {{ block.settings.out_of_stock_text }}
+            {%- else -%}
+              {{ 'products.product.sold_out' | t }}
+            {%- endif -%}
+          {%- endif -%}
+        </span>
+        {%- if stock_variant.available and delivery != blank -%}
+          <span aria-hidden="true">·</span>
+          <span>{{ delivery }}</span>
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+  {%- else -%}
+    <button type="button" class="sgym-atc" disabled>
+      <span>{{ 'products.product.sold_out' | t }}</span>
+    </button>
+  {%- endif -%}
+</div>

@@ -1,0 +1,62 @@
+{% comment %}
+  Accessory card with quick add when a product is available.
+
+  Accepts:
+  - card_product, title, image, fallback, link, section_id, block_id
+{% endcomment %}
+{%- liquid
+  assign card_title = title
+  assign card_image = image
+  assign card_link = link
+  if card_product != blank
+    if card_title == blank
+      assign card_title = card_product.title
+    endif
+    if card_image == blank
+      assign card_image = card_product.featured_image
+    endif
+    if card_link == blank
+      assign card_link = card_product.url
+    endif
+    assign card_variant = card_product.selected_or_first_available_variant
+  endif
+  assign form_key = section_id | append: '-' | append: block_id | append: '-' | append: card_product.id
+-%}
+<article class="sgym-acc-card">
+  <div class="sgym-acc-card__media">
+    {% render 'sgym-picture',
+      image: card_image,
+      fallback: fallback,
+      alt: card_title,
+      width: 800,
+      height: 800,
+      sizes: '244px'
+    %}
+  </div>
+  <div class="sgym-acc-card__foot">
+    <span>{{ card_title }}</span>
+    {%- if card_product != blank and card_product.has_only_default_variant and card_variant.available -%}
+      <product-form>
+        <div class="product-form__error-message-wrapper" hidden>
+          <span class="product-form__error-message"></span>
+        </div>
+        {%- form 'product', card_product, id: form_key, class: 'form' -%}
+          <input type="hidden" name="id" value="{{ card_variant.id }}" class="product-variant-id">
+          <button type="submit" class="sgym-acc-card__add" aria-label="{{ 'products.product.add_to_cart' | t }}: {{ card_title | escape }}">
+            <span class="visually-hidden">{{ 'products.product.add_to_cart' | t }}</span>
+            {% render 'sgym-icon', name: 'add-circle-white', size: 24 %}
+            {%- render 'loading-spinner' -%}
+          </button>
+        {%- endform -%}
+      </product-form>
+    {%- elsif card_link != blank -%}
+      <a class="sgym-acc-card__add" href="{{ card_link }}" aria-label="{{ card_title | escape }}">
+        {% render 'sgym-icon', name: 'add-circle-white', size: 24 %}
+      </a>
+    {%- else -%}
+      <button type="button" class="sgym-acc-card__add" disabled aria-label="{{ card_title | escape }}">
+        {% render 'sgym-icon', name: 'add-circle-white', size: 24 %}
+      </button>
+    {%- endif -%}
+  </div>
+</article>
