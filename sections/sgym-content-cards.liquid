@@ -3,7 +3,7 @@
 
 <div class="sgym sgym-section">
   <div class="sgym-wrap">
-    {% render 'sgym-heading', title: section.settings.heading, text: section.settings.subheading %}
+    {% render 'sgym-heading', title: section.settings.heading, text: section.settings.subheading, title_class: 'sgym-title--loose' %}
     <div class="sgym-cards">
       {%- for block in section.blocks -%}
         {%- liquid
@@ -61,8 +61,8 @@
     { "type": "richtext", "id": "subheading", "label": "Subheading" },
     { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
     { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
-    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Top padding", "default": 40 },
-    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Bottom padding", "default": 40 }
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 1, "unit": "px", "label": "Top padding", "default": 25 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "label": "Bottom padding", "default": 25 }
   ],
   "blocks": [
     {

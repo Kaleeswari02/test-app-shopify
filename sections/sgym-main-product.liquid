@@ -134,12 +134,14 @@
               {%- elsif block.settings.icon != 'none' -%}
                 {% render 'sgym-icon', name: block.settings.icon, size: 24 %}
               {%- endif -%}
-              {%- if block.settings.value != blank -%}
-                <p class="sgym-features__value">{{ block.settings.value }}</p>
-              {%- endif -%}
-              {%- if block.settings.label != blank -%}
-                <p class="sgym-features__label">{{ block.settings.label }}</p>
-              {%- endif -%}
+              <div class="sgym-features__text">
+                {%- if block.settings.value != blank -%}
+                  <p class="sgym-features__value">{{ block.settings.value }}</p>
+                {%- endif -%}
+                {%- if block.settings.label != blank -%}
+                  <p class="sgym-features__label">{{ block.settings.label }}</p>
+                {%- endif -%}
+              </div>
             </div>
             {%- if next_type != 'feature' -%}
               </div>
@@ -188,15 +190,19 @@
 
           {%- when 'trustpilot' -%}
             <div class="sgym-trustpilot" {{ block.shopify_attributes }}>
-              {% render 'sgym-icon', name: 'trustpilot-logo', size: 92, class: 'sgym-trustpilot__logo' %}
-              <div class="sgym-trustpilot__stars" aria-hidden="true">
-                {%- for i in (1..5) -%}
-                  {% render 'sgym-icon', name: 'trustpilot-star', size: 18 %}
-                {%- endfor -%}
+              <div class="sgym-trustpilot__top">
+                {% render 'sgym-icon', name: 'trustpilot-logo', size: 92, class: 'sgym-trustpilot__logo' %}
+                <div class="sgym-trustpilot__stars" aria-hidden="true">
+                  {%- for i in (1..4) -%}
+                    {% render 'sgym-icon', name: 'trustpilot-star', size: 23 %}
+                  {%- endfor -%}
+                  {% render 'sgym-icon', name: 'trustpilot-star-half', size: 23 %}
+                </div>
+                {%- if block.settings.label != blank -%}
+                  <p class="sgym-trustpilot__label">{{ block.settings.label }}</p>
+                {%- endif -%}
+                <span class="sgym-trustpilot__sep" aria-hidden="true"></span>
               </div>
-              {%- if block.settings.label != blank -%}
-                <p class="sgym-trustpilot__label">{{ block.settings.label }}</p>
-              {%- endif -%}
               {%- if block.settings.count != blank -%}
                 <p class="sgym-trustpilot__count">{{ block.settings.count }}</p>
               {%- endif -%}
@@ -214,10 +220,10 @@
                   <label class="visually-hidden" for="SgymAsk-{{ section.id }}">{{ block.settings.placeholder }}</label>
                   <input id="SgymAsk-{{ section.id }}" type="search" name="q" placeholder="{{ block.settings.placeholder | escape }}">
                   <button type="button" class="sgym-ask__mic" disabled aria-label="{{ block.settings.mic_label }}">
-                    {% render 'sgym-icon', name: 'mic', size: 18 %}
+                    {% render 'sgym-icon', name: 'mic', size: 24 %}
                   </button>
                   <button type="submit" class="sgym-ask__send" aria-label="{{ block.settings.send_label }}">
-                    {% render 'sgym-icon', name: 'send', size: 18 %}
+                    {% render 'sgym-icon', name: 'send', size: 24 %}
                   </button>
                 </form>
                 </div>
@@ -231,7 +237,7 @@
               <div class="sgym-ask"><div class="sgym-ask__chips">
             {%- endif -%}
             <a class="sgym-chip" href="{{ block.settings.link | default: block.settings.anchor | default: '#sgym-faq' }}" {{ block.shopify_attributes }}>
-              {% render 'sgym-icon', name: 'question-bubble', size: 18 %}
+              {% render 'sgym-icon', name: 'question-bubble', size: 24 %}
               <span>{{ block.settings.label }}</span>
             </a>
             {%- if next_type != 'question_chip' -%}
@@ -240,10 +246,10 @@
                   <label class="visually-hidden" for="SgymAsk-{{ section.id }}">{{ ask_box.settings.placeholder | default: block.settings.label }}</label>
                   <input id="SgymAsk-{{ section.id }}" type="search" name="q" placeholder="{{ ask_box.settings.placeholder | escape }}">
                   <button type="button" class="sgym-ask__mic" disabled aria-label="{{ ask_box.settings.mic_label }}">
-                    {% render 'sgym-icon', name: 'mic', size: 18 %}
+                    {% render 'sgym-icon', name: 'mic', size: 24 %}
                   </button>
                   <button type="submit" class="sgym-ask__send" aria-label="{{ ask_box.settings.send_label }}">
-                    {% render 'sgym-icon', name: 'send', size: 18 %}
+                    {% render 'sgym-icon', name: 'send', size: 24 %}
                   </button>
                 </form>
               </div>
@@ -297,6 +303,13 @@
     "templates": ["product"]
   },
   "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_media_tools",
+      "label": "Show 360 and AR buttons",
+      "default": false,
+      "info": "Off in the sGym Pro design. Turn on to show 360 and AR when that media exists."
+    },
     {
       "type": "text",
       "id": "view_360_label",

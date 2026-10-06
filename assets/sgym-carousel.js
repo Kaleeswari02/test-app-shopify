@@ -13,6 +13,8 @@ if (!customElements.get('sgym-carousel')) {
         this.currentEl = this.querySelector('[data-sgym-current]');
         this.totalEl = this.querySelector('[data-sgym-total]');
         this.reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        this.paused = false;
+        if (this.dataset.interval) this.style.setProperty('--sgym-interval', `${Number(this.dataset.interval)}ms`);
 
         this.prev?.addEventListener('click', () => this.move(-1));
         this.next?.addEventListener('click', () => this.move(1));
@@ -21,6 +23,7 @@ if (!customElements.get('sgym-carousel')) {
           if (event.key === 'ArrowRight') this.move(1);
           if (event.key === 'ArrowLeft') this.move(-1);
         });
+        this.bindDrag();
 
         this.buildDots();
         this.update();
@@ -33,18 +36,44 @@ if (!customElements.get('sgym-carousel')) {
         if (this.dataset.autoplay === 'true' && !this.reduceMotion) {
           const interval = Number(this.dataset.interval || 6000);
           this.timer = window.setInterval(() => this.move(1), interval);
-          this.addEventListener('mouseenter', () => this.stop());
-          this.addEventListener('focusin', () => this.stop());
+          this.addEventListener('mouseenter', () => this.pauseAutoplay());
+          this.addEventListener('focusin', () => this.pauseAutoplay());
+          this.restartRing();
         }
       }
 
       disconnectedCallback() {
-        this.stop();
+        this.pauseAutoplay();
         this.resizeObserver?.disconnect();
       }
 
-      stop() {
+      pauseAutoplay() {
+        this.paused = true;
         if (this.timer) window.clearInterval(this.timer);
+        this.timer = null;
+        this.classList.remove('is-playing');
+      }
+
+      bindDrag() {
+        let startX = 0;
+        let startScroll = 0;
+        let dragging = false;
+        this.viewport.addEventListener('pointerdown', (event) => {
+          if (event.pointerType === 'touch' || event.target.closest('button, a')) return;
+          dragging = true;
+          startX = event.clientX;
+          startScroll = this.viewport.scrollLeft;
+          this.viewport.setPointerCapture(event.pointerId);
+        });
+        this.viewport.addEventListener('pointermove', (event) => {
+          if (!dragging) return;
+          this.viewport.scrollLeft = startScroll - (event.clientX - startX);
+        });
+        const end = () => {
+          dragging = false;
+        };
+        this.viewport.addEventListener('pointerup', end);
+        this.viewport.addEventListener('pointercancel', end);
       }
 
       slides() {
@@ -62,6 +91,11 @@ if (!customElements.get('sgym-carousel')) {
         return Math.max(1, this.slides().length - this.pageSize() + 1);
       }
 
+      dotCount() {
+        if (this.dataset.dots === 'per-slide') return this.slides().length;
+        return this.pageCount();
+      }
+
       activeIndex() {
         const items = this.slides();
         if (!items.length) return 0;
@@ -75,7 +109,7 @@ if (!customElements.get('sgym-carousel')) {
 
       buildDots() {
         if (!this.dotsWrap) return;
-        const count = this.pageCount();
+        const count = this.dotCount();
         this.dotsWrap.replaceChildren();
         if (count < 2) return;
         for (let i = 0; i < count; i += 1) {
@@ -98,13 +132,25 @@ if (!customElements.get('sgym-carousel')) {
       }
 
       move(direction) {
-        const count = this.pageCount();
-        const next = (this.activeIndex() + direction + count) % count;
-        this.goTo(next);
+        const index = this.activeIndex();
+        if (this.dataset.loop === 'true') {
+          const count = this.slides().length;
+          this.goTo((index + direction + count) % count);
+        } else {
+          this.goTo(index + direction);
+        }
+        this.restartRing();
+      }
+
+      restartRing() {
+        this.classList.remove('is-playing');
+        if (this.dataset.autoplay !== 'true' || this.reduceMotion || this.paused) return;
+        void this.offsetWidth;
+        this.classList.add('is-playing');
       }
 
       update() {
-        const index = Math.min(this.activeIndex(), this.pageCount() - 1);
+        const index = this.dataset.dots === 'per-slide' ? this.activeIndex() : Math.min(this.activeIndex(), this.pageCount() - 1);
         this.dotsWrap?.querySelectorAll('button').forEach((dot, i) => {
           if (i === index) dot.setAttribute('aria-current', 'true');
           else dot.removeAttribute('aria-current');

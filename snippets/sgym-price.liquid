@@ -33,7 +33,14 @@
     {%- endif -%}
   </div>
   {%- if block.settings.tax_note != blank -%}
-    <p class="sgym-price__tax">{{ block.settings.tax_note }}</p>
+    {%- assign tax_parts = block.settings.tax_note | split: '·' -%}
+    <p class="sgym-price__tax">
+      {%- if tax_parts.size > 1 -%}
+        {{ tax_parts[0] | strip }}<span class="sgym-price__dot">·</span>{{ tax_parts[1] | strip }}
+      {%- else -%}
+        {{ block.settings.tax_note }}
+      {%- endif -%}
+    </p>
   {%- endif -%}
   {%- if target.unit_price_measurement -%}
     {%- render 'unit-price', price: target.unit_price, measurement: target.unit_price_measurement -%}

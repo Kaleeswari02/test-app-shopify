@@ -1,6 +1,7 @@
 {{ 'sgym.css' | asset_url | stylesheet_tag }}
 {% render 'sgym-fonts' %}
 <script src="{{ 'sgym-carousel.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'sgym-ui.js' | asset_url }}" defer="defer"></script>
 
 <div class="sgym sgym-section sgym-showcase">
   <div class="sgym-wrap">
@@ -18,38 +19,48 @@
       class: 'sgym-showcase__cutout',
       width: 1500,
       height: 1500,
-      sizes: '(min-width: 990px) 920px, 100vw'
+      sizes: '100vw'
     %}
-    <sgym-carousel class="sgym-carousel sgym-carousel--dots-mobile" data-loop="true">
+    <sgym-carousel class="sgym-carousel sgym-carousel--dots-mobile">
       <div class="sgym-carousel__head">
         <h3 class="sgym-title">{{ section.settings.carousel_heading }}</h3>
         <div class="sgym-carousel__arrows">
           <button type="button" class="sgym-arrow" data-sgym-prev aria-label="{{ 'general.slider.previous_slide' | t }}">
-            <img src="{{ 'sgym-carousel-prev-dark.svg' | asset_url }}" alt="" width="44" height="44">
+            <img class="is-active" src="{{ 'sgym-arrow-dark-active.svg' | asset_url }}" alt="" width="54" height="54">
+            <img class="is-disabled" src="{{ 'sgym-arrow-dark-disabled.svg' | asset_url }}" alt="" width="54" height="54">
           </button>
           <button type="button" class="sgym-arrow" data-sgym-next aria-label="{{ 'general.slider.next_slide' | t }}">
-            <img src="{{ 'sgym-carousel-prev-dark.svg' | asset_url }}" alt="" width="44" height="44">
+            <img class="is-active" src="{{ 'sgym-arrow-dark-active.svg' | asset_url }}" alt="" width="54" height="54">
+            <img class="is-disabled" src="{{ 'sgym-arrow-dark-disabled.svg' | asset_url }}" alt="" width="54" height="54">
           </button>
         </div>
       </div>
       <div class="sgym-viewport" data-sgym-viewport tabindex="0">
         <ul class="sgym-track" data-sgym-track>
           {%- for block in section.blocks -%}
-            <li class="sgym-feature-card" {{ block.shopify_attributes }}>
-              <div class="sgym-feature-card__media">
+            <li class="sgym-feature-card{% if block.settings.show_play %} sgym-feature-card--active{% endif %}" {{ block.shopify_attributes }}>
+              <sgym-inline-video class="sgym-feature-card__media" data-autoplay="true" data-sgym-observe>
                 {% render 'sgym-video',
                   video: block.settings.video,
                   image: block.settings.image,
                   fallback: block.settings.fallback_asset,
                   alt: block.settings.title,
-                  autoplay: false,
+                  autoplay: true,
+                  loop: true,
+                  muted: true,
                   controls: false,
                   width: 890,
                   height: 778,
-                  sizes: '300px',
+                  sizes: '373px',
                   class: 'sgym-feature-card__img'
                 %}
-              </div>
+                {%- if block.settings.show_play -%}
+                  <button type="button" class="sgym-feature-card__btn" data-sgym-pause aria-pressed="true" aria-label="{{ block.settings.title | escape }}">
+                    <img class="is-pause" src="{{ 'sgym-play-button.svg' | asset_url }}" width="44" height="44" alt="">
+                    <img class="is-play" src="{{ 'sgym-play-button-play.svg' | asset_url }}" width="44" height="44" alt="">
+                  </button>
+                {%- endif -%}
+              </sgym-inline-video>
               <div class="sgym-feature-card__body">
                 {%- if block.settings.title != blank -%}
                   <h3>{{ block.settings.title }}</h3>
@@ -91,7 +102,8 @@
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Image" },
         { "type": "text", "id": "fallback_asset", "label": "Bundled image filename" },
-        { "type": "video", "id": "video", "label": "Video" },
+        { "type": "video", "id": "video", "label": "Video", "info": "Muted looping video. The image is the fallback until a file is uploaded." },
+        { "type": "checkbox", "id": "show_play", "label": "Show play button", "default": false },
         { "type": "text", "id": "title", "label": "Title", "default": "Feature" },
         { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Describe the feature.</p>" }
       ]

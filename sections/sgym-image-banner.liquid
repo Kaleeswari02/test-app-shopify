@@ -5,8 +5,9 @@
 <div class="sgym sgym-section">
   <div class="{% unless section.settings.full_width %}sgym-wrap{% endunless %}">
     <sgym-inline-video
-      class="sgym-banner{% if section.settings.heading == blank %} sgym-banner--plain{% endif %}"
+      class="sgym-banner sgym-banner--{{ section.settings.ratio }}{% if section.settings.heading == blank %} sgym-banner--plain{% endif %}"
       data-autoplay="{% if section.settings.autoplay %}true{% else %}false{% endif %}"
+      data-interval="{{ section.settings.progress_interval | times: 1000 }}"
     >
       {%- assign banner_alt = section.settings.heading | default: section.settings.image.alt -%}
       {% render 'sgym-video',
@@ -24,6 +25,13 @@
         loading: 'lazy',
         sizes: '100vw'
       %}
+      {%- if section.settings.logo != blank -%}
+        {{
+          section.settings.logo
+          | image_url: width: 120
+          | image_tag: class: 'sgym-banner__logo', widths: '52, 104', sizes: '52px', alt: '', loading: 'lazy'
+        }}
+      {%- endif -%}
       {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
         <div class="sgym-banner__overlay">
           {%- if section.settings.heading != blank -%}
@@ -34,10 +42,22 @@
           {%- endif -%}
         </div>
       {%- endif -%}
-      {%- if section.settings.show_play_button -%}
-        <button type="button" class="sgym-inline-video__btn" data-sgym-pause aria-label="{{ section.settings.pause_label }}">
-          {% render 'sgym-icon', name: 'play', size: 12 %}
-        </button>
+      {%- if section.settings.show_play_button or section.settings.show_progress -%}
+        <div class="sgym-banner__controls">
+          {%- if section.settings.show_play_button -%}
+            <button type="button" class="sgym-banner__play" data-sgym-pause aria-pressed="true" aria-label="{{ section.settings.pause_label }}">
+              <img class="is-pause" src="{{ 'sgym-play-button.svg' | asset_url }}" width="44" height="44" alt="">
+              <img class="is-play" src="{{ 'sgym-play-button-play.svg' | asset_url }}" width="44" height="44" alt="">
+            </button>
+          {%- endif -%}
+          {%- if section.settings.show_progress -%}
+            <div class="sgym-progress" aria-hidden="true">
+              {%- for i in (1..section.settings.progress_steps) -%}
+                <span class="sgym-progress__tick{% if forloop.first %} is-active{% endif %}" data-sgym-step></span>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+        </div>
       {%- endif -%}
     </sgym-inline-video>
   </div>
@@ -59,14 +79,23 @@
     { "type": "checkbox", "id": "autoplay", "label": "Autoplay muted", "default": false },
     { "type": "checkbox", "id": "show_controls", "label": "Show video controls", "default": false },
     { "type": "checkbox", "id": "show_play_button", "label": "Show play button", "default": false },
+    { "type": "checkbox", "id": "show_progress", "label": "Show progress pill", "default": false },
+    { "type": "range", "id": "progress_steps", "min": 2, "max": 8, "step": 1, "label": "Progress steps", "default": 5 },
+    { "type": "range", "id": "progress_interval", "min": 3, "max": 10, "step": 1, "unit": "s", "label": "Progress interval", "default": 5 },
     { "type": "text", "id": "pause_label", "label": "Play button label", "default": "Play video" },
+    { "type": "select", "id": "ratio", "label": "Frame", "default": "auto", "options": [
+      { "value": "auto", "label": "Auto" },
+      { "value": "square", "label": "Square story" },
+      { "value": "wide", "label": "Wide lifestyle" }
+    ]},
+    { "type": "image_picker", "id": "logo", "label": "Logo", "info": "Top-left mark for the elegant banner. Upload the Elegant logo; it is not in the theme export." },
     { "type": "text", "id": "heading", "label": "Heading" },
     { "type": "text", "id": "subheading", "label": "Subheading" },
     { "type": "checkbox", "id": "full_width", "label": "Full width", "default": false },
     { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
     { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
-    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Top padding", "default": 20 },
-    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Bottom padding", "default": 20 }
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 1, "unit": "px", "label": "Top padding", "default": 25 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "label": "Bottom padding", "default": 25 }
   ],
   "presets": [{ "name": "sGym image banner", "category": "sGym" }]
 }

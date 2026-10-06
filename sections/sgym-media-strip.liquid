@@ -5,9 +5,13 @@
 <div class="sgym sgym-section sgym-strip">
   <div class="sgym-wrap">
     {%- if section.settings.heading != blank -%}
-      <h2 class="sgym-strip__title">{{ section.settings.heading }}</h2>
+      {%- assign strip_parts = section.settings.heading | split: '#' -%}
+      <h2 class="sgym-strip__title">
+        {{ strip_parts[0] }}
+        {%- if strip_parts.size > 1 -%}<strong>#{{ strip_parts[1] }}</strong>{%- endif -%}
+      </h2>
     {%- endif -%}
-    <sgym-carousel class="sgym-carousel sgym-carousel--dots-mobile sgym-carousel--arrows-desktop" data-loop="true">
+    <sgym-carousel class="sgym-carousel sgym-carousel--dots-mobile sgym-carousel--arrows-desktop">
       <div class="sgym-viewport" data-sgym-viewport tabindex="0">
         <ul class="sgym-track" data-sgym-track>
           {%- for block in section.blocks -%}
@@ -24,7 +28,7 @@
                 alt: strip_alt,
                 width: 400,
                 height: 500,
-                sizes: '148px',
+                sizes: '132px',
                 class: 'sgym-strip__img'
               %}
               {%- if block.settings.link != blank -%}

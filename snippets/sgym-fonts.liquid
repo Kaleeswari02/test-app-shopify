@@ -9,9 +9,17 @@
 {%- style -%}
   {%- if heading_font != blank -%}
     {{ heading_font | font_face: font_display: 'swap' }}
+    {%- assign heading_regular = heading_font | font_modify: 'weight', '400' -%}
     {%- assign heading_medium = heading_font | font_modify: 'weight', '500' -%}
+    {%- assign heading_semibold = heading_font | font_modify: 'weight', '600' -%}
+    {%- if heading_regular != blank -%}
+      {{ heading_regular | font_face: font_display: 'swap' }}
+    {%- endif -%}
     {%- if heading_medium != blank -%}
       {{ heading_medium | font_face: font_display: 'swap' }}
+    {%- endif -%}
+    {%- if heading_semibold != blank -%}
+      {{ heading_semibold | font_face: font_display: 'swap' }}
     {%- endif -%}
   {%- endif -%}
   {%- if body_font != blank -%}
