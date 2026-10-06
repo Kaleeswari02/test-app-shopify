@@ -6,22 +6,24 @@
   <div class="sgym-wrap">
     <sgym-tabs class="sgym-tabs-card">
       <div class="sgym-tabs__media">
-        {%- for block in section.blocks -%}
-          <div class="sgym-tabs__panel{% if forloop.first %} is-active{% endif %}" data-sgym-tab-panel>
-            {% render 'sgym-picture',
-              image: block.settings.image,
-              fallback: block.settings.fallback_asset,
-              alt: block.settings.title,
-              width: 1012,
-              height: 1800,
-              sizes: '(min-width: 990px) 320px, 70vw'
-            %}
-          </div>
-        {%- endfor -%}
+        <div class="sgym-tabs__device">
+          {%- for block in section.blocks -%}
+            <div class="sgym-tabs__panel{% if forloop.first %} is-active{% endif %}" data-sgym-tab-panel>
+              {% render 'sgym-picture',
+                image: block.settings.image,
+                fallback: block.settings.fallback_asset,
+                alt: block.settings.title,
+                width: 1012,
+                height: 1800,
+                sizes: '298px'
+              %}
+            </div>
+          {%- endfor -%}
+        </div>
       </div>
       <div class="sgym-tabs__copy">
         {%- if section.settings.heading != blank -%}
-          <h2 class="sgym-title" style="margin-bottom: 22px;">{{ section.settings.heading }}</h2>
+          <h2 class="sgym-title sgym-title--loose">{{ section.settings.heading }}</h2>
         {%- endif -%}
         <div role="tablist" aria-label="{{ section.settings.heading | escape }}">
           {%- for block in section.blocks -%}
@@ -38,8 +40,8 @@
               >
                 {{ block.settings.title }}
               </button>
-              <div class="sgym-tab__panel rte" role="tabpanel" id="SgymTabPanel-{{ block.id }}" aria-labelledby="SgymTab-{{ block.id }}">
-                {{ block.settings.text }}
+              <div class="sgym-tab__panel" role="tabpanel" id="SgymTabPanel-{{ block.id }}" aria-labelledby="SgymTab-{{ block.id }}">
+                <div class="sgym-tab__panel-inner rte">{{ block.settings.text }}</div>
               </div>
             </div>
           {%- endfor -%}

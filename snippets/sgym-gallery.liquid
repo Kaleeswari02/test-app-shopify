@@ -44,7 +44,10 @@
                 | image_tag: widths: '96, 160', sizes: '48px', alt: '', loading: 'lazy'
               }}
               {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
-                <span class="sgym-gallery__play">{% render 'sgym-icon', name: 'play', size: 10 %}</span>
+                <span class="sgym-gallery__play">
+                  <img src="{{ 'sgym-play-bg.svg' | asset_url }}" width="28" height="28" alt="">
+                  <img class="sgym-gallery__play-glyph" src="{{ 'sgym-play.svg' | asset_url }}" width="10" height="12" alt="">
+                </span>
               {%- endif -%}
             </button>
           </li>
@@ -144,7 +147,8 @@
       </div>
     </div>
     <p class="visually-hidden" aria-live="polite" data-sgym-gallery-status></p>
-    {%- if spin_target or model_media -%}
+    {%- if section.settings.show_media_tools -%}
+      {%- if spin_target or model_media -%}
       <div class="sgym-gallery__tools">
         {%- if spin_target -%}
           <button type="button" class="sgym-outline" data-sgym-jump data-media-id="{{ spin_target.id }}">
@@ -170,6 +174,7 @@
           </button>
         {%- endif -%}
       </div>
+      {%- endif -%}
     {%- endif -%}
   {%- else -%}
     {{ 'product-apparel-1' | placeholder_svg_tag: 'sgym-gallery__stage' }}

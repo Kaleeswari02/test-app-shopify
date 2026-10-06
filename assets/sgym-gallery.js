@@ -55,11 +55,22 @@ if (!customElements.get('sgym-gallery')) {
         if (!count) return;
         this.index = (index + count) % count;
         if (typeof window.pauseAllMedia === 'function') window.pauseAllMedia();
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         this.slides.forEach((slide, i) => {
           const active = i === this.index;
-          slide.classList.toggle('is-active', active);
-          slide.hidden = !active;
+          if (active) {
+            slide.hidden = false;
+            if (reduce) slide.classList.add('is-active');
+            else requestAnimationFrame(() => slide.classList.add('is-active'));
+          } else {
+            slide.classList.remove('is-active');
+            const hide = () => {
+              if (!slide.classList.contains('is-active')) slide.hidden = true;
+            };
+            if (reduce) hide();
+            else window.setTimeout(hide, 300);
+          }
         });
         this.thumbs.forEach((thumb, i) => {
           if (i === this.index) thumb.setAttribute('aria-current', 'true');

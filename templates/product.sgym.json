@@ -23,14 +23,22 @@
     "main": {
       "type": "sgym-main-product",
       "blocks": {
-        "title": { "type": "title", "settings": {} },
+        "title": {
+          "type": "title",
+          "settings": {}
+        },
         "rating": {
           "type": "rating",
-          "settings": { "count_label": "Bewertungen" }
+          "settings": {
+            "count_label": "Bewertungen"
+          }
         },
         "description": {
           "type": "description",
-          "settings": { "metafield": "custom.short_description", "truncate": 220 }
+          "settings": {
+            "metafield": "custom.short_description",
+            "truncate": 220
+          }
         },
         "info_highlights": {
           "type": "info_row",
@@ -67,27 +75,50 @@
         },
         "feat_1": {
           "type": "feature",
-          "settings": { "icon": "feat-exercises", "value": "400+", "label": "Übungsvarianten" }
+          "settings": {
+            "icon": "feat-exercises",
+            "value": "400+",
+            "label": "Übungsvarianten"
+          }
         },
         "feat_2": {
           "type": "feature",
-          "settings": { "icon": "feat-resistance", "value": "120 kg", "label": "Elektrischer Widerstand" }
+          "settings": {
+            "icon": "feat-resistance",
+            "value": "120 kg",
+            "label": "Elektrischer Widerstand"
+          }
         },
         "feat_3": {
           "type": "feature",
-          "settings": { "icon": "feat-footprint", "value": "Nur 2 m²", "label": "Stellfläche" }
+          "settings": {
+            "icon": "feat-footprint",
+            "value": "Nur 2 m²",
+            "label": "Stellfläche"
+          }
         },
         "feat_4": {
           "type": "feature",
-          "settings": { "icon": "feat-display", "value": "21\" Display", "label": "mit Sportstech Live App" }
+          "settings": {
+            "icon": "feat-display",
+            "value": "21\" Display",
+            "label": "mit Sportstech Live App"
+          }
         },
         "feat_5": {
           "type": "feature",
-          "settings": { "icon": "feat-fullbody", "value": "Ganzkörpertraining", "label": "Kraft, Cardio & Mobility" }
+          "settings": {
+            "icon": "feat-fullbody",
+            "value": "Ganzkörpertraining",
+            "label": "Kraft, Cardio & Mobility"
+          }
         },
         "variants": {
           "type": "variant_picker",
-          "settings": { "heading": "Produktoptionen", "included_label": "Im Preis enthalten" }
+          "settings": {
+            "heading": "Produktoptionen",
+            "included_label": "Im Preis enthalten"
+          }
         },
         "buy": {
           "type": "buy_buttons",
@@ -102,19 +133,31 @@
         },
         "trust_1": {
           "type": "trust_item",
-          "settings": { "icon": "trust-box", "title": "Kostenloser Versand" }
+          "settings": {
+            "icon": "trust-box",
+            "title": "Kostenloser Versand"
+          }
         },
         "trust_2": {
           "type": "trust_item",
-          "settings": { "icon": "trust-shield", "title": "2 Jahre Garantie" }
+          "settings": {
+            "icon": "trust-shield",
+            "title": "2 Jahre Garantie"
+          }
         },
         "trust_3": {
           "type": "trust_item",
-          "settings": { "icon": "trust-users", "title": "4 Millionen Kunden" }
+          "settings": {
+            "icon": "trust-users",
+            "title": "4 Millionen Kunden"
+          }
         },
         "trustpilot": {
           "type": "trustpilot",
-          "settings": { "label": "Hervorragend", "count": "Über 8.000 Bewertungen" }
+          "settings": {
+            "label": "Hervorragend",
+            "count": "Über 8.000 Bewertungen"
+          }
         },
         "ask": {
           "type": "question_box",
@@ -140,7 +183,9 @@
         },
         "footnote": {
           "type": "footnote",
-          "settings": { "text": "* 30-Tage-Bestpreis: 2.549,00 €" }
+          "settings": {
+            "text": "* 30-Tage-Bestpreis: 2.549,00 €"
+          }
         }
       },
       "block_order": [
@@ -171,23 +216,49 @@
         "view_360_label": "360 VIEW",
         "view_ar_label": "IN DEINEM RAUM ANSEHEN",
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 48,
+        "padding_bottom": 60,
+        "show_media_tools": false
       }
     },
     "recommended": {
       "type": "sgym-media-strip",
       "blocks": {
-        "thumb_1": { "type": "media", "settings": {} },
-        "thumb_2": { "type": "media", "settings": {} },
-        "thumb_3": { "type": "media", "settings": {} },
-        "thumb_4": { "type": "media", "settings": {} },
-        "thumb_5": { "type": "media", "settings": {} }
+        "thumb_1": {
+          "type": "media",
+          "settings": {}
+        },
+        "thumb_2": {
+          "type": "media",
+          "settings": {}
+        },
+        "thumb_3": {
+          "type": "media",
+          "settings": {}
+        },
+        "thumb_4": {
+          "type": "media",
+          "settings": {}
+        },
+        "thumb_5": {
+          "type": "media",
+          "settings": {}
+        }
       },
-      "block_order": ["thumb_1", "thumb_2", "thumb_3", "thumb_4", "thumb_5"],
+      "block_order": [
+        "thumb_1",
+        "thumb_2",
+        "thumb_3",
+        "thumb_4",
+        "thumb_5"
+      ],
       "settings": {
         "heading": "Recommended by #SashaHuber",
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 0,
+        "padding_bottom": 40
       }
     },
     "features": {
@@ -214,7 +285,8 @@
           "settings": {
             "fallback_asset": "sgym-key-feature-auto-lowering.jpg",
             "title": "Auto-Lowering Function",
-            "text": "<p>The base plate takes up less than 1.5 m², lowers automatically and can be moved easily thanks to transport wheels.</p>"
+            "text": "<p>The base plate takes up less than 1.5 m², lowers automatically and can be moved easily thanks to transport wheels.</p>",
+            "show_play": true
           }
         },
         "resistance": {
@@ -226,14 +298,21 @@
           }
         }
       },
-      "block_order": ["safety", "pulley", "lowering", "resistance"],
+      "block_order": [
+        "safety",
+        "pulley",
+        "lowering",
+        "resistance"
+      ],
       "settings": {
         "kicker": "sGym Pro Design",
         "heading": "Engineered to the last detail",
         "fallback_asset": "sgym-product-cutout-sgym-pro.png",
         "carousel_heading": "Key Features",
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 50,
+        "padding_bottom": 50
       }
     },
     "tabs": {
@@ -264,11 +343,17 @@
           }
         }
       },
-      "block_order": ["workouts", "plans", "modes"],
+      "block_order": [
+        "workouts",
+        "plans",
+        "modes"
+      ],
       "settings": {
         "heading": "Endless possibilities for your strength training",
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 0,
+        "padding_bottom": 36
       }
     },
     "story_system": {
@@ -281,7 +366,9 @@
         "fallback_asset": "sgym-story-combine-rowing-machine.jpg",
         "autoplay": true,
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 61,
+        "padding_bottom": 25
       }
     },
     "story_elegant": {
@@ -292,7 +379,10 @@
         "fallback_height": 1500,
         "heading": "Elegant. Compact. Unique.",
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 25,
+        "padding_bottom": 25,
+        "ratio": "square"
       }
     },
     "story_combine": {
@@ -317,11 +407,16 @@
           }
         }
       },
-      "block_order": ["bench", "rower"],
+      "block_order": [
+        "bench",
+        "rower"
+      ],
       "settings": {
         "heading": "Combine & benefit!",
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 25,
+        "padding_bottom": 25
       }
     },
     "story_app": {
@@ -329,27 +424,42 @@
       "blocks": {
         "slide_1": {
           "type": "slide",
-          "settings": { "fallback_asset": "sgym-app-screen-workout-1.jpg", "label": "Workouts" }
+          "settings": {
+            "fallback_asset": "sgym-app-screen-workout-1.jpg",
+            "label": "Workouts"
+          }
         },
         "slide_2": {
           "type": "slide",
-          "settings": { "fallback_asset": "sgym-app-screen-workout-2.jpg", "label": "Trainingsdaten" }
+          "settings": {
+            "fallback_asset": "sgym-app-screen-workout-2.jpg",
+            "label": "Trainingsdaten"
+          }
         },
         "slide_3": {
           "type": "slide",
-          "settings": { "fallback_asset": "sgym-app-screen-workout-1.jpg", "label": "Stats" }
+          "settings": {
+            "fallback_asset": "sgym-app-screen-workout-1.jpg",
+            "label": "Stats"
+          }
         }
       },
-      "block_order": ["slide_1", "slide_2", "slide_3"],
+      "block_order": [
+        "slide_1",
+        "slide_2",
+        "slide_3"
+      ],
       "settings": {
         "heading": "More than just your smart gym.",
         "text": "<p>Mit dem sGym Pro erhältst du Zugang zu einem smarten, digitalen Ökosystem, das Training, Daten und Coaching nahtlos verbindet.</p>",
         "counter_label": "OF",
         "link_label": "https://www.sportstech.de/live-app",
         "link": "https://www.sportstech.de/live-app",
-        "autoplay": false,
+        "autoplay": true,
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 25,
+        "padding_bottom": 25
       }
     },
     "story_modes": {
@@ -383,31 +493,82 @@
           }
         }
       },
-      "block_order": ["partner", "light", "weighted"],
+      "block_order": [
+        "partner",
+        "light",
+        "weighted"
+      ],
       "settings": {
         "heading": "Dynamic training modes",
         "subheading": "<p>Whether you train solo or with a partner – you'll always find the right setup for your goals.</p>",
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 25,
+        "padding_bottom": 61
       }
     },
     "accessories": {
       "type": "sgym-product-carousel",
       "blocks": {
-        "acc_1": { "type": "card", "settings": { "title": "Safety spotter", "fallback_asset": "sgym-acc-safety-spotter.png" } },
-        "acc_2": { "type": "card", "settings": { "title": "Ankle strap", "fallback_asset": "sgym-acc-ankle-strap.png" } },
-        "acc_3": { "type": "card", "settings": { "title": "Triceps rope", "fallback_asset": "sgym-acc-triceps-rope.png" } },
-        "acc_4": { "type": "card", "settings": { "title": "Single handles", "fallback_asset": "sgym-acc-single-handles.png" } },
-        "acc_5": { "type": "card", "settings": { "title": "Floor protection mat", "fallback_asset": "sgym-acc-floor-mat.png" } },
-        "acc_6": { "type": "card", "settings": { "title": "Pull-Up", "fallback_asset": "sgym-acc-pull-up.png" } }
+        "acc_1": {
+          "type": "card",
+          "settings": {
+            "title": "Safety spotter",
+            "fallback_asset": "sgym-acc-safety-spotter.png"
+          }
+        },
+        "acc_2": {
+          "type": "card",
+          "settings": {
+            "title": "Ankle strap",
+            "fallback_asset": "sgym-acc-ankle-strap.png"
+          }
+        },
+        "acc_3": {
+          "type": "card",
+          "settings": {
+            "title": "Triceps rope",
+            "fallback_asset": "sgym-acc-triceps-rope.png"
+          }
+        },
+        "acc_4": {
+          "type": "card",
+          "settings": {
+            "title": "Single handles",
+            "fallback_asset": "sgym-acc-single-handles.png"
+          }
+        },
+        "acc_5": {
+          "type": "card",
+          "settings": {
+            "title": "Floor protection mat",
+            "fallback_asset": "sgym-acc-floor-mat.png"
+          }
+        },
+        "acc_6": {
+          "type": "card",
+          "settings": {
+            "title": "Pull-Up",
+            "fallback_asset": "sgym-acc-pull-up.png"
+          }
+        }
       },
-      "block_order": ["acc_1", "acc_2", "acc_3", "acc_4", "acc_5", "acc_6"],
+      "block_order": [
+        "acc_1",
+        "acc_2",
+        "acc_3",
+        "acc_4",
+        "acc_5",
+        "acc_6"
+      ],
       "settings": {
         "eyebrow": "Equipment",
         "heading": "The right accessories for every workout",
         "subheading": "<p>Complete training setup for optimal results.</p>",
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 50,
+        "padding_bottom": 50
       }
     },
     "lifestyle": {
@@ -418,7 +579,11 @@
         "fallback_height": 1360,
         "show_play_button": true,
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 50,
+        "padding_bottom": 51,
+        "ratio": "wide",
+        "show_progress": true
       }
     },
     "influencer": {
@@ -430,7 +595,9 @@
         "fallback_asset": "sgym-influencer-sascha-huber-video-poster.jpg",
         "autoplay": true,
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 50,
+        "padding_bottom": 60
       }
     },
     "guarantees": {
@@ -461,11 +628,17 @@
           }
         }
       },
-      "block_order": ["trial", "shipping", "warranty"],
+      "block_order": [
+        "trial",
+        "shipping",
+        "warranty"
+      ],
       "settings": {
         "heading": "The shop you can trust",
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 50,
+        "padding_bottom": 50
       }
     },
     "coaches": {
@@ -504,14 +677,21 @@
           }
         }
       },
-      "block_order": ["carlo", "lina", "time", "lauren"],
+      "block_order": [
+        "carlo",
+        "lina",
+        "time",
+        "lauren"
+      ],
       "settings": {
         "eyebrow": "Trainer",
         "heading": "Meet your coach",
         "subheading": "<p>Our trainers support you through every workout with expertise, motivation and power.</p>",
         "card_label": "TRAINER",
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 50,
+        "padding_bottom": 52
       }
     },
     "reviews": {
@@ -521,7 +701,9 @@
         "count_label": "Bewertungen",
         "anchor": "sgym-reviews",
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 50,
+        "padding_bottom": 50
       }
     },
     "specs": {
@@ -537,25 +719,41 @@
         },
         "console": {
           "type": "group",
-          "settings": { "title": "Konsole", "open": false }
+          "settings": {
+            "title": "Konsole",
+            "open": false
+          }
         },
         "general": {
           "type": "group",
-          "settings": { "title": "Allgemeine Informationen", "open": false }
+          "settings": {
+            "title": "Allgemeine Informationen",
+            "open": false
+          }
         },
         "screen": {
           "type": "group",
-          "settings": { "title": "Bildschirm-Anzeige", "open": false }
+          "settings": {
+            "title": "Bildschirm-Anzeige",
+            "open": false
+          }
         }
       },
-      "block_order": ["dimensions", "console", "general", "screen"],
+      "block_order": [
+        "dimensions",
+        "console",
+        "general",
+        "screen"
+      ],
       "settings": {
         "heading": "Technische Daten",
         "anchor": "sgym-specs",
         "prefer_metafield": true,
         "metafield": "custom.specs",
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 50,
+        "padding_bottom": 60
       }
     },
     "faq": {
@@ -598,12 +796,20 @@
           }
         }
       },
-      "block_order": ["q1", "q2", "q3", "q4", "q5"],
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ],
       "settings": {
-        "heading": "FAQ's",
+        "heading": "FAQ’s",
         "anchor": "sgym-faq",
         "heading_font": "archivo_n7",
-        "body_font": "inter_n4"
+        "body_font": "inter_n4",
+        "padding_top": 50,
+        "padding_bottom": 60
       }
     }
   },

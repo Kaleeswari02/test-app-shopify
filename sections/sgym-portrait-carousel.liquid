@@ -6,7 +6,7 @@
   <div class="sgym-wrap">
     <div class="sgym-intro">
       {%- if section.settings.eyebrow != blank -%}
-        <p class="sgym-pill-tag" style="background: #fff; color: #1e1e1e; border: 1px solid rgba(0,0,0,.08);">{{ section.settings.eyebrow }}</p>
+        <p class="sgym-pill-tag sgym-pill-tag--light">{{ section.settings.eyebrow }}</p>
       {%- endif -%}
       {%- if section.settings.heading != blank -%}
         <h2 class="sgym-title">{{ section.settings.heading }}</h2>
@@ -15,7 +15,7 @@
         <div class="sgym-sub rte">{{ section.settings.subheading }}</div>
       {%- endif -%}
     </div>
-    <sgym-carousel class="sgym-carousel" data-loop="true">
+    <sgym-carousel class="sgym-carousel" data-dots="per-slide">
       <div class="sgym-viewport" data-sgym-viewport tabindex="0">
         <ul class="sgym-track" data-sgym-track>
           {%- for block in section.blocks -%}
@@ -27,7 +27,7 @@
                   alt: block.settings.name,
                   width: 1200,
                   height: 1800,
-                  sizes: '280px',
+                  sizes: '300px',
                   class: 'sgym-coach-card__img'
                 %}
                 <div class="sgym-coach-card__shade">

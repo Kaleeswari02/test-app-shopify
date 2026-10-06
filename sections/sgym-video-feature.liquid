@@ -6,7 +6,7 @@
   <div class="sgym-wrap">
     {%- if section.settings.show_stars -%}
       <div class="sgym-video-feature__stars">
-        {% render 'sgym-stars', rating: 5, scale: 5, size: 16 %}
+        {% render 'sgym-stars', rating: 4.5, scale: 5, size: 24 %}
       </div>
     {%- endif -%}
     {% render 'sgym-heading', eyebrow: section.settings.eyebrow, title: section.settings.heading %}
@@ -25,14 +25,14 @@
         height: 1021,
         sizes: '(min-width: 990px) 1246px, 100vw'
       %}
-      {%- if section.settings.video != blank -%}
-        <button type="button" class="sgym-video-stage__btn sgym-video-stage__btn--mute" data-sgym-mute aria-pressed="true" aria-label="{{ section.settings.mute_label }}">
-          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M4 9v6h4l5 4V5L8 9H4zm11.5 3a4.5 4.5 0 0 0-2.5-4.03v8.05A4.5 4.5 0 0 0 15.5 12z"/></svg>
-        </button>
-        <button type="button" class="sgym-video-stage__btn sgym-video-stage__btn--pause" data-sgym-pause aria-pressed="true" aria-label="{{ section.settings.pause_label }}">
-          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-        </button>
-      {%- endif -%}
+      <button type="button" class="sgym-video-stage__btn sgym-video-stage__btn--mute" data-sgym-mute aria-pressed="true" aria-label="{{ section.settings.mute_label }}">
+        <img class="is-muted" src="{{ 'sgym-volume-off.svg' | asset_url }}" width="24" height="24" alt="">
+        <img class="is-unmuted" src="{{ 'sgym-volume-on.svg' | asset_url }}" width="24" height="24" alt="">
+      </button>
+      <button type="button" class="sgym-video-stage__btn sgym-video-stage__btn--pause" data-sgym-pause aria-pressed="true" aria-label="{{ section.settings.pause_label }}">
+        <img class="is-pause" src="{{ 'sgym-play-button.svg' | asset_url }}" width="44" height="44" alt="">
+        <img class="is-play" src="{{ 'sgym-play-button-play.svg' | asset_url }}" width="44" height="44" alt="">
+      </button>
     </sgym-inline-video>
   </div>
 </div>

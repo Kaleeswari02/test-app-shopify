@@ -7,7 +7,12 @@
     <div class="sgym-split sgym-split--{{ section.settings.scheme }} sgym-split--image-{{ section.settings.image_position }}">
       <div class="sgym-split__copy">
         {%- if section.settings.heading != blank -%}
-          <h2>{{ section.settings.heading }}</h2>
+          {%- assign heading_parts = section.settings.heading | split: '. ' -%}
+          <h2 class="sgym-title sgym-title--loose">
+            {%- for part in heading_parts -%}
+              {{ part }}{%- unless forloop.last -%}.<br>{%- endunless -%}
+            {%- endfor -%}
+          </h2>
         {%- endif -%}
         {%- if section.settings.text != blank -%}
           <div class="rte">{{ section.settings.text }}</div>
@@ -31,11 +36,10 @@
           height: 1017,
           sizes: '(min-width: 990px) 640px, 100vw'
         %}
-        {%- if section.settings.video != blank -%}
-          <button type="button" class="sgym-inline-video__btn" data-sgym-pause aria-label="{{ section.settings.pause_label }}" aria-pressed="true">
-            {% render 'sgym-icon', name: 'play-circle-64', size: 28 %}
-          </button>
-        {%- endif -%}
+        <button type="button" class="sgym-inline-video__btn" data-sgym-pause aria-label="{{ section.settings.pause_label }}" aria-pressed="true">
+          <img class="is-pause" src="{{ 'sgym-play-button.svg' | asset_url }}" width="34" height="34" alt="">
+          <img class="is-play" src="{{ 'sgym-play-button-play.svg' | asset_url }}" width="34" height="34" alt="">
+        </button>
       </sgym-inline-video>
     </div>
   </div>
@@ -68,8 +72,8 @@
     { "type": "text", "id": "pause_label", "label": "Pause label", "default": "Pause video" },
     { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
     { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
-    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Top padding", "default": 20 },
-    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Bottom padding", "default": 20 }
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 1, "unit": "px", "label": "Top padding", "default": 25 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "label": "Bottom padding", "default": 25 }
   ],
   "presets": [{ "name": "sGym media with text", "category": "sGym" }]
 }

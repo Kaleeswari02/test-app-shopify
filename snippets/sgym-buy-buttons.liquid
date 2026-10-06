@@ -82,8 +82,8 @@
           {%- endif -%}
         </span>
         {%- if stock_variant.available and delivery != blank -%}
-          <span aria-hidden="true">·</span>
-          <span>{{ delivery }}</span>
+          <span class="sgym-price__dot" aria-hidden="true">·</span>
+          <span class="sgym-stock__delivery">{{ delivery }}</span>
         {%- endif -%}
       </p>
     {%- endif -%}

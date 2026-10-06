@@ -15,9 +15,9 @@
 
 <div class="sgym sgym-section sgym--dark">
   <div class="sgym-wrap">
-    <sgym-carousel class="sgym-carousel sgym-carousel--dots-mobile" data-loop="true">
+    <sgym-carousel class="sgym-carousel sgym-carousel--dots-mobile">
       <div class="sgym-carousel__head">
-        <div class="sgym-intro" style="justify-items: start; text-align: left; margin: 0;">
+        <div class="sgym-intro">
           {%- if section.settings.eyebrow != blank -%}
             <p class="sgym-pill-tag">{{ section.settings.eyebrow }}</p>
           {%- endif -%}
@@ -30,10 +30,10 @@
         </div>
         <div class="sgym-carousel__arrows">
           <button type="button" class="sgym-arrow" data-sgym-prev aria-label="{{ 'general.slider.previous_slide' | t }}">
-            <img src="{{ 'sgym-carousel-next-light.svg' | asset_url }}" alt="" width="44" height="44">
+            <img src="{{ 'sgym-carousel-prev-dark.svg' | asset_url }}" alt="" width="54" height="54">
           </button>
           <button type="button" class="sgym-arrow" data-sgym-next aria-label="{{ 'general.slider.next_slide' | t }}">
-            <img src="{{ 'sgym-carousel-next-light.svg' | asset_url }}" alt="" width="44" height="44">
+            <img src="{{ 'sgym-carousel-next-light.svg' | asset_url }}" alt="" width="54" height="54">
           </button>
         </div>
       </div>

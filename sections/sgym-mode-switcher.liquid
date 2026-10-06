@@ -5,7 +5,7 @@
 <div class="sgym sgym-section">
   <div class="sgym-wrap">
     <div class="sgym-modes">
-      {% render 'sgym-heading', title: section.settings.heading, text: section.settings.subheading %}
+      {% render 'sgym-heading', title: section.settings.heading, text: section.settings.subheading, title_class: 'sgym-title--loose' %}
       <sgym-modes>
         <div class="sgym-modes__stage">
           {%- for block in section.blocks -%}
@@ -16,11 +16,18 @@
                 fallback: block.settings.fallback_asset,
                 alt: mode_alt,
                 width: 1800,
-                height: 900,
-                sizes: '(min-width: 990px) 1100px, 100vw'
+                height: 1184,
+                sizes: '(min-width: 990px) 1080px, 100vw'
               %}
               {%- if block.settings.title != blank or block.settings.text != blank -%}
                 <div class="sgym-modes__overlay">
+                  {%- if block.settings.icon != blank -%}
+                    {{
+                      block.settings.icon
+                      | image_url: width: 116
+                      | image_tag: class: 'sgym-modes__icon', widths: '58, 116', sizes: '58px', alt: '', loading: 'lazy'
+                    }}
+                  {%- endif -%}
                   {%- if block.settings.title != blank -%}
                     <h3>{{ block.settings.title }}</h3>
                   {%- endif -%}
@@ -31,18 +38,19 @@
               {%- endif -%}
             </div>
           {%- endfor -%}
-        </div>
-        <div class="sgym-modes__switch" role="tablist" aria-label="{{ section.settings.heading | escape }}">
-          {%- for block in section.blocks -%}
-            <button
-              type="button"
-              role="tab"
-              data-sgym-mode
-              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-            >
-              {{ block.settings.label }}
-            </button>
-          {%- endfor -%}
+          <div class="sgym-modes__switch" role="tablist" aria-label="{{ section.settings.heading | escape }}">
+            <span class="sgym-modes__thumb" aria-hidden="true"></span>
+            {%- for block in section.blocks -%}
+              <button
+                type="button"
+                role="tab"
+                data-sgym-mode
+                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+              >
+                {{ block.settings.label }}
+              </button>
+            {%- endfor -%}
+          </div>
         </div>
       </sgym-modes>
     </div>
@@ -60,8 +68,8 @@
     { "type": "richtext", "id": "subheading", "label": "Subheading", "default": "<p>Whether you train solo or with a partner – you'll always find the right setup for your goals.</p>" },
     { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
     { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
-    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Top padding", "default": 20 },
-    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Bottom padding", "default": 20 }
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 1, "unit": "px", "label": "Top padding", "default": 25 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "label": "Bottom padding", "default": 25 }
   ],
   "blocks": [
     {
@@ -72,6 +80,7 @@
         { "type": "text", "id": "title", "label": "Overlay title", "default": "PARTNER MODUS:" },
         { "type": "textarea", "id": "text", "label": "Overlay text", "default": "Train as a duo, double your progress." },
         { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "image_picker", "id": "icon", "label": "Overlay icon", "info": "58px mark in the top right of the mode card. Not included in the theme export." },
         { "type": "text", "id": "fallback_asset", "label": "Bundled image filename" }
       ]
     }

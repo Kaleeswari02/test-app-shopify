@@ -13,18 +13,23 @@
         <div class="sgym-slide-card__top">
           <div>
             {%- if section.settings.heading != blank -%}
-              <h2>{{ section.settings.heading }}</h2>
+              <h2 class="sgym-title sgym-title--loose">{{ section.settings.heading }}</h2>
             {%- endif -%}
             {%- if section.settings.text != blank -%}
               <div class="sgym-sub rte">{{ section.settings.text }}</div>
             {%- endif -%}
           </div>
-          <p class="sgym-counter">
-            <span data-sgym-current>1</span>
-            {{ section.settings.counter_label }}
-            <span data-sgym-total>{{ section.blocks.size }}</span>
-          </p>
         </div>
+        <p class="sgym-counter">
+          <span class="sgym-counter__badge">
+            <svg class="sgym-counter__ring" viewBox="0 0 55 55" width="55" height="55" aria-hidden="true">
+              <circle cx="27.5" cy="27.5" r="25" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="1.5"></circle>
+              <circle class="sgym-counter__arc" cx="27.5" cy="27.5" r="25" fill="none" stroke="#fff" stroke-width="1.5" pathLength="100"></circle>
+            </svg>
+            <span data-sgym-current>1</span>
+          </span>
+          <span>{{ section.settings.counter_label }} <span data-sgym-total>{{ section.blocks.size }}</span></span>
+        </p>
         <div class="sgym-viewport" data-sgym-viewport tabindex="0">
           <ul class="sgym-track" data-sgym-track>
             {%- for block in section.blocks -%}
@@ -39,7 +44,13 @@
                   sizes: '(min-width: 990px) 1100px, 100vw'
                 %}
                 {%- if block.settings.label != blank -%}
-                  <span class="sgym-slide__label">{{ block.settings.label }}</span>
+                  <span class="sgym-slide__label" style="--sgym-label-x: {{ block.settings.label_x }}%; --sgym-label-y: {{ block.settings.label_y }}%; --sgym-label-bottom: auto;">{{ block.settings.label }}</span>
+                {%- endif -%}
+                {%- if block.settings.label_2 != blank -%}
+                  <span class="sgym-slide__label" style="--sgym-label-x: {{ block.settings.label_2_x }}%; --sgym-label-y: {{ block.settings.label_2_y }}%; --sgym-label-bottom: auto;">{{ block.settings.label_2 }}</span>
+                {%- endif -%}
+                {%- if block.settings.label_3 != blank -%}
+                  <span class="sgym-slide__label" style="--sgym-label-x: {{ block.settings.label_3_x }}%; --sgym-label-y: {{ block.settings.label_3_y }}%; --sgym-label-bottom: auto;">{{ block.settings.label_3 }}</span>
                 {%- endif -%}
               </li>
             {%- endfor -%}
@@ -66,12 +77,12 @@
     { "type": "text", "id": "counter_label", "label": "Counter word", "default": "OF" },
     { "type": "text", "id": "link_label", "label": "Link label", "default": "https://www.sportstech.de/live-app" },
     { "type": "url", "id": "link", "label": "Link" },
-    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": false, "info": "Autoplay is disabled when the visitor prefers reduced motion." },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": true, "info": "Autoplay is disabled when the visitor prefers reduced motion." },
     { "type": "range", "id": "interval", "min": 3, "max": 10, "step": 1, "unit": "s", "label": "Autoplay interval", "default": 5 },
     { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
     { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
-    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Top padding", "default": 20 },
-    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 2, "unit": "px", "label": "Bottom padding", "default": 20 }
+    { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 1, "unit": "px", "label": "Top padding", "default": 25 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 100, "step": 1, "unit": "px", "label": "Bottom padding", "default": 25 }
   ],
   "blocks": [
     {
@@ -80,7 +91,15 @@
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Image" },
         { "type": "text", "id": "fallback_asset", "label": "Bundled image filename" },
-        { "type": "text", "id": "label", "label": "Label", "default": "Workouts" }
+        { "type": "text", "id": "label", "label": "Label", "default": "Workouts" },
+        { "type": "range", "id": "label_x", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Label horizontal", "default": 8 },
+        { "type": "range", "id": "label_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Label vertical", "default": 72 },
+        { "type": "text", "id": "label_2", "label": "Second label" },
+        { "type": "range", "id": "label_2_x", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Second label horizontal", "default": 40 },
+        { "type": "range", "id": "label_2_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Second label vertical", "default": 18 },
+        { "type": "text", "id": "label_3", "label": "Third label" },
+        { "type": "range", "id": "label_3_x", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Third label horizontal", "default": 62 },
+        { "type": "range", "id": "label_3_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Third label vertical", "default": 46 }
       ]
     }
   ],

@@ -13,7 +13,7 @@
     {%- if rating != blank -%}
       <div class="sgym-reviews__score">
         <div class="sgym-reviews__value">{{ rating.rating }}</div>
-        {% render 'sgym-stars', rating: rating.rating, scale: rating.scale_max, size: 18 %}
+        {% render 'sgym-stars', rating: rating.rating, scale: rating.scale_max, size: 30 %}
         <p class="sgym-reviews__meta">
           {{ rating_count }}
           {{ section.settings.count_label }}
