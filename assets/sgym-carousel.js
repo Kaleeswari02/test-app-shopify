@@ -10,7 +10,7 @@ if (!customElements.get('sgym-carousel')) {
         this.prev = this.querySelector('[data-sgym-prev]');
         this.next = this.querySelector('[data-sgym-next]');
         this.dotsWrap = this.querySelector('[data-sgym-dots]');
-        this.currentEl = this.querySelector('[data-sgym-current]');
+        this.currentEls = this.querySelectorAll('[data-sgym-current]');
         this.totalEl = this.querySelector('[data-sgym-total]');
         this.motion = window.matchMedia('(prefers-reduced-motion: reduce)');
         this.reduceMotion = this.motion.matches;
@@ -44,7 +44,7 @@ if (!customElements.get('sgym-carousel')) {
 
         this.refresh();
 
-        if (this.dataset.autoplay === 'true' && !this.reduceMotion && !this.timer) {
+        if (this.dataset.autoplay === 'true' && !this.reduceMotion && !this.timer && this.slides().length > 1) {
           const interval = Number(this.dataset.interval || 6000);
           this.timer = window.setInterval(() => this.move(1), interval);
           this.addEventListener('mouseenter', () => this.pauseAutoplay(), { signal });
@@ -268,7 +268,9 @@ if (!customElements.get('sgym-carousel')) {
           if (i === index) dot.setAttribute('aria-current', 'true');
           else dot.removeAttribute('aria-current');
         });
-        if (this.currentEl) this.currentEl.textContent = String(index + 1);
+        this.currentEls?.forEach((el) => {
+          el.textContent = String(index + 1);
+        });
         if (this.totalEl) this.totalEl.textContent = String(this.slides().length);
         const loop = this.dataset.loop === 'true';
         const left = this.viewport.scrollLeft;

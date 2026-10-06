@@ -58,3 +58,32 @@
     }
   }
 {%- endstyle -%}
+<script>
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('sgym-motion');
+  }
+  (function () {
+    var script = document.currentScript;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function bind() {
+      var wrap = script.closest('.shopify-section') || script.parentElement;
+      if (!wrap || wrap.dataset.sgymRevealBound === 'true') return;
+      wrap.dataset.sgymRevealBound = 'true';
+      var section = wrap.querySelector('.sgym-section') || wrap;
+      if (reduce) {
+        section.classList.add('is-in');
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          section.classList.add('is-in');
+          io.disconnect();
+        });
+      }, { threshold: 0.12 });
+      io.observe(section);
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind);
+    else bind();
+  })();
+</script>
