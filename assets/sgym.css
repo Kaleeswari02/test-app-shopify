@@ -26,6 +26,7 @@
 }
 
 .sgym-section {
+  display: block;
   padding-top: var(--sgym-pad-top, 0px);
   padding-bottom: var(--sgym-pad-bottom, 0px);
   overflow-x: clip;
@@ -344,6 +345,7 @@ sgym-carousel {
   position: relative;
   min-height: 460px;
   height: min(72vw, 660px);
+  margin-bottom: 0;
   color: #fff;
   display: flex;
   align-items: flex-end;
@@ -491,6 +493,7 @@ sgym-carousel {
 
 /* Product */
 .sgym-product {
+  margin-top: 0;
   color: var(--sgym-buybox);
 }
 
@@ -694,6 +697,9 @@ sgym-carousel {
   flex-direction: column;
   gap: 20px;
   min-width: 0;
+  margin-top: 0;
+  position: relative;
+  top: auto;
 }
 
 .sgym-product__title {
@@ -1939,8 +1945,7 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
 .sgym h1,
 .sgym h2,
 .sgym h3,
-.sgym .sgym-title,
-.sgym .sgym-product__title {
+.sgym .sgym-title {
   letter-spacing: 0;
 }
 
@@ -3462,12 +3467,35 @@ sgym-carousel:focus-within .sgym-counter__arc {
   justify-items: center;
   text-align: center;
   margin: 0 auto;
+  pointer-events: none;
 }
 
 .sgym--dark .sgym-carousel__arrows {
   position: absolute;
   right: 0;
   bottom: 0;
+  z-index: 3;
+  pointer-events: auto;
+}
+
+.sgym--dark .sgym-carousel__head .sgym-intro a {
+  pointer-events: auto;
+}
+
+.sgym--dark .sgym-arrow .is-disabled {
+  display: none;
+}
+
+.sgym--dark .sgym-arrow:disabled {
+  opacity: 1;
+}
+
+.sgym--dark .sgym-arrow:disabled .is-active {
+  display: none;
+}
+
+.sgym--dark .sgym-arrow:disabled .is-disabled {
+  display: block;
 }
 
 .sgym--dark .sgym-sub {
@@ -3918,5 +3946,176 @@ sgym-carousel:focus-within .sgym-counter__arc {
 
   .sgym-tabs__copy {
     flex: 1 1 auto;
+  }
+}
+
+/* Gallery + buy box fidelity. These follow the earlier rules so they win. */
+.sgym-gallery__thumbs {
+  line-height: 0;
+  position: relative;
+}
+
+.sgym-gallery__thumbs li {
+  display: flex;
+}
+
+.sgym-gallery__thumb {
+  border: 0;
+}
+
+.sgym-gallery__thumb[aria-current='true'] {
+  border-color: transparent;
+}
+
+.sgym-gallery__thumb[aria-current='true']::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid #181a1d;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.sgym-gallery__thumb .sgym-gallery__play img {
+  width: auto;
+  height: auto;
+  max-width: none;
+  object-fit: initial;
+}
+
+.sgym-gallery__thumb .sgym-gallery__play-glyph {
+  width: 10px;
+  height: 12px;
+  transform: translateX(1px);
+}
+
+.sgym-gallery__poster-play {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.sgym .sgym-gallery__poster-play img {
+  width: 44px;
+  height: 44px;
+  max-width: none;
+  object-fit: initial;
+}
+
+.sgym-gallery__nav {
+  background: #333;
+  opacity: 0.5;
+}
+
+.sgym-gallery__nav:hover,
+.sgym-gallery__nav:focus-visible {
+  opacity: 0.7;
+}
+
+@media screen and (min-width: 990px) {
+  .sgym-product__media {
+    margin-top: 6px;
+  }
+}
+
+.sgym-product__info {
+  line-height: normal;
+}
+
+.sgym .sgym-product__title {
+  line-height: 33px;
+  letter-spacing: 0.165px;
+}
+
+.sgym-features__label {
+  line-height: normal;
+}
+
+.sgym-info__summary,
+.sgym-info__link {
+  line-height: 18px;
+}
+
+.sgym-info__body {
+  padding: 0 17px 13px;
+  line-height: normal;
+}
+
+.sgym-product__description p,
+.sgym-info__body ul,
+.sgym-info__body p {
+  margin: 0;
+}
+
+.sgym-info .sgym-icon {
+  transition: transform var(--sgym-dur) var(--sgym-ease);
+}
+
+.sgym-info details::details-content {
+  height: 0;
+  overflow: clip;
+  transition: height var(--sgym-dur) var(--sgym-ease), content-visibility var(--sgym-dur) allow-discrete;
+}
+
+.sgym-info details[open]::details-content {
+  height: auto;
+}
+
+.sgym-price__dot {
+  opacity: 1;
+  color: rgba(24, 26, 29, 0.35);
+  margin: 0 4px;
+}
+
+.sgym-stock .sgym-price__dot {
+  margin: 0;
+}
+
+.sgym-stock {
+  margin-top: 24px;
+}
+
+.sgym-trustrow {
+  gap: 0;
+}
+
+.sgym-trustrow__item p {
+  max-width: 90px;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+.sgym-trustpilot img.sgym-trustpilot__logo {
+  width: 92px;
+  height: 23px;
+  max-width: none;
+}
+
+.sgym-features__item > .sgym-icon,
+.sgym-features__item > img {
+  align-self: flex-start;
+}
+
+.sgym-option {
+  background: #fff;
+}
+
+@media screen and (max-width: 749px) {
+  .sgym-gallery__thumb {
+    width: 62px;
+    height: 62px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sgym-info .sgym-icon,
+  .sgym-info details::details-content,
+  .sgym-gallery__nav {
+    transition: none;
   }
 }

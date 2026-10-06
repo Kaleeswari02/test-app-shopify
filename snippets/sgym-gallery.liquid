@@ -1,30 +1,200 @@
 {% comment %}
-  Vertical thumbnail gallery for product.media.
-  360 and AR controls render only when a spin asset or 3D model exists.
+  Product gallery. Design mode uses theme gallery blocks (bundled images by default).
+  Product mode uses product.media, including video, models, and 360/AR when enabled.
 
   Accepts:
   - product: {Object}
   - section: {Object}
+  - gallery_source: {String} design | product
 {% endcomment %}
 {%- liquid
-  assign active_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media
-  assign spin_media = nil
-  assign model_media = nil
-  for media in product.media
-    assign alt_down = media.alt | downcase
-    if spin_media == nil
-      if alt_down contains '360' or alt_down contains 'spin'
-        assign spin_media = media
-      endif
-    endif
-    if model_media == nil and media.media_type == 'model'
-      assign model_media = media
+  assign gallery_source = gallery_source | default: 'design'
+  assign design_count = 0
+  for block in section.blocks
+    if block.type == 'gallery_image' or block.type == 'gallery_video'
+      assign design_count = design_count | plus: 1
     endif
   endfor
-  assign spin_target = spin_media | default: model_media
+  assign use_design = false
+  if gallery_source == 'design' and design_count > 0
+    assign use_design = true
+  endif
+
+  assign active_media = nil
+  assign spin_media = nil
+  assign model_media = nil
+  assign spin_target = nil
+  unless use_design
+    assign active_media = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+    for media in product.media
+      assign alt_down = media.alt | downcase
+      if spin_media == nil
+        if alt_down contains '360' or alt_down contains 'spin'
+          assign spin_media = media
+        endif
+      endif
+      if model_media == nil and media.media_type == 'model'
+        assign model_media = media
+      endif
+    endfor
+    assign spin_target = spin_media | default: model_media
+  endunless
+
+  assign thumb_sizes = '62px'
+  assign thumb_widths = '96, 160'
+  assign slide_sizes = '(min-width: 990px) 664px, 100vw'
+  assign slide_widths = '400, 700, 1000, 1400, 1600'
+  assign poster_widths = '400, 800, 1400'
 -%}
-<sgym-gallery class="sgym-gallery" data-section="{{ section.id }}">
-  {%- if product.media.size > 0 -%}
+<sgym-gallery class="sgym-gallery" data-section="{{ section.id }}" tabindex="0">
+  {%- if use_design -%}
+    <div class="sgym-gallery__frame">
+      <ul class="sgym-gallery__thumbs" role="list">
+        {%- assign thumb_index = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'gallery_image' or block.type == 'gallery_video' -%}
+            {%- liquid
+              assign thumb_index = thumb_index | plus: 1
+              assign thumb_image = block.settings.image
+              assign thumb_fallback = block.settings.fallback_asset
+              assign thumb_alt = ''
+              if block.type == 'gallery_video'
+                assign thumb_image = block.settings.poster
+                if thumb_fallback == blank
+                  assign thumb_fallback = 'sgym-gallery-12-video-poster.jpg'
+                endif
+              endif
+            -%}
+            <li>
+              <button
+                type="button"
+                class="sgym-gallery__thumb"
+                data-sgym-thumb
+                aria-label="{{ 'products.product.media.load_image' | t: index: thumb_index }}"
+                {% if thumb_index == 1 %}
+                  aria-current="true"
+                {% endif %}
+                {{ block.shopify_attributes }}
+              >
+                {% render 'sgym-picture',
+                  image: thumb_image,
+                  fallback: thumb_fallback,
+                  alt: thumb_alt,
+                  width: 160,
+                  height: 160,
+                  sizes: thumb_sizes,
+                  widths: thumb_widths,
+                  loading: 'lazy'
+                %}
+                {%- if block.type == 'gallery_video' -%}
+                  <span class="sgym-gallery__play">
+                    <img src="{{ 'sgym-play-bg.svg' | asset_url }}" width="28" height="28" alt="">
+                    <img class="sgym-gallery__play-glyph" src="{{ 'sgym-play.svg' | asset_url }}" width="10" height="12" alt="">
+                  </span>
+                {%- endif -%}
+              </button>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+      <div class="sgym-gallery__stage">
+        {%- assign slide_index = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'gallery_image' or block.type == 'gallery_video' -%}
+            {%- liquid
+              assign slide_index = slide_index | plus: 1
+              assign is_active = false
+              if slide_index == 1
+                assign is_active = true
+                assign slide_loading = 'eager'
+              else
+                assign slide_loading = 'lazy'
+              endif
+              assign slide_image = block.settings.image
+              assign slide_fallback = block.settings.fallback_asset
+              assign slide_alt = block.settings.alt
+              if block.type == 'gallery_video'
+                assign slide_image = block.settings.poster
+                if slide_fallback == blank
+                  assign slide_fallback = 'sgym-gallery-12-video-poster.jpg'
+                endif
+              endif
+            -%}
+            <div
+              class="sgym-gallery__slide{% if is_active %} is-active{% endif %}"
+              data-media-id="{{ block.id }}"
+              data-media-type="{% if block.type == 'gallery_video' %}video{% else %}image{% endif %}"
+              {% unless is_active %}
+                hidden
+              {% endunless %}
+            >
+              {%- if block.type == 'gallery_image' -%}
+                {% render 'sgym-picture',
+                  image: slide_image,
+                  fallback: slide_fallback,
+                  alt: slide_alt,
+                  width: 1600,
+                  height: 1600,
+                  sizes: slide_sizes,
+                  widths: slide_widths,
+                  loading: slide_loading
+                %}
+              {%- elsif block.settings.video != blank -%}
+                <deferred-media>
+                  <button
+                    id="Deferred-Poster-{{ section.id }}-{{ block.id }}"
+                    class="sgym-gallery__poster"
+                    type="button"
+                    aria-label="{{ 'products.product.media.play_video' | t }}"
+                  >
+                    {% render 'sgym-picture',
+                      image: slide_image,
+                      fallback: slide_fallback,
+                      alt: slide_alt,
+                      width: 1400,
+                      height: 788,
+                      sizes: slide_sizes,
+                      widths: poster_widths,
+                      loading: slide_loading
+                    %}
+                    <span class="sgym-gallery__poster-play">
+                      {% render 'sgym-icon', name: 'play-button', size: 44 %}
+                    </span>
+                  </button>
+                  <template>
+                    {{ block.settings.video | video_tag: image_size: '1600x', autoplay: true, loop: section.settings.enable_video_looping, controls: true, preload: 'none' }}
+                  </template>
+                </deferred-media>
+              {%- else -%}
+                {% render 'sgym-picture',
+                  image: slide_image,
+                  fallback: slide_fallback,
+                  alt: slide_alt,
+                  width: 1280,
+                  height: 720,
+                  sizes: slide_sizes,
+                  widths: poster_widths,
+                  loading: slide_loading
+                %}
+                <span class="sgym-gallery__poster-play">
+                  {% render 'sgym-icon', name: 'play-button', size: 44 %}
+                </span>
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if design_count > 1 -%}
+          <button type="button" class="sgym-gallery__nav sgym-gallery__nav--prev" data-sgym-gallery-prev aria-label="{{ 'general.slider.previous_slide' | t }}">
+            {% render 'sgym-icon', name: 'slider-arrow', size: 18 %}
+          </button>
+          <button type="button" class="sgym-gallery__nav sgym-gallery__nav--next" data-sgym-gallery-next aria-label="{{ 'general.slider.next_slide' | t }}">
+            {% render 'sgym-icon', name: 'slider-arrow', size: 18 %}
+          </button>
+        {%- endif -%}
+      </div>
+    </div>
+    <p class="visually-hidden" aria-live="polite" data-sgym-gallery-status></p>
+  {%- elsif product.media.size > 0 -%}
     <div class="sgym-gallery__frame">
       <ul class="sgym-gallery__thumbs" role="list">
         {%- for media in product.media -%}
@@ -118,7 +288,9 @@
                       | image_url: width: 1400
                       | image_tag: widths: '400, 800, 1400', sizes: '(min-width: 990px) 664px, 100vw', alt: media.alt, loading: 'lazy'
                     }}
-                    <span class="sgym-gallery__play">{% render 'sgym-icon', name: 'play-button', size: 44 %}</span>
+                    <span class="sgym-gallery__poster-play">
+                      {% render 'sgym-icon', name: 'play-button', size: 44 %}
+                    </span>
                   </button>
                   <template>
                     {%- if media.media_type == 'external_video' -%}

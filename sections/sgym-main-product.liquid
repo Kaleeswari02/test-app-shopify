@@ -35,7 +35,8 @@
   {%- endif -%}
   <div class="sgym-product__layout">
     <div class="sgym-product__media">
-      {% render 'sgym-gallery', product: product, section: section %}
+      {%- assign gallery_source = section.settings.gallery_source | default: 'design' -%}
+      {% render 'sgym-gallery', product: product, section: section, gallery_source: gallery_source %}
     </div>
     <div class="sgym-product__info">
       {%- if section.blocks.size == 0 and product != blank -%}
@@ -60,16 +61,26 @@
             <h1 class="sgym-product__title" {{ block.shopify_attributes }}>{{ product.title | escape }}</h1>
 
           {%- when 'rating' -%}
-            {%- if product.metafields.reviews.rating.value != blank -%}
+            {%- liquid
+              assign rating_value = product.metafields.reviews.rating.value.rating
+              assign rating_scale = product.metafields.reviews.rating.value.scale_max
+              assign rating_count = product.metafields.reviews.rating_count
+              if rating_value == blank and block.settings.fallback_rating != blank
+                assign rating_value = block.settings.fallback_rating
+                assign rating_scale = 5
+                assign rating_count = block.settings.fallback_count
+              endif
+            -%}
+            {%- if rating_value != blank -%}
               <div class="sgym-rating" {{ block.shopify_attributes }}>
                 {% render 'sgym-stars',
-                  rating: product.metafields.reviews.rating.value.rating,
-                  scale: product.metafields.reviews.rating.value.scale_max,
+                  rating: rating_value,
+                  scale: rating_scale,
                   size: 14
                 %}
-                <span>{{ product.metafields.reviews.rating.value.rating }}</span>
+                <span>{{ rating_value }}</span>
                 <span class="sgym-rating__count">
-                  {{ product.metafields.reviews.rating_count }}
+                  {{ rating_count }}
                   {{ block.settings.count_label }}
                   <span class="visually-hidden">{{ 'accessibility.total_reviews' | t }}</span>
                 </span>
@@ -88,6 +99,8 @@
                 {%- else -%}
                   {{ short_mf.value | default: short_mf }}
                 {%- endif -%}
+              {%- elsif block.settings.fallback != blank -%}
+                {{ block.settings.fallback }}
               {%- elsif product.description != blank -%}
                 {{ product.description | strip_html | truncate: block.settings.truncate }}
               {%- endif -%}
@@ -182,7 +195,12 @@
               {%- elsif block.settings.icon != 'none' -%}
                 {% render 'sgym-icon', name: block.settings.icon, size: 20 %}
               {%- endif -%}
-              <p>{{ block.settings.title }}</p>
+              {%- assign trust_lines = block.settings.title | split: '|' -%}
+              <p>
+                {%- for line in trust_lines -%}
+                  {{ line | strip }}{%- unless forloop.last -%}<br>{%- endunless -%}
+                {%- endfor -%}
+              </p>
             </div>
             {%- if next_type != 'trust_item' -%}
               </div>
@@ -331,6 +349,17 @@
       "default": false
     },
     {
+      "type": "select",
+      "id": "gallery_source",
+      "label": "Gallery source",
+      "default": "design",
+      "options": [
+        { "value": "design", "label": "Design images (theme)" },
+        { "value": "product", "label": "Product media" }
+      ],
+      "info": "Design images use the gallery blocks and bundled theme assets. Product media uses the product media library."
+    },
+    {
       "type": "header",
       "content": "Typography"
     },
@@ -354,7 +383,7 @@
       "step": 2,
       "unit": "px",
       "label": "Top padding",
-      "default": 36
+      "default": 50
     },
     {
       "type": "range",
@@ -383,8 +412,20 @@
           "type": "text",
           "id": "count_label",
           "label": "Review count label",
-          "default": "Bewertungen",
-          "info": "Hidden when product.metafields.reviews.rating is empty."
+          "default": "Bewertungen"
+        },
+        {
+          "type": "text",
+          "id": "fallback_rating",
+          "label": "Fallback rating",
+          "default": "4.8",
+          "info": "Used only when product.metafields.reviews.rating is empty. Shown as a half-star fill."
+        },
+        {
+          "type": "text",
+          "id": "fallback_count",
+          "label": "Fallback review count",
+          "default": "249"
         }
       ]
     },
@@ -398,7 +439,13 @@
           "id": "metafield",
           "label": "Short description metafield",
           "default": "custom.short_description",
-          "info": "namespace.key. Falls back to the product description."
+          "info": "namespace.key. Falls back to the text below, then the product description."
+        },
+        {
+          "type": "richtext",
+          "id": "fallback",
+          "label": "Fallback description",
+          "default": "<p>Krafttraining mit elektrischem Widerstand bis 120 kg und über 400 Übungen, geführt über das 21\" Display – dazu Klimmzug, Dip-Station und unter 1,5m² Stellfläche.</p>"
         },
         {
           "type": "range",
@@ -608,7 +655,8 @@
           "type": "text",
           "id": "title",
           "label": "Label",
-          "default": "Kostenloser Versand"
+          "default": "Kostenloser Versand",
+          "info": "Use | to break the label onto two lines. Example: Kostenloser|Versand"
         }
       ]
     },
@@ -706,6 +754,25 @@
           "default": "* 30-Tage-Bestpreis: 2.549,00 €",
           "info": "Overridden by metafield custom.best_price on the variant or product."
         }
+      ]
+    },
+    {
+      "type": "gallery_image",
+      "name": "Gallery image",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "fallback_asset", "label": "Bundled image filename", "default": "sgym-gallery-01.jpg" },
+        { "type": "text", "id": "alt", "label": "Alt text" }
+      ]
+    },
+    {
+      "type": "gallery_video",
+      "name": "Gallery video",
+      "settings": [
+        { "type": "video", "id": "video", "label": "Video" },
+        { "type": "image_picker", "id": "poster", "label": "Poster" },
+        { "type": "text", "id": "fallback_asset", "label": "Bundled poster filename", "default": "sgym-gallery-12-video-poster.jpg" },
+        { "type": "text", "id": "alt", "label": "Alt text", "default": "Product video" }
       ]
     }
   ],
