@@ -58,7 +58,13 @@
 
         {%- case block.type -%}
           {%- when 'title' -%}
-            <h1 class="sgym-product__title" {{ block.shopify_attributes }}>{{ product.title | escape }}</h1>
+            <h1 class="sgym-product__title" {{ block.shopify_attributes }}>
+              {%- if block.settings.title_override != blank -%}
+                {{ block.settings.title_override | escape }}
+              {%- else -%}
+                {{ product.title | escape }}
+              {%- endif -%}
+            </h1>
 
           {%- when 'rating' -%}
             {%- liquid
@@ -164,9 +170,12 @@
             {% render 'sgym-variant-picker',
               product: product,
               block: block,
+              section: section,
               product_form_id: product_form_id,
               section_id: section.id
             %}
+
+          {%- when 'option_card' -%}
 
           {%- when 'buy_buttons' -%}
             {% render 'sgym-buy-buttons',
@@ -401,7 +410,15 @@
     {
       "type": "title",
       "name": "Title",
-      "limit": 1
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title_override",
+          "label": "Title override",
+          "info": "Leave blank to use the product title."
+        }
+      ]
     },
     {
       "type": "rating",
@@ -526,6 +543,31 @@
           "id": "show_asterisk",
           "label": "Show price asterisk",
           "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "use_design_price",
+          "label": "Use design price",
+          "default": false,
+          "info": "Also used automatically when the product price is 0, so a test product never shows $0.00."
+        },
+        {
+          "type": "text",
+          "id": "design_price",
+          "label": "Design price",
+          "default": "2.999,00 €"
+        },
+        {
+          "type": "text",
+          "id": "design_compare",
+          "label": "Design compare-at price",
+          "default": "3.499,00 €"
+        },
+        {
+          "type": "text",
+          "id": "design_savings",
+          "label": "Design savings",
+          "default": "500,00 €"
         }
       ]
     },
@@ -583,6 +625,35 @@
           "label": "Included label",
           "default": "Im Preis enthalten",
           "info": "Shown when the option price matches the first variant."
+        }
+      ]
+    },
+    {
+      "type": "option_card",
+      "name": "Option card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Name",
+          "default": "Standard"
+        },
+        {
+          "type": "text",
+          "id": "subline",
+          "label": "Sub line",
+          "default": "Im Preis enthalten"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Bundle product"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Bundle link",
+          "info": "Used when the product has only the default variant. A real variant list replaces these cards."
         }
       ]
     },
