@@ -1,14 +1,22 @@
 {{ 'sgym.css' | asset_url | stylesheet_tag }}
 {% render 'sgym-fonts' %}
 <script src="{{ 'sgym-carousel.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'sgym-ui.js' | asset_url }}" defer="defer"></script>
+<script>
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.documentElement.classList.add('sgym-motion');
+  }
+</script>
 
 <div class="sgym sgym-section">
   <div class="sgym-wrap">
-    <div class="sgym-slide-card">
+    <div class="sgym-slide-card" data-sgym-reveal>
       <sgym-carousel
-        data-autoplay="{% if section.settings.autoplay %}true{% else %}false{% endif %}"
+        data-autoplay="{% if section.settings.autoplay and section.blocks.size > 1 %}true{% else %}false{% endif %}"
         data-interval="{{ section.settings.interval | times: 1000 }}"
-        data-loop="true"
+        {% if section.blocks.size > 1 %}
+          data-loop="true"
+        {% endif %}
       >
         <div class="sgym-slide-card__top">
           <div>
@@ -20,47 +28,110 @@
             {%- endif -%}
           </div>
         </div>
-        <p class="sgym-counter">
-          <span class="sgym-counter__badge">
-            <svg class="sgym-counter__ring" viewBox="0 0 55 55" width="55" height="55" aria-hidden="true">
-              <circle cx="27.5" cy="27.5" r="25" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="1.5"></circle>
-              <circle class="sgym-counter__arc" cx="27.5" cy="27.5" r="25" fill="none" stroke="#fff" stroke-width="1.5" pathLength="100"></circle>
-            </svg>
-            <span data-sgym-current>1</span>
-          </span>
-          <span>{{ section.settings.counter_label }} <span data-sgym-total>{{ section.blocks.size }}</span></span>
-        </p>
+        {%- if section.blocks.size > 1 -%}
+          <p class="sgym-counter">
+            <span class="sgym-counter__text"><span data-sgym-current>1</span> {{ section.settings.counter_label }} <span data-sgym-total>{{ section.blocks.size }}</span></span>
+            <span class="sgym-counter__badge" aria-hidden="true">
+              <svg class="sgym-counter__ring" viewBox="0 0 55 55" width="55" height="55">
+                <circle cx="27.5" cy="27.5" r="25" fill="none" stroke="rgba(109,109,109,0.6)" stroke-width="2.5"></circle>
+                <circle class="sgym-counter__arc" cx="27.5" cy="27.5" r="25" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" pathLength="100"></circle>
+              </svg>
+              <span data-sgym-current>1</span>
+            </span>
+          </p>
+        {%- else -%}
+          <p class="sgym-counter sgym-counter--static">
+            <span class="sgym-counter__text">{{ section.settings.counter_current }} {{ section.settings.counter_label }} {{ section.settings.counter_total }}</span>
+            <span class="sgym-counter__badge" aria-hidden="true">
+              <svg class="sgym-counter__ring" viewBox="0 0 55 55" width="55" height="55">
+                <circle cx="27.5" cy="27.5" r="25" fill="none" stroke="rgba(109,109,109,0.6)" stroke-width="2.5"></circle>
+                <circle class="sgym-counter__arc" cx="27.5" cy="27.5" r="25" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" pathLength="100"></circle>
+              </svg>
+              <span>{{ section.settings.counter_current }}</span>
+            </span>
+          </p>
+        {%- endif -%}
         <div class="sgym-viewport" data-sgym-viewport tabindex="0">
           <ul class="sgym-track" data-sgym-track>
             {%- for block in section.blocks -%}
-              <li class="sgym-slide" style="flex-basis: 100%;" {{ block.shopify_attributes }}>
-                {%- assign slide_alt = block.settings.label | default: section.settings.heading -%}
-                {% render 'sgym-picture',
-                  image: block.settings.image,
-                  fallback: block.settings.fallback_asset,
-                  alt: slide_alt,
-                  width: 1600,
-                  height: 900,
-                  sizes: '(min-width: 990px) 1100px, 100vw'
-                %}
-                {%- if block.settings.label != blank -%}
-                  <span class="sgym-slide__label" style="--sgym-label-x: {{ block.settings.label_x }}%; --sgym-label-y: {{ block.settings.label_y }}%; --sgym-label-bottom: auto;">{{ block.settings.label }}</span>
-                {%- endif -%}
-                {%- if block.settings.label_2 != blank -%}
-                  <span class="sgym-slide__label" style="--sgym-label-x: {{ block.settings.label_2_x }}%; --sgym-label-y: {{ block.settings.label_2_y }}%; --sgym-label-bottom: auto;">{{ block.settings.label_2 }}</span>
-                {%- endif -%}
-                {%- if block.settings.label_3 != blank -%}
-                  <span class="sgym-slide__label" style="--sgym-label-x: {{ block.settings.label_3_x }}%; --sgym-label-y: {{ block.settings.label_3_y }}%; --sgym-label-bottom: auto;">{{ block.settings.label_3 }}</span>
-                {%- endif -%}
-              </li>
+              {%- case block.type -%}
+                {%- when 'collage' -%}
+                  <li class="sgym-slide sgym-slide--collage" style="flex-basis: 100%;" {{ block.shopify_attributes }}>
+                    <div class="sgym-collage sgym-enter" style="--sgym-delay: 100ms;">
+                      {%- assign collage_alt = section.settings.heading -%}
+                      {% render 'sgym-picture',
+                        image: block.settings.image,
+                        fallback: block.settings.fallback_asset,
+                        alt: collage_alt,
+                        width: 2222,
+                        height: 1400,
+                        sizes: '(min-width: 990px) 1111px, 100vw',
+                        class: 'sgym-collage__img'
+                      %}
+                    </div>
+                    <span class="sgym-slide__label sgym-enter" style="--sgym-label-x: 25.2%; --sgym-label-y: 7.14%; --sgym-label-bottom: auto; --sgym-delay: 500ms;">Trainingsdaten</span>
+                    <span class="sgym-slide__label sgym-slide__label--live sgym-enter" style="--sgym-label-x: 70.12%; --sgym-label-y: 3.14%; --sgym-label-bottom: auto; --sgym-delay: 580ms;">...und vieles mehr in der<br>Sportstech Live App</span>
+                    <span class="sgym-slide__label sgym-enter" style="--sgym-label-x: 3.42%; --sgym-label-y: 22.71%; --sgym-label-bottom: auto; --sgym-delay: 660ms;">Workouts</span>
+                    <img
+                      class="sgym-ai-badge sgym-enter sgym-enter--pop"
+                      style="--sgym-delay: 620ms;"
+                      src="{{ 'sgym-ai-badge-50.png' | asset_url }}"
+                      alt=""
+                      width="50"
+                      height="50"
+                    >
+                    <span class="sgym-slide__label sgym-enter" style="--sgym-label-x: 86.41%; --sgym-label-y: 19.57%; --sgym-label-bottom: auto; --sgym-delay: 740ms;">Stats</span>
+                    <span class="sgym-slide__label sgym-enter" style="--sgym-label-x: 2.61%; --sgym-label-y: 84.86%; --sgym-label-bottom: auto; --sgym-delay: 820ms;">Landscapes</span>
+                    <span class="sgym-slide__label sgym-enter" style="--sgym-label-x: 85.69%; --sgym-label-y: 82%; --sgym-label-bottom: auto; --sgym-delay: 900ms;">Recipes</span>
+                    {%- if section.settings.link_label != blank -%}
+                      <a class="sgym-slide-card__link sgym-enter sgym-enter--link" style="--sgym-delay: 1000ms;" href="{{ section.settings.link | default: 'https://www.sportstech.de/live-app' }}">{{ section.settings.link_label }}</a>
+                    {%- endif -%}
+                  </li>
+                {%- when 'video' -%}
+                  <li class="sgym-slide" style="flex-basis: 100%;" {{ block.shopify_attributes }}>
+                    {%- if block.settings.video != blank -%}
+                      {{ block.settings.video | video_tag: image_size: '1600x', autoplay: false, loop: true, controls: true, class: 'sgym-slide__video' }}
+                    {%- else -%}
+                      {%- assign poster_alt = section.settings.heading -%}
+                      {% render 'sgym-picture',
+                        image: block.settings.poster,
+                        fallback: block.settings.fallback_asset,
+                        alt: poster_alt,
+                        width: 1600,
+                        height: 900,
+                        sizes: '(min-width: 990px) 1100px, 100vw'
+                      %}
+                    {%- endif -%}
+                  </li>
+                {%- else -%}
+                  <li class="sgym-slide" style="flex-basis: 100%;" {{ block.shopify_attributes }}>
+                    {%- assign slide_alt = block.settings.label | default: section.settings.heading -%}
+                    {% render 'sgym-picture',
+                      image: block.settings.image,
+                      fallback: block.settings.fallback_asset,
+                      alt: slide_alt,
+                      width: 1600,
+                      height: 900,
+                      sizes: '(min-width: 990px) 1100px, 100vw'
+                    %}
+                    {%- if block.settings.label != blank -%}
+                      <span class="sgym-slide__label" style="--sgym-label-x: {{ block.settings.label_x }}%; --sgym-label-y: {{ block.settings.label_y }}%; --sgym-label-bottom: auto;">{{ block.settings.label }}</span>
+                    {%- endif -%}
+                    {%- if block.settings.label_2 != blank -%}
+                      <span class="sgym-slide__label" style="--sgym-label-x: {{ block.settings.label_2_x }}%; --sgym-label-y: {{ block.settings.label_2_y }}%; --sgym-label-bottom: auto;">{{ block.settings.label_2 }}</span>
+                    {%- endif -%}
+                    {%- if block.settings.label_3 != blank -%}
+                      <span class="sgym-slide__label" style="--sgym-label-x: {{ block.settings.label_3_x }}%; --sgym-label-y: {{ block.settings.label_3_y }}%; --sgym-label-bottom: auto;">{{ block.settings.label_3 }}</span>
+                    {%- endif -%}
+                  </li>
+              {%- endcase -%}
             {%- endfor -%}
           </ul>
         </div>
-        <div class="sgym-dots" data-sgym-dots></div>
+        {%- if section.blocks.size > 1 -%}
+          <div class="sgym-dots" data-sgym-dots></div>
+        {%- endif -%}
       </sgym-carousel>
-      {%- if section.settings.link_label != blank -%}
-        <a class="sgym-slide-card__link" href="{{ section.settings.link }}">{{ section.settings.link_label }}</a>
-      {%- endif -%}
     </div>
   </div>
 </div>
@@ -74,11 +145,13 @@
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "default": "More than just your smart gym." },
     { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Mit dem sGym Pro erhältst du Zugang zu einem smarten, digitalen Ökosystem, das Training, Daten und Coaching nahtlos verbindet.</p>" },
+    { "type": "text", "id": "counter_current", "label": "Counter number", "default": "3", "info": "Used when the section has a single slide, so the collage can read 3 OF 3." },
     { "type": "text", "id": "counter_label", "label": "Counter word", "default": "OF" },
+    { "type": "text", "id": "counter_total", "label": "Counter total", "default": "3", "info": "Used when the section has a single slide." },
     { "type": "text", "id": "link_label", "label": "Link label", "default": "https://www.sportstech.de/live-app" },
     { "type": "url", "id": "link", "label": "Link" },
-    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": true, "info": "Autoplay is disabled when the visitor prefers reduced motion." },
-    { "type": "range", "id": "interval", "min": 3, "max": 10, "step": 1, "unit": "s", "label": "Autoplay interval", "default": 5 },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": false, "info": "Ignored for a single slide and when the visitor prefers reduced motion. Off by default." },
+    { "type": "range", "id": "interval", "min": 3, "max": 10, "step": 1, "unit": "s", "label": "Autoplay interval", "default": 6 },
     { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
     { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
     { "type": "range", "id": "padding_top", "min": 0, "max": 100, "step": 1, "unit": "px", "label": "Top padding", "default": 25 },
@@ -86,12 +159,30 @@
   ],
   "blocks": [
     {
+      "type": "collage",
+      "name": "App collage",
+      "limit": 1,
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Collage image" },
+        { "type": "text", "id": "fallback_asset", "label": "Bundled collage filename", "default": "sgym-app-collage-3of3.png" }
+      ]
+    },
+    {
+      "type": "video",
+      "name": "Video slide",
+      "settings": [
+        { "type": "video", "id": "video", "label": "Video" },
+        { "type": "image_picker", "id": "poster", "label": "Poster" },
+        { "type": "text", "id": "fallback_asset", "label": "Bundled poster filename", "info": "Optional. Leave the section on the collage slide unless a video should play." }
+      ]
+    },
+    {
       "type": "slide",
-      "name": "Slide",
+      "name": "Image slide",
       "settings": [
         { "type": "image_picker", "id": "image", "label": "Image" },
         { "type": "text", "id": "fallback_asset", "label": "Bundled image filename" },
-        { "type": "text", "id": "label", "label": "Label", "default": "Workouts" },
+        { "type": "text", "id": "label", "label": "Label" },
         { "type": "range", "id": "label_x", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Label horizontal", "default": 8 },
         { "type": "range", "id": "label_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Label vertical", "default": 72 },
         { "type": "text", "id": "label_2", "label": "Second label" },
@@ -103,6 +194,14 @@
       ]
     }
   ],
-  "presets": [{ "name": "sGym slideshow", "category": "sGym" }]
+  "presets": [
+    {
+      "name": "sGym slideshow",
+      "category": "sGym",
+      "blocks": [
+        { "type": "collage" }
+      ]
+    }
+  ]
 }
 {% endschema %}

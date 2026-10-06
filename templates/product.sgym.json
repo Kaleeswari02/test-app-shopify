@@ -560,40 +560,26 @@
     "story_app": {
       "type": "sgym-slideshow",
       "blocks": {
-        "slide_1": {
-          "type": "slide",
+        "collage": {
+          "type": "collage",
           "settings": {
-            "fallback_asset": "sgym-app-screen-workout-1.jpg",
-            "label": "Workouts"
-          }
-        },
-        "slide_2": {
-          "type": "slide",
-          "settings": {
-            "fallback_asset": "sgym-app-screen-workout-2.jpg",
-            "label": "Trainingsdaten"
-          }
-        },
-        "slide_3": {
-          "type": "slide",
-          "settings": {
-            "fallback_asset": "sgym-app-screen-workout-1.jpg",
-            "label": "Stats"
+            "fallback_asset": "sgym-app-collage-3of3.png"
           }
         }
       },
       "block_order": [
-        "slide_1",
-        "slide_2",
-        "slide_3"
+        "collage"
       ],
       "settings": {
         "heading": "More than just your smart gym.",
         "text": "<p>Mit dem sGym Pro erhältst du Zugang zu einem smarten, digitalen Ökosystem, das Training, Daten und Coaching nahtlos verbindet.</p>",
+        "counter_current": "3",
         "counter_label": "OF",
+        "counter_total": "3",
         "link_label": "https://www.sportstech.de/live-app",
         "link": "https://www.sportstech.de/live-app",
-        "autoplay": true,
+        "autoplay": false,
+        "interval": 6,
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
         "padding_top": 50,
@@ -607,27 +593,27 @@
           "type": "mode",
           "settings": {
             "label": "Partnermodus:",
-            "title": "PARTNER MODUS:",
+            "title": "Partner\nmodus:",
             "text": "Train as a duo, double your progress.",
-            "fallback_asset": "sgym-story-dynamic-modes-partner.jpg"
+            "fallback_asset": "sgym-mode-partner.jpg"
           }
         },
         "light": {
           "type": "mode",
           "settings": {
             "label": "Light mode",
-            "title": "LIGHT MODE:",
-            "text": "Train with guided resistance that stays smooth and consistent.",
-            "fallback_asset": "sgym-story-dynamic-modes-alt.jpg"
+            "title": "Light\nmode",
+            "text": "Start gently, refine your technique.",
+            "fallback_asset": "sgym-mode-light.jpg"
           }
         },
         "weighted": {
           "type": "mode",
           "settings": {
             "label": "Weighted mode",
-            "title": "WEIGHTED MODE:",
-            "text": "Add load and build strength with precise electric resistance.",
-            "fallback_asset": "sgym-story-dynamic-modes-alt.jpg"
+            "title": "Weighted\nmode",
+            "text": "Like free weights – only more precise.",
+            "fallback_asset": "sgym-mode-weighted.jpg"
           }
         }
       },
@@ -787,7 +773,7 @@
           "settings": {
             "name": "Carlo",
             "text": "Boost your workout with dynamic rides for all levels.",
-            "fallback_asset": "sgym-coach-carlo.jpg"
+            "fallback_asset": "sgym-coach-carlo-studio.jpg"
           }
         },
         "lina": {
@@ -795,7 +781,7 @@
           "settings": {
             "name": "Lina",
             "text": "Full power with full-body cycling & relaxing walking workouts!",
-            "fallback_asset": "sgym-coach-lina.jpg"
+            "fallback_asset": "sgym-coach-lina-studio.jpg"
           }
         },
         "time": {
@@ -803,7 +789,7 @@
           "settings": {
             "name": "Time",
             "text": "Exciting cycling challenges to reach your next fitness level!",
-            "fallback_asset": "sgym-coach-time.jpg"
+            "fallback_asset": "sgym-coach-time-studio.jpg"
           }
         },
         "lauren": {
@@ -811,7 +797,23 @@
           "settings": {
             "name": "Lauren",
             "text": "Cycling and running for more endurance & full-body workouts.",
-            "fallback_asset": "sgym-coach-lauren.jpg"
+            "fallback_asset": "sgym-coach-lauren-studio.jpg"
+          }
+        },
+        "gustavo": {
+          "type": "person",
+          "settings": {
+            "name": "Gustavo",
+            "text": "With our Sportstech Live Trainers, real experts in their field",
+            "fallback_asset": "sgym-coach-gustavo-studio.jpg"
+          }
+        },
+        "patrico": {
+          "type": "person",
+          "settings": {
+            "name": "Patrico",
+            "text": "With our Sportstech Live Trainers, real experts in their field",
+            "fallback_asset": "sgym-coach-patrico-studio.jpg"
           }
         }
       },
@@ -819,7 +821,9 @@
         "carlo",
         "lina",
         "time",
-        "lauren"
+        "lauren",
+        "gustavo",
+        "patrico"
       ],
       "settings": {
         "eyebrow": "Trainer",

@@ -27,9 +27,11 @@
                       | image_url: width: 116
                       | image_tag: class: 'sgym-modes__icon', widths: '58, 116', sizes: '58px', alt: '', loading: 'lazy'
                     }}
+                  {%- else -%}
+                    {% render 'sgym-icon', name: 'icon-partner-exchange', size: 58, class: 'sgym-modes__icon' %}
                   {%- endif -%}
                   {%- if block.settings.title != blank -%}
-                    <h3>{{ block.settings.title }}</h3>
+                    <h3>{{ block.settings.title | newline_to_br }}</h3>
                   {%- endif -%}
                   {%- if block.settings.text != blank -%}
                     <p>{{ block.settings.text }}</p>
@@ -80,7 +82,7 @@
         { "type": "text", "id": "title", "label": "Overlay title", "default": "PARTNER MODUS:" },
         { "type": "textarea", "id": "text", "label": "Overlay text", "default": "Train as a duo, double your progress." },
         { "type": "image_picker", "id": "image", "label": "Image" },
-        { "type": "image_picker", "id": "icon", "label": "Overlay icon", "info": "58px mark in the top right of the mode card. Not included in the theme export." },
+        { "type": "image_picker", "id": "icon", "label": "Overlay icon", "info": "58px mark. Leave empty to use the bundled partner-exchange icon on every mode." },
         { "type": "text", "id": "fallback_asset", "label": "Bundled image filename" }
       ]
     }

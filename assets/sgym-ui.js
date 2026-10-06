@@ -191,3 +191,28 @@ if (!customElements.get('sgym-modes')) {
     }
   );
 }
+
+function sgymReveal(root) {
+  const scope = root && root.querySelectorAll ? root : document;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  scope.querySelectorAll('[data-sgym-reveal]:not(.is-in)').forEach((node) => {
+    if (reduce) {
+      node.classList.add('is-in');
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-in');
+          io.disconnect();
+        });
+      },
+      { threshold: 0.2 }
+    );
+    io.observe(node);
+  });
+}
+
+sgymReveal();
+document.addEventListener('shopify:section:load', (event) => sgymReveal(event.target));
