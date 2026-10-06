@@ -14,7 +14,8 @@
   if star_scale == 0
     assign star_scale = 5
   endif
-  assign star_fill = star_rating | times: 100.0 | divided_by: star_scale
+  assign star_steps = star_rating | times: 2.0 | floor
+  assign star_fill = star_steps | times: 100.0 | divided_by: star_scale | divided_by: 2.0
   if star_fill > 100
     assign star_fill = 100
   endif

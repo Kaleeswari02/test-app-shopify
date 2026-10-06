@@ -30,14 +30,17 @@
         "rating": {
           "type": "rating",
           "settings": {
-            "count_label": "Bewertungen"
+            "count_label": "Bewertungen",
+            "fallback_rating": "4.8",
+            "fallback_count": "249"
           }
         },
         "description": {
           "type": "description",
           "settings": {
             "metafield": "custom.short_description",
-            "truncate": 220
+            "truncate": 220,
+            "fallback": "<p>Krafttraining mit elektrischem Widerstand bis 120 kg und über 400 Übungen, geführt über das 21\" Display – dazu Klimmzug, Dip-Station und unter 1,5m² Stellfläche.</p>"
           }
         },
         "info_highlights": {
@@ -45,7 +48,7 @@
           "settings": {
             "title": "Highlights",
             "behavior": "expand",
-            "content": "<p>Krafttraining mit elektrischem Widerstand bis 120 kg und über 400 Übungen, geführt über das 21\" Display – dazu Klimmzug, Dip-Station und unter 1,5 m² Stellfläche.</p>",
+            "content": "<ul><li>400+ Übungsvarianten von Bankdrücken über Squats bis Klimmzüge</li><li>Ganzkörpertraining: Brust, Rücken, Beine, Schultern, Bauch, Arme und mehr</li><li>Elektronischer Widerstand bis 120 kg (60 kg pro Seite) – stufenlos einstellbar</li><li>21″ Touch-Display mit STL App, Trainingsplänen, Workouts und Tracking</li><li>Inklusive Klimmzugstange, Dipbar, Gewichtsgürtel, Trizepsseil, 2× Einzelgriffe, 2x Verlängerungen, Langhantel und Schlaufe für Kickbacks</li><li>Paralleltraining für zwei Personen möglich</li><li>Verstellbarer Kabelzug oben und unten für maximale Übungsvielfalt</li><li>Klappbar und mit Transportrollen – verstaut unter 1 m² Stellfläche</li><li>Edles schwarzes Design mit Spiegeloptik und massivem Rahmen</li><li>Supportfunktion und Extra Gewicht für Klimmzüge und Dips</li></ul>",
             "open": false
           }
         },
@@ -94,7 +97,7 @@
           "settings": {
             "icon": "feat-footprint",
             "value": "Nur 2 m²",
-            "label": "Stellfläche"
+            "label": "Stellfläche benötigt"
           }
         },
         "feat_4": {
@@ -110,7 +113,7 @@
           "settings": {
             "icon": "feat-fullbody",
             "value": "Ganzkörpertraining",
-            "label": "Kraft, Cardio & Mobility"
+            "label": "für alle Muskelgruppen"
           }
         },
         "variants": {
@@ -135,21 +138,21 @@
           "type": "trust_item",
           "settings": {
             "icon": "trust-box",
-            "title": "Kostenloser Versand"
+            "title": "Kostenloser|Versand"
           }
         },
         "trust_2": {
           "type": "trust_item",
           "settings": {
             "icon": "trust-shield",
-            "title": "2 Jahre Garantie"
+            "title": "2 Jahre|Garantie"
           }
         },
         "trust_3": {
           "type": "trust_item",
           "settings": {
             "icon": "trust-users",
-            "title": "4 Millionen Kunden"
+            "title": "4 Millionen|Kunden"
           }
         },
         "trustpilot": {
@@ -186,6 +189,90 @@
           "settings": {
             "text": "* 30-Tage-Bestpreis: 2.549,00 €"
           }
+        },
+        "gal_01": {
+          "type": "gallery_image",
+          "settings": {
+            "fallback_asset": "sgym-gallery-01.jpg",
+            "alt": "sGym Pro 1"
+          }
+        },
+        "gal_02": {
+          "type": "gallery_image",
+          "settings": {
+            "fallback_asset": "sgym-gallery-02.jpg",
+            "alt": "sGym Pro 2"
+          }
+        },
+        "gal_03": {
+          "type": "gallery_image",
+          "settings": {
+            "fallback_asset": "sgym-gallery-03.jpg",
+            "alt": "sGym Pro 3"
+          }
+        },
+        "gal_04": {
+          "type": "gallery_image",
+          "settings": {
+            "fallback_asset": "sgym-gallery-04.jpg",
+            "alt": "sGym Pro 4"
+          }
+        },
+        "gal_05": {
+          "type": "gallery_image",
+          "settings": {
+            "fallback_asset": "sgym-gallery-05.jpg",
+            "alt": "sGym Pro 5"
+          }
+        },
+        "gal_06": {
+          "type": "gallery_image",
+          "settings": {
+            "fallback_asset": "sgym-gallery-06.jpg",
+            "alt": "sGym Pro 6"
+          }
+        },
+        "gal_07": {
+          "type": "gallery_image",
+          "settings": {
+            "fallback_asset": "sgym-gallery-07.jpg",
+            "alt": "sGym Pro 7"
+          }
+        },
+        "gal_08": {
+          "type": "gallery_image",
+          "settings": {
+            "fallback_asset": "sgym-gallery-08.jpg",
+            "alt": "sGym Pro 8"
+          }
+        },
+        "gal_09": {
+          "type": "gallery_image",
+          "settings": {
+            "fallback_asset": "sgym-gallery-09.jpg",
+            "alt": "sGym Pro 9"
+          }
+        },
+        "gal_10": {
+          "type": "gallery_image",
+          "settings": {
+            "fallback_asset": "sgym-gallery-10.jpg",
+            "alt": "sGym Pro 10"
+          }
+        },
+        "gal_11": {
+          "type": "gallery_image",
+          "settings": {
+            "fallback_asset": "sgym-gallery-11.jpg",
+            "alt": "sGym Pro 11"
+          }
+        },
+        "gal_12": {
+          "type": "gallery_video",
+          "settings": {
+            "fallback_asset": "sgym-gallery-12-video-poster.jpg",
+            "alt": "Product video"
+          }
         }
       },
       "block_order": [
@@ -210,7 +297,19 @@
         "ask",
         "chip_1",
         "chip_2",
-        "footnote"
+        "footnote",
+        "gal_01",
+        "gal_02",
+        "gal_03",
+        "gal_04",
+        "gal_05",
+        "gal_06",
+        "gal_07",
+        "gal_08",
+        "gal_09",
+        "gal_10",
+        "gal_11",
+        "gal_12"
       ],
       "settings": {
         "view_360_label": "360 VIEW",
@@ -219,7 +318,8 @@
         "body_font": "inter_n4",
         "padding_top": 50,
         "padding_bottom": 50,
-        "show_media_tools": false
+        "show_media_tools": false,
+        "gallery_source": "design"
       }
     },
     "recommended": {

@@ -30,10 +30,12 @@
         </div>
         <div class="sgym-carousel__arrows">
           <button type="button" class="sgym-arrow" data-sgym-prev aria-label="{{ 'general.slider.previous_slide' | t }}">
-            <img src="{{ 'sgym-carousel-prev-dark.svg' | asset_url }}" alt="" width="54" height="54">
+            <img class="is-active" src="{{ 'sgym-carousel-next-light.svg' | asset_url }}" alt="" width="54" height="54">
+            <img class="is-disabled" src="{{ 'sgym-carousel-prev-dark.svg' | asset_url }}" alt="" width="54" height="54">
           </button>
           <button type="button" class="sgym-arrow" data-sgym-next aria-label="{{ 'general.slider.next_slide' | t }}">
-            <img src="{{ 'sgym-carousel-next-light.svg' | asset_url }}" alt="" width="54" height="54">
+            <img class="is-active" src="{{ 'sgym-carousel-next-light.svg' | asset_url }}" alt="" width="54" height="54">
+            <img class="is-disabled" src="{{ 'sgym-carousel-prev-dark.svg' | asset_url }}" alt="" width="54" height="54">
           </button>
         </div>
       </div>

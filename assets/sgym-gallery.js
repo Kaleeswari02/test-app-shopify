@@ -15,6 +15,13 @@ if (!customElements.get('sgym-gallery')) {
         this.thumbs.forEach((thumb, index) => {
           thumb.addEventListener('click', () => this.go(index));
         });
+        this.addEventListener('keydown', (event) => {
+          const tag = event.target?.tagName;
+          if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+          if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+          event.preventDefault();
+          this.go(this.index + (event.key === 'ArrowRight' ? 1 : -1));
+        });
         this.querySelectorAll('[data-sgym-jump]').forEach((button) => {
           button.addEventListener('click', () => {
             const mediaId = button.dataset.mediaId;
@@ -76,7 +83,7 @@ if (!customElements.get('sgym-gallery')) {
           if (i === this.index) thumb.setAttribute('aria-current', 'true');
           else thumb.removeAttribute('aria-current');
         });
-        this.thumbs[this.index]?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+        this.scrollThumbIntoList();
 
         const status = this.querySelector('[data-sgym-gallery-status]');
         if (status) status.textContent = `${this.index + 1} / ${count}`;
@@ -84,6 +91,24 @@ if (!customElements.get('sgym-gallery')) {
         if (!load) return;
         const poster = this.slides[this.index].querySelector('[id^="Deferred-Poster-"]');
         poster?.click();
+      }
+
+      scrollThumbIntoList() {
+        const thumb = this.thumbs[this.index];
+        const list = this.querySelector('.sgym-gallery__thumbs');
+        if (!thumb || !list) return;
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let nextTop = list.scrollTop;
+        const thumbTop = thumb.offsetTop;
+        const thumbBottom = thumbTop + thumb.offsetHeight;
+        if (thumbTop < list.scrollTop) nextTop = thumbTop;
+        else if (thumbBottom > list.scrollTop + list.clientHeight) nextTop = thumbBottom - list.clientHeight;
+        let nextLeft = list.scrollLeft;
+        const thumbLeft = thumb.offsetLeft;
+        const thumbRight = thumbLeft + thumb.offsetWidth;
+        if (thumbLeft < list.scrollLeft) nextLeft = thumbLeft;
+        else if (thumbRight > list.scrollLeft + list.clientWidth) nextLeft = thumbRight - list.clientWidth;
+        list.scrollTo({ top: nextTop, left: nextLeft, behavior: reduce ? 'auto' : 'smooth' });
       }
     }
   );

@@ -149,9 +149,13 @@ if (!customElements.get('sgym-carousel')) {
           return;
         }
         const card = items[0].getBoundingClientRect().width;
-        const view = this.viewport.getBoundingClientRect();
-        const overflows = items.some((item) => item.getBoundingClientRect().right > view.right + 1);
-        if (!overflows || card <= 0 || card >= this.viewport.clientWidth - 1) {
+        const last = items[items.length - 1];
+        const lastRight = this.slideLeft(last) + last.getBoundingClientRect().width;
+        // Dark rows bleed to the screen edge. A card that merely touches that
+        // edge still has to be scrollable, or the next arrow looks live and
+        // does nothing.
+        const slack = this.closest('.sgym--dark') ? 48 : 1;
+        if (lastRight <= this.viewport.clientWidth - slack || card <= 0 || card >= this.viewport.clientWidth - 1) {
           spacer?.remove();
           return;
         }
@@ -200,11 +204,42 @@ if (!customElements.get('sgym-carousel')) {
         const target = items[Math.max(0, Math.min(index, items.length - 1))];
         if (!target) return;
         const left = Math.max(0, Math.min(this.slideLeft(target), this.maxScroll()));
-        this.viewport.scrollTo({
-          left,
-          behavior: this.reduceMotion ? 'auto' : 'smooth',
-        });
+        this.animateScroll(left);
         this.update();
+      }
+
+      animateScroll(left) {
+        const view = this.viewport;
+        this.scrollToken = (this.scrollToken || 0) + 1;
+        const token = this.scrollToken;
+        const finish = () => {
+          if (token !== this.scrollToken) return;
+          view.style.scrollSnapType = '';
+          this.destination = null;
+          this.update();
+        };
+        view.style.scrollSnapType = 'none';
+        if (this.reduceMotion || Math.abs(left - view.scrollLeft) < 1) {
+          view.scrollLeft = left;
+          finish();
+          return;
+        }
+        const start = view.scrollLeft;
+        const change = left - start;
+        const duration = 480;
+        const t0 = performance.now();
+        const step = (now) => {
+          if (token !== this.scrollToken) return;
+          const p = Math.min(1, (now - t0) / duration);
+          const eased = 1 - Math.pow(1 - p, 3);
+          view.scrollLeft = start + change * eased;
+          if (p < 1) requestAnimationFrame(step);
+          else {
+            view.scrollLeft = left;
+            finish();
+          }
+        };
+        requestAnimationFrame(step);
       }
 
       move(direction) {
@@ -242,7 +277,7 @@ if (!customElements.get('sgym-carousel')) {
         const start = items.length ? this.slideLeft(items[0]) : 0;
         const lastLeft = items.length ? this.slideLeft(items[items.length - 1]) : 0;
         if (this.prev) this.prev.disabled = !loop && left <= start + 2;
-        if (this.next) this.next.disabled = !loop && (max <= start + 2 || left >= lastLeft - 2 || left >= max - 2);
+        if (this.next) this.next.disabled = !loop && (max <= 2 || left >= lastLeft - 2 || left >= max - 2);
       }
     }
   );
