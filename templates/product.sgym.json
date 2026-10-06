@@ -25,7 +25,9 @@
       "blocks": {
         "title": {
           "type": "title",
-          "settings": {}
+          "settings": {
+            "title_override": "sGym Pro Kraftstation"
+          }
         },
         "rating": {
           "type": "rating",
@@ -73,7 +75,11 @@
           "settings": {
             "savings_label": "gespart",
             "tax_note": "Inkl. MwSt. · Lieferung im Preis enthalten",
-            "show_asterisk": true
+            "show_asterisk": true,
+            "use_design_price": false,
+            "design_price": "2.999,00 €",
+            "design_compare": "3.499,00 €",
+            "design_savings": "500,00 €"
           }
         },
         "feat_1": {
@@ -121,6 +127,34 @@
           "settings": {
             "heading": "Produktoptionen",
             "included_label": "Im Preis enthalten"
+          }
+        },
+        "opt_standard": {
+          "type": "option_card",
+          "settings": {
+            "name": "Standard",
+            "subline": "Im Preis enthalten"
+          }
+        },
+        "opt_allrounder": {
+          "type": "option_card",
+          "settings": {
+            "name": "Allrounder Bundle (inkl. sGym Rower + sGym Bench)",
+            "subline": "+ 400 €"
+          }
+        },
+        "opt_cardio": {
+          "type": "option_card",
+          "settings": {
+            "name": "Cardio Bundle (inkl. sGym Rower)",
+            "subline": "+ 300 €"
+          }
+        },
+        "opt_performer": {
+          "type": "option_card",
+          "settings": {
+            "name": "Performer Bundle (inkl. sGym Bench)",
+            "subline": "+ 145 €"
           }
         },
         "buy": {
@@ -289,6 +323,10 @@
         "feat_4",
         "feat_5",
         "variants",
+        "opt_standard",
+        "opt_allrounder",
+        "opt_cardio",
+        "opt_performer",
         "buy",
         "trust_1",
         "trust_2",

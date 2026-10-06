@@ -1,6 +1,10 @@
 {% comment %}
   Sale price, compare-at price, and savings for the sGym buy box.
 
+  A price of 0, or the design-price checkbox, shows the theme settings
+  instead of money formatting so a test product never renders $0.00.
+  A real price and compare-at price replace those strings.
+
   Accepts:
   - product: {Object}
   - block: {Object}
@@ -8,10 +12,18 @@
 {% endcomment %}
 {%- liquid
   assign target = product.selected_or_first_available_variant
-  assign price = target.price
-  assign compare_at = target.compare_at_price
+  assign price = 0
+  assign compare_at = 0
+  if target != blank
+    assign price = target.price | default: 0
+    assign compare_at = target.compare_at_price | default: 0
+  endif
+  assign use_design = false
+  if block.settings.use_design_price or price == 0
+    assign use_design = true
+  endif
   assign on_sale = false
-  if compare_at > price
+  if use_design == false and compare_at > price
     assign on_sale = true
     assign savings = compare_at | minus: price
   endif
@@ -20,10 +32,25 @@
   <div class="sgym-price__row">
     <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
     <span class="sgym-price__current">
-      {{ price | money }}
+      {%- if use_design -%}
+        {{ block.settings.design_price | default: '2.999,00 €' }}
+      {%- else -%}
+        {{ price | money }}
+      {%- endif -%}
       {%- if block.settings.show_asterisk -%}<sup aria-hidden="true">*</sup>{%- endif -%}
     </span>
-    {%- if on_sale -%}
+    {%- if use_design -%}
+      {%- if block.settings.design_compare != blank -%}
+        <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+        <s class="sgym-price__compare">{{ block.settings.design_compare }}</s>
+      {%- endif -%}
+      {%- if block.settings.design_savings != blank -%}
+        <span class="sgym-price__save">
+          {{ block.settings.design_savings }}
+          {{ block.settings.savings_label }}
+        </span>
+      {%- endif -%}
+    {%- elsif on_sale -%}
       <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
       <s class="sgym-price__compare">{{ compare_at | money }}</s>
       <span class="sgym-price__save">
@@ -42,7 +69,7 @@
       {%- endif -%}
     </p>
   {%- endif -%}
-  {%- if target.unit_price_measurement -%}
+  {%- if use_design == false and target.unit_price_measurement -%}
     {%- render 'unit-price', price: target.unit_price, measurement: target.unit_price_measurement -%}
   {%- endif -%}
 </div>

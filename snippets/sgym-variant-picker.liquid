@@ -1,13 +1,67 @@
 {% comment %}
   Option cards. The subline is the price difference from the first variant.
+  A product with only the default variant uses option_card blocks instead.
 
   Accepts:
   - product: {Object}
   - block: {Object}
+  - section: {Object}
   - product_form_id: {String}
   - section_id: {String}
 {% endcomment %}
-{%- unless product.has_only_default_variant -%}
+{%- if product.has_only_default_variant -%}
+  {%- assign option_cards = section.blocks | where: 'type', 'option_card' -%}
+  {%- if option_cards.size > 0 -%}
+    <div class="sgym-design-options" {{ block.shopify_attributes }}>
+      <fieldset class="sgym-options" id="sgym-design-options-{{ section_id }}">
+        <legend class="sgym-options__legend">
+          <span>{{ block.settings.heading | default: 'Produktoptionen' }}</span>
+          <span data-selected-value>{{ option_cards.first.settings.name }}</span>
+        </legend>
+        {%- for card in option_cards -%}
+          {%- liquid
+            assign bundle_url = card.settings.link
+            if bundle_url == blank and card.settings.product != blank
+              assign bundle_url = card.settings.product.url
+            endif
+            assign input_id = section_id | append: '-design-' | append: forloop.index0
+          -%}
+          <label class="sgym-option{% if forloop.first %} is-selected{% endif %}" for="{{ input_id }}" {{ card.shopify_attributes }}>
+            <input
+              type="radio"
+              id="{{ input_id }}"
+              name="sgym-design-option-{{ section_id }}"
+              value="{{ card.settings.name | escape }}"
+              {% if forloop.first %}
+                checked
+              {% endif %}
+              {% if bundle_url != blank %}
+                data-bundle-url="{{ bundle_url }}"
+              {% endif %}
+            >
+            <span class="sgym-option__name">{{ card.settings.name }}</span>
+            <span class="sgym-option__meta">{{ card.settings.subline }}</span>
+          </label>
+        {%- endfor -%}
+      </fieldset>
+    </div>
+    <script>
+      (function () {
+        var field = document.getElementById('sgym-design-options-{{ section_id }}');
+        if (!field) return;
+        var selected = field.querySelector('[data-selected-value]');
+        field.addEventListener('change', function (event) {
+          var input = event.target;
+          if (!input || input.type !== 'radio') return;
+          field.querySelectorAll('.sgym-option').forEach(function (card) {
+            card.classList.toggle('is-selected', card.contains(input));
+          });
+          if (selected) selected.textContent = input.value;
+        });
+      })();
+    </script>
+  {%- endif -%}
+{%- else -%}
   <variant-selects
     id="variant-selects-{{ section_id }}"
     class="sgym-variant-selects"
@@ -104,4 +158,4 @@
       {{ product.selected_or_first_available_variant | json }}
     </script>
   </variant-selects>
-{%- endunless -%}
+{%- endif -%}
