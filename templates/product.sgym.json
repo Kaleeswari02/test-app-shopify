@@ -217,8 +217,8 @@
         "view_ar_label": "IN DEINEM RAUM ANSEHEN",
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
-        "padding_top": 48,
-        "padding_bottom": 60,
+        "padding_top": 50,
+        "padding_bottom": 50,
         "show_media_tools": false
       }
     },
@@ -258,7 +258,7 @@
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
         "padding_top": 0,
-        "padding_bottom": 40
+        "padding_bottom": 50
       }
     },
     "features": {
@@ -352,8 +352,8 @@
         "heading": "Endless possibilities for your strength training",
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
-        "padding_top": 0,
-        "padding_bottom": 36
+        "padding_top": 50,
+        "padding_bottom": 0
       }
     },
     "story_system": {
@@ -367,8 +367,8 @@
         "autoplay": true,
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
-        "padding_top": 61,
-        "padding_bottom": 25
+        "padding_top": 50,
+        "padding_bottom": 0
       }
     },
     "story_elegant": {
@@ -380,8 +380,8 @@
         "heading": "Elegant. Compact. Unique.",
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
-        "padding_top": 25,
-        "padding_bottom": 25,
+        "padding_top": 50,
+        "padding_bottom": 0,
         "ratio": "square"
       }
     },
@@ -415,8 +415,8 @@
         "heading": "Combine & benefit!",
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
-        "padding_top": 25,
-        "padding_bottom": 25
+        "padding_top": 50,
+        "padding_bottom": 0
       }
     },
     "story_app": {
@@ -458,8 +458,8 @@
         "autoplay": true,
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
-        "padding_top": 25,
-        "padding_bottom": 25
+        "padding_top": 50,
+        "padding_bottom": 0
       }
     },
     "story_modes": {
@@ -503,8 +503,8 @@
         "subheading": "<p>Whether you train solo or with a partner – you'll always find the right setup for your goals.</p>",
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
-        "padding_top": 25,
-        "padding_bottom": 61
+        "padding_top": 50,
+        "padding_bottom": 50
       }
     },
     "accessories": {
@@ -581,7 +581,7 @@
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
         "padding_top": 50,
-        "padding_bottom": 51,
+        "padding_bottom": 0,
         "ratio": "wide",
         "show_progress": true
       }
@@ -597,7 +597,7 @@
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
         "padding_top": 50,
-        "padding_bottom": 60
+        "padding_bottom": 0
       }
     },
     "guarantees": {
@@ -638,7 +638,7 @@
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
         "padding_top": 50,
-        "padding_bottom": 50
+        "padding_bottom": 0
       }
     },
     "coaches": {
@@ -691,7 +691,7 @@
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
         "padding_top": 50,
-        "padding_bottom": 52
+        "padding_bottom": 0
       }
     },
     "reviews": {
@@ -703,7 +703,7 @@
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
         "padding_top": 50,
-        "padding_bottom": 50
+        "padding_bottom": 0
       }
     },
     "specs": {
@@ -753,7 +753,7 @@
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
         "padding_top": 50,
-        "padding_bottom": 60
+        "padding_bottom": 0
       }
     },
     "faq": {
@@ -809,7 +809,7 @@
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
         "padding_top": 50,
-        "padding_bottom": 60
+        "padding_bottom": 50
       }
     }
   },
