@@ -11,16 +11,19 @@
     {%- if section.settings.heading != blank -%}
       <h2 class="sgym-showcase__heading">{{ section.settings.heading }}</h2>
     {%- endif -%}
-    {%- assign showcase_alt = section.settings.image.alt | default: section.settings.heading -%}
-    {% render 'sgym-picture',
-      image: section.settings.image,
-      fallback: section.settings.fallback_asset,
-      alt: showcase_alt,
-      class: 'sgym-showcase__cutout',
-      width: 1500,
-      height: 1500,
-      sizes: '100vw'
-    %}
+  </div>
+  {%- assign showcase_alt = section.settings.image.alt | default: section.settings.heading -%}
+  {%- assign showcase_sizes = '(min-width: 1440px) 1440px, 100vw' -%}
+  {% render 'sgym-picture',
+    image: section.settings.image,
+    fallback: section.settings.fallback_asset,
+    alt: showcase_alt,
+    class: 'sgym-showcase__cutout',
+    width: 1500,
+    height: 1500,
+    sizes: showcase_sizes
+  %}
+  <div class="sgym-wrap">
     <sgym-carousel class="sgym-carousel sgym-carousel--dots-mobile">
       <div class="sgym-carousel__head">
         <h3 class="sgym-title">{{ section.settings.carousel_heading }}</h3>
