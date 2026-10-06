@@ -17,10 +17,11 @@
               {%- else -%}
                 <div class="sgym-strip__card">
               {%- endif -%}
+              {%- assign strip_alt = block.settings.image.alt | default: section.settings.heading -%}
               {% render 'sgym-picture',
                 image: block.settings.image,
                 fallback: block.settings.fallback_asset,
-                alt: block.settings.image.alt | default: section.settings.heading,
+                alt: strip_alt,
                 width: 400,
                 height: 500,
                 sizes: '148px',
