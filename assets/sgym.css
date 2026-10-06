@@ -2150,9 +2150,28 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
     grid-template-columns: auto minmax(0, 1fr) auto;
   }
 
+  .sgym-content-card {
+    min-height: 0;
+  }
+
   .sgym-content-card img {
     height: auto;
     aspect-ratio: 4 / 3;
+  }
+
+  .sgym-faq-section .sgym-title {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .sgym-faq-section .sgym-title::after {
+    content: "";
+    width: 18px;
+    height: 18px;
+    flex: 0 0 auto;
+    background: center / 18px 18px no-repeat url("sgym-chevron-down.svg");
   }
 
   .sgym-tabs-card,
@@ -2478,15 +2497,24 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
 }
 
 .sgym-options {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 15px;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .sgym-options__legend {
+  width: 100%;
   font-size: 15px;
-  margin-bottom: 0;
+  margin: 0 0 16px;
+}
+
+.sgym-options__row {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  gap: 15px;
+  width: 100%;
 }
 
 .sgym-options__legend [data-selected-value] {
@@ -3232,11 +3260,18 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
   flex-direction: column;
   gap: 15px;
   overflow: visible;
+  height: auto;
+  align-self: start;
+  min-height: 630px;
 }
 
 .sgym-content-card img {
   aspect-ratio: auto;
+  flex: 0 0 466px;
+  width: 100%;
   height: 466px;
+  min-height: 0;
+  max-height: 466px;
   object-fit: cover;
   border-radius: 8px;
 }
@@ -3261,6 +3296,7 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
 }
 
 .sgym-content-card p {
+  margin: 0;
   font-size: 16px;
   line-height: 22px;
   color: rgba(30, 30, 30, 0.8);
@@ -3964,8 +4000,14 @@ sgym-carousel:focus-within .sgym-counter__arc {
     padding: 0 22px;
   }
 
+  .sgym-content-card {
+    min-height: 0;
+  }
+
   .sgym-content-card img {
+    flex: 0 1 auto;
     height: auto;
+    max-height: none;
     aspect-ratio: 4 / 3;
   }
 
