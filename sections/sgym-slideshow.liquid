@@ -10,6 +10,9 @@
         data-autoplay="{% if section.settings.autoplay %}true{% else %}false{% endif %}"
         data-interval="{{ section.settings.interval | times: 1000 }}"
         data-counter-word="{{ section.settings.counter_label | escape }}"
+        data-static-counter="{% if section.blocks.size < 2 %}true{% else %}false{% endif %}"
+        data-counter-index="3"
+        data-counter-total="3"
         tabindex="0"
       >
         <div class="sgym-slide-card__top">
@@ -22,8 +25,8 @@
             {%- endif -%}
           </div>
         </div>
-        <p class="sgym-counter">
-          <span class="sgym-counter__text" data-sgym-count>1 {{ section.settings.counter_label }} {{ section.blocks.size }}</span>
+        <p class="sgym-counter{% if section.blocks.size < 2 %} sgym-counter--static{% endif %}">
+          <span class="sgym-counter__text" data-sgym-count>{% if section.blocks.size > 1 %}1 {{ section.settings.counter_label }} {{ section.blocks.size }}{% else %}3 {{ section.settings.counter_label }} 3{% endif %}</span>
           <button
             type="button"
             class="sgym-counter__toggle"
@@ -42,7 +45,7 @@
             <svg class="sgym-counter__glyph sgym-counter__glyph--play" viewBox="0 0 12 12" aria-hidden="true">
               <path d="M3.2 1.6v8.8L10.4 6 3.2 1.6z" fill="#fff"></path>
             </svg>
-            <span class="sgym-counter__num" data-sgym-num>1</span>
+            <span class="sgym-counter__num" data-sgym-num>{% if section.blocks.size > 1 %}1{% else %}3{% endif %}</span>
           </button>
         </p>
         <div class="sgym-show__panel">
@@ -153,7 +156,7 @@
     { "type": "text", "id": "counter_label", "label": "Counter word", "default": "OF" },
     { "type": "text", "id": "link_label", "label": "Link label", "default": "https://www.sportstech.de/live-app" },
     { "type": "url", "id": "link", "label": "Link" },
-    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": true, "info": "Starts when half the section is in view. Off when the visitor prefers reduced motion." },
+    { "type": "checkbox", "id": "autoplay", "label": "Autoplay", "default": false, "info": "Off by default. With more than one slide, starts when half the section is in view. A single slide does not advance." },
     { "type": "range", "id": "interval", "min": 3, "max": 12, "step": 1, "unit": "s", "label": "Slide duration", "default": 6, "info": "Image and collage slides use this. A video slide uses its own length, up to 12 seconds." },
     { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "archivo_n7" },
     { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "inter_n4" },
@@ -169,7 +172,7 @@
         { "type": "text", "id": "video_asset", "label": "Bundled video filename", "info": "Used when the video picker is empty. MP4 in the theme assets." },
         { "type": "image_picker", "id": "poster", "label": "Poster" },
         { "type": "text", "id": "fallback_asset", "label": "Bundled poster filename" },
-        { "type": "text", "id": "label", "label": "Label", "default": "Stats" },
+        { "type": "text", "id": "label", "label": "Label" },
         { "type": "range", "id": "label_x", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Label horizontal", "default": 86 },
         { "type": "range", "id": "label_y", "min": 0, "max": 100, "step": 1, "unit": "%", "label": "Label vertical", "default": 20 }
       ]
@@ -206,7 +209,6 @@
       "name": "sGym slideshow",
       "category": "sGym",
       "blocks": [
-        { "type": "video" },
         { "type": "collage" }
       ]
     }

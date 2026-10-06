@@ -560,16 +560,6 @@
     "story_app": {
       "type": "sgym-slideshow",
       "blocks": {
-        "video_1": {
-          "type": "video",
-          "settings": {
-            "video_asset": "sgym-live-app-bar.mp4",
-            "fallback_asset": "sgym-live-app-poster.jpg",
-            "label": "Stats",
-            "label_x": 86,
-            "label_y": 20
-          }
-        },
         "collage": {
           "type": "collage",
           "settings": {
@@ -578,7 +568,6 @@
         }
       },
       "block_order": [
-        "video_1",
         "collage"
       ],
       "settings": {
@@ -587,7 +576,7 @@
         "counter_label": "OF",
         "link_label": "https://www.sportstech.de/live-app",
         "link": "https://www.sportstech.de/live-app",
-        "autoplay": true,
+        "autoplay": false,
         "interval": 6,
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",

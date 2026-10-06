@@ -309,7 +309,7 @@ if (!customElements.get('sgym-show')) {
       }
 
       toggle() {
-        if (this.reduce) return;
+        if (this.reduce || this.dataset.staticCounter === 'true') return;
         this.userPaused = !this.userPaused;
         if (this.userPaused) this.freeze();
         else this.resume();
@@ -347,9 +347,12 @@ if (!customElements.get('sgym-show')) {
           if (!slide.classList.contains('is-active')) slide.classList.add('is-active');
         });
         const applyCount = () => {
-          const label = `${index + 1} ${this.word} ${this.slides.length}`;
+          const designed = this.dataset.staticCounter === 'true';
+          const label = designed
+            ? `${this.dataset.counterIndex || '3'} ${this.word} ${this.dataset.counterTotal || '3'}`
+            : `${index + 1} ${this.word} ${this.slides.length}`;
           if (this.countEl) this.countEl.textContent = label;
-          if (this.numEl) this.numEl.textContent = String(index + 1);
+          if (this.numEl) this.numEl.textContent = designed ? this.dataset.counterIndex || '3' : String(index + 1);
           this.counter?.classList.remove('is-swapping');
         };
         clearTimeout(this.swapTimer);
@@ -412,6 +415,12 @@ if (!customElements.get('sgym-show')) {
       }
 
       paintPlaying() {
+        if (this.dataset.staticCounter === 'true' && !this.reduce) {
+          this.classList.remove('is-playing', 'is-paused', 'is-held');
+          this.toggleBtn?.setAttribute('aria-pressed', 'false');
+          this.toggleBtn?.setAttribute('aria-label', 'Slide 3 of 3');
+          return;
+        }
         const playing = this.canPlay();
         this.classList.toggle('is-playing', this.cycleMs > 0 && !this.reduce);
         this.classList.toggle('is-paused', this.userPaused || this.reduce);

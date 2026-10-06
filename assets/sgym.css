@@ -4618,8 +4618,12 @@ sgym-show.is-playing:not(.is-held):not(.is-paused) .sgym-counter__glyph--pause {
 
 sgym-show.is-paused .sgym-counter__glyph--play,
 sgym-show.is-held .sgym-counter__glyph--play,
-sgym-show:not(.is-playing) .sgym-counter__glyph--play {
+sgym-show:not(.is-playing):not([data-static-counter='true']) .sgym-counter__glyph--play {
   display: block;
+}
+
+sgym-show[data-static-counter='true'] .sgym-counter__glyph {
+  display: none;
 }
 
 .sgym-counter__text,
@@ -4648,19 +4652,19 @@ sgym-show.is-paused .sgym-counter__arc {
   opacity: 0;
 }
 
-.sgym-motion .sgym-slide--collage.is-active .sgym-collage {
+.sgym-motion .sgym-section.is-in .sgym-slide--collage.is-active .sgym-collage {
   animation: sgym-show-device 600ms cubic-bezier(0, 0, 0.58, 1) 100ms both;
 }
 
-.sgym-motion .sgym-slide--collage.is-active .sgym-slide__label {
+.sgym-motion .sgym-section.is-in .sgym-slide--collage.is-active .sgym-slide__label {
   animation: sgym-show-pill 500ms cubic-bezier(0, 0, 0.58, 1) calc(500ms + (var(--i, 0) * 80ms)) both;
 }
 
-.sgym-motion .sgym-slide--collage.is-active .sgym-ai-badge {
+.sgym-motion .sgym-section.is-in .sgym-slide--collage.is-active .sgym-ai-badge {
   animation: sgym-show-pop 400ms cubic-bezier(0.34, 1.56, 0.64, 1) 620ms both;
 }
 
-.sgym-motion .sgym-slide--collage.is-active .sgym-slide-card__link {
+.sgym-motion .sgym-section.is-in .sgym-slide--collage.is-active .sgym-slide-card__link {
   animation: sgym-show-link 400ms cubic-bezier(0, 0, 0.58, 1) 1000ms both;
 }
 
