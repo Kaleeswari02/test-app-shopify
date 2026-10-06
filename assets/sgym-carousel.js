@@ -77,23 +77,22 @@ if (!customElements.get('sgym-carousel')) {
         let startX = 0;
         let startScroll = 0;
         let dragging = false;
+        const end = () => {
+          dragging = false;
+        };
         this.viewport.addEventListener('pointerdown', (event) => {
           if (event.pointerType === 'touch' || event.target.closest('button, a')) return;
           dragging = true;
           this.destination = null;
           startX = event.clientX;
           startScroll = this.viewport.scrollLeft;
-          this.viewport.setPointerCapture(event.pointerId);
         }, { signal });
-        this.viewport.addEventListener('pointermove', (event) => {
+        document.addEventListener('pointermove', (event) => {
           if (!dragging) return;
           this.viewport.scrollLeft = startScroll - (event.clientX - startX);
         }, { signal });
-        const end = () => {
-          dragging = false;
-        };
-        this.viewport.addEventListener('pointerup', end, { signal });
-        this.viewport.addEventListener('pointercancel', end, { signal });
+        document.addEventListener('pointerup', end, { signal });
+        document.addEventListener('pointercancel', end, { signal });
       }
 
       slides() {
@@ -105,14 +104,10 @@ if (!customElements.get('sgym-carousel')) {
         return parseFloat(style.columnGap || style.gap) || 0;
       }
 
-      paddingLeft() {
-        return parseFloat(getComputedStyle(this.viewport).paddingLeft) || 0;
-      }
-
       slideLeft(item) {
         const view = this.viewport.getBoundingClientRect();
         const rect = item.getBoundingClientRect();
-        return this.viewport.scrollLeft + rect.left - view.left - this.paddingLeft();
+        return this.viewport.scrollLeft + rect.left - view.left;
       }
 
       pageSize() {
@@ -209,6 +204,7 @@ if (!customElements.get('sgym-carousel')) {
           left,
           behavior: this.reduceMotion ? 'auto' : 'smooth',
         });
+        this.update();
       }
 
       move(direction) {
@@ -243,9 +239,10 @@ if (!customElements.get('sgym-carousel')) {
         const left = this.viewport.scrollLeft;
         const max = this.maxScroll();
         const items = this.slides();
+        const start = items.length ? this.slideLeft(items[0]) : 0;
         const lastLeft = items.length ? this.slideLeft(items[items.length - 1]) : 0;
-        if (this.prev) this.prev.disabled = !loop && left <= 2;
-        if (this.next) this.next.disabled = !loop && (max <= 2 || left >= lastLeft - 2 || left >= max - 2);
+        if (this.prev) this.prev.disabled = !loop && left <= start + 2;
+        if (this.next) this.next.disabled = !loop && (max <= start + 2 || left >= lastLeft - 2 || left >= max - 2);
       }
     }
   );
