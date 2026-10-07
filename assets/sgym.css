@@ -2768,6 +2768,10 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
   z-index: 3;
 }
 
+.sgym-showcase .sgym-carousel.is-at-end::after {
+  visibility: hidden;
+}
+
 .sgym-showcase .sgym-carousel__arrows {
   gap: 5px;
   backdrop-filter: blur(18.1px);
@@ -2807,13 +2811,7 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
 }
 
 .sgym-showcase .sgym-track {
-  width: max-content;
-  min-width: 100%;
   gap: clamp(20px, calc(20px + (100vw - 1024px) * 10 / 416), 30px);
-}
-
-.sgym-showcase .sgym-track > li:last-child {
-  scroll-snap-align: end;
 }
 
 .sgym-feature-card {

@@ -164,6 +164,19 @@ if (!customElements.get('sgym-carousel')) {
         return Math.max(0, this.viewport.scrollWidth - this.viewport.clientWidth);
       }
 
+      // Scroll offset where the last card's right edge meets the viewport's
+      // right edge. Trailing padding can make maxScroll larger than that.
+      revealEnd() {
+        const items = this.slides();
+        const last = items[items.length - 1];
+        const max = this.maxScroll();
+        if (!last) return max;
+        const view = this.viewport.getBoundingClientRect();
+        const rect = last.getBoundingClientRect();
+        const end = this.viewport.scrollLeft + rect.right - view.right;
+        return Math.max(0, Math.min(max, end));
+      }
+
       // Centre a scrolling row on its section. Track padding and
       // scroll-padding use one inset, so the first and last cards share it.
       centerTrack() {
@@ -301,20 +314,21 @@ if (!customElements.get('sgym-carousel')) {
         // visible run, and clamp to the real scroll range, so next can
         // bring the last card fully into view and previous can return.
         if (this.closest('.sgym-showcase') && this.dataset.loop !== 'true') {
-          const max = this.maxScroll();
           const left = this.viewport.scrollLeft;
-          const first = items[0].getBoundingClientRect().width;
-          const stride = first + this.gap();
+          const end = this.revealEnd();
+          const stride = items[0].getBoundingClientRect().width + this.gap();
           const distance = Math.max(stride, this.pageSize() * stride);
-          if (direction > 0 && left < max - 2) {
+          if (direction > 0 && left < end - 2) {
             this.destination = null;
-            this.animateScroll(Math.min(max, left + distance));
+            this.animateScroll(Math.min(end, left + distance));
             this.restartRing();
             return;
           }
           if (direction < 0 && left > 2) {
             this.destination = null;
-            this.animateScroll(Math.max(0, left - distance));
+            const aligned = Math.floor((left - 1) / stride) * stride;
+            const target = end - left < 2 ? Math.max(0, aligned) : Math.max(0, left - distance);
+            this.animateScroll(target);
             this.restartRing();
             return;
           }
@@ -361,10 +375,12 @@ if (!customElements.get('sgym-carousel')) {
         const start = items.length ? this.slideLeft(items[0]) : 0;
         const lastLeft = items.length ? this.slideLeft(items[items.length - 1]) : 0;
         const showcase = this.closest('.sgym-showcase');
+        const end = showcase ? this.revealEnd() : max;
+        if (showcase) this.classList.toggle('is-at-end', end <= 2 || left >= end - 2);
         if (this.prev) this.prev.disabled = !loop && (showcase ? left <= 2 : left <= start + 2);
         if (this.next) {
           this.next.disabled = !loop && (showcase
-            ? max <= 2 || left >= max - 2
+            ? end <= 2 || left >= end - 2
             : max <= 2 || left >= lastLeft - 2 || left >= max - 2);
         }
       }
