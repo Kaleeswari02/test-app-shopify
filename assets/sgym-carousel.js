@@ -61,7 +61,7 @@ if (!customElements.get('sgym-carousel')) {
 
       refresh() {
         if (!this.viewport || !this.track) return;
-        this.centerCoaches();
+        this.centerTrack();
         this.ensureReachable();
         this.buildDots();
         this.update();
@@ -115,7 +115,9 @@ if (!customElements.get('sgym-carousel')) {
         const first = this.slides()[0];
         if (!first) return 1;
         const gap = this.gap();
-        return Math.max(1, Math.round((this.viewport.clientWidth + gap) / (first.getBoundingClientRect().width + gap)));
+        const pad = this.scrollPad();
+        const width = Math.max(0, this.viewport.clientWidth - pad * 2);
+        return Math.max(1, Math.round((width + gap) / (first.getBoundingClientRect().width + gap)));
       }
 
       pageCount() {
@@ -146,10 +148,10 @@ if (!customElements.get('sgym-carousel')) {
         return Math.max(0, this.viewport.scrollWidth - this.viewport.clientWidth);
       }
 
-      // Centre the coach row in the grey section. Track padding and
+      // Centre a scrolling row on its section. Track padding and
       // scroll-padding use one inset, so the first and last cards share it.
-      centerCoaches() {
-        if (!this.closest('.sgym-coach')) return;
+      centerTrack() {
+        if (!this.closest('.sgym-coach, .sgym-showcase, .sgym--dark, .sgym-strip')) return;
         this.track.querySelector('[data-sgym-spacer]')?.remove();
         const items = this.slides();
         if (!items.length) return;
@@ -168,11 +170,11 @@ if (!customElements.get('sgym-carousel')) {
         }
         const visible = Math.min(content, visibleCount * card + Math.max(0, visibleCount - 1) * gap);
         const inset = Math.max(0, (available - Math.min(visible, available)) / 2);
-        this.style.setProperty('--sgym-coach-inset', `${inset}px`);
+        this.style.setProperty('--sgym-track-inset', `${inset}px`);
       }
 
       ensureReachable() {
-        if (this.closest('.sgym-coach')) {
+        if (this.closest('.sgym-coach, .sgym-showcase, .sgym--dark, .sgym-strip')) {
           this.track.querySelector('[data-sgym-spacer]')?.remove();
           return;
         }
