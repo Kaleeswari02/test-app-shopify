@@ -28,11 +28,13 @@
       <div class="sgym-carousel__head">
         <h3 class="sgym-title">{{ section.settings.carousel_heading }}</h3>
         <div class="sgym-carousel__arrows">
-          <button type="button" class="sgym-arrow" data-sgym-prev aria-label="{{ 'general.slider.previous_slide' | t }}">
+          <button type="button" class="sgym-arrow" data-sgym-prev disabled aria-label="{{ 'general.slider.previous_slide' | t }}">
+            <img class="is-rest" src="{{ 'sgym-arrow-light.svg' | asset_url }}" alt="" width="54" height="54">
             <img class="is-active" src="{{ 'sgym-arrow-dark-active.svg' | asset_url }}" alt="" width="54" height="54">
             <img class="is-disabled" src="{{ 'sgym-arrow-dark-disabled.svg' | asset_url }}" alt="" width="54" height="54">
           </button>
           <button type="button" class="sgym-arrow" data-sgym-next aria-label="{{ 'general.slider.next_slide' | t }}">
+            <img class="is-rest" src="{{ 'sgym-arrow-light.svg' | asset_url }}" alt="" width="54" height="54">
             <img class="is-active" src="{{ 'sgym-arrow-dark-active.svg' | asset_url }}" alt="" width="54" height="54">
             <img class="is-disabled" src="{{ 'sgym-arrow-dark-disabled.svg' | asset_url }}" alt="" width="54" height="54">
           </button>
