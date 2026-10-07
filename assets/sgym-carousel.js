@@ -1,4 +1,33 @@
 if (!customElements.get('sgym-carousel')) {
+  // cubic-bezier(.22, .61, .36, 1) — one card step eases out over 500ms.
+  const featureEase = (() => {
+    const x1 = 0.22;
+    const y1 = 0.61;
+    const x2 = 0.36;
+    const y2 = 1;
+    const cx = 3 * x1;
+    const bx = 3 * (x2 - x1) - cx;
+    const ax = 1 - cx - bx;
+    const cy = 3 * y1;
+    const by = 3 * (y2 - y1) - cy;
+    const ay = 1 - cy - by;
+    const sampleX = (t) => ((ax * t + bx) * t + cx) * t;
+    const sampleY = (t) => ((ay * t + by) * t + cy) * t;
+    const sampleDX = (t) => (3 * ax * t + 2 * bx) * t + cx;
+    return (x) => {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+      let t = x;
+      for (let i = 0; i < 8; i += 1) {
+        const dx = sampleX(t) - x;
+        const d = sampleDX(t);
+        if (Math.abs(dx) < 1e-5 || Math.abs(d) < 1e-6) break;
+        t -= dx / d;
+      }
+      return sampleY(Math.max(0, Math.min(1, t)));
+    };
+  })();
+
   customElements.define(
     'sgym-carousel',
     class SgymCarousel extends HTMLElement {
@@ -37,6 +66,11 @@ if (!customElements.get('sgym-carousel')) {
         this.prev?.addEventListener('click', () => this.move(-1), { signal });
         this.next?.addEventListener('click', () => this.move(1), { signal });
         this.viewport.addEventListener('scroll', () => this.update(), { passive: true, signal });
+        this.viewport.addEventListener('wheel', () => {
+          if (!this.closest('.sgym-showcase')) return;
+          this.scrollToken = (this.scrollToken || 0) + 1;
+          this.destination = null;
+        }, { passive: true, signal });
         this.viewport.addEventListener('scrollend', () => {
           this.destination = null;
           this.update();
@@ -96,6 +130,7 @@ if (!customElements.get('sgym-carousel')) {
         this.viewport.addEventListener('pointerdown', (event) => {
           if (event.pointerType === 'touch' || event.target.closest('button, a')) return;
           dragging = true;
+          this.scrollToken = (this.scrollToken || 0) + 1;
           this.destination = null;
           startX = event.clientX;
           startScroll = this.viewport.scrollLeft;
@@ -203,7 +238,11 @@ if (!customElements.get('sgym-carousel')) {
       }
 
       ensureReachable() {
-        if (this.closest('.sgym-coach, .sgym-showcase, .sgym--dark, .sgym-strip')) {
+        if (this.closest('.sgym-showcase')) {
+          this.ensureShowcaseSteps();
+          return;
+        }
+        if (this.closest('.sgym-coach, .sgym--dark, .sgym-strip')) {
           this.track.querySelector('[data-sgym-spacer]')?.remove();
           return;
         }
@@ -245,6 +284,38 @@ if (!customElements.get('sgym-carousel')) {
         node.style.pointerEvents = 'none';
       }
 
+      // One click moves a single card. The track has to be long enough
+      // to park every card on the left edge, or the step clamps early.
+      ensureShowcaseSteps() {
+        const items = this.slides();
+        const spacer = this.track.querySelector('[data-sgym-spacer]');
+        if (items.length < 2) {
+          spacer?.remove();
+          return;
+        }
+        const stride = items[0].getBoundingClientRect().width + this.gap();
+        if (stride <= 1) return;
+        const target = this.slideLeft(items[items.length - 1]);
+        const spacerWidth = spacer ? spacer.getBoundingClientRect().width : 0;
+        const maxWithout = this.maxScroll() - spacerWidth;
+        const needed = Math.max(0, Math.ceil(target - maxWithout));
+        if (needed < 1) {
+          spacer?.remove();
+          return;
+        }
+        const node = spacer || document.createElement('li');
+        if (!spacer) {
+          node.setAttribute('data-sgym-spacer', '');
+          node.setAttribute('aria-hidden', 'true');
+          this.track.append(node);
+        }
+        if (spacer && Math.abs(spacerWidth - needed) < 2) return;
+        node.style.flex = `0 0 ${needed}px`;
+        node.style.width = `${needed}px`;
+        node.style.scrollSnapAlign = 'none';
+        node.style.pointerEvents = 'none';
+      }
+
       buildDots() {
         if (!this.dotsWrap) return;
         const count = this.dotCount();
@@ -273,7 +344,7 @@ if (!customElements.get('sgym-carousel')) {
         this.update();
       }
 
-      animateScroll(left) {
+      animateScroll(left, options = {}) {
         const view = this.viewport;
         this.scrollToken = (this.scrollToken || 0) + 1;
         const token = this.scrollToken;
@@ -284,23 +355,24 @@ if (!customElements.get('sgym-carousel')) {
           this.update();
         };
         view.style.scrollSnapType = 'none';
-        if (this.reduceMotion || Math.abs(left - view.scrollLeft) < 1) {
-          view.scrollLeft = left;
+        const target = Math.max(0, Math.min(left, this.maxScroll()));
+        if (this.reduceMotion || Math.abs(target - view.scrollLeft) < 1) {
+          view.scrollLeft = target;
           finish();
           return;
         }
         const start = view.scrollLeft;
-        const change = left - start;
-        const duration = 480;
+        const change = target - start;
+        const duration = options.duration || 480;
+        const ease = options.ease || ((p) => 1 - Math.pow(1 - p, 3));
         const t0 = performance.now();
         const step = (now) => {
           if (token !== this.scrollToken) return;
           const p = Math.min(1, (now - t0) / duration);
-          const eased = 1 - Math.pow(1 - p, 3);
-          view.scrollLeft = start + change * eased;
+          view.scrollLeft = start + change * ease(p);
           if (p < 1) requestAnimationFrame(step);
           else {
-            view.scrollLeft = left;
+            view.scrollLeft = target;
             finish();
           }
         };
@@ -310,28 +382,19 @@ if (!customElements.get('sgym-carousel')) {
       move(direction) {
         const items = this.slides();
         if (!items.length) return;
-        // Key features overflows by less than a card. Step by the fully
-        // visible run, and clamp to the real scroll range, so next can
-        // bring the last card fully into view and previous can return.
+        // Key features: exactly one card plus its gap, clamped to the ends.
         if (this.closest('.sgym-showcase') && this.dataset.loop !== 'true') {
-          const left = this.viewport.scrollLeft;
-          const end = this.revealEnd();
           const stride = items[0].getBoundingClientRect().width + this.gap();
-          const distance = Math.max(stride, this.pageSize() * stride);
-          if (direction > 0 && left < end - 2) {
-            this.destination = null;
-            this.animateScroll(Math.min(end, left + distance));
-            this.restartRing();
-            return;
-          }
-          if (direction < 0 && left > 2) {
-            this.destination = null;
-            const aligned = Math.floor((left - 1) / stride) * stride;
-            const target = end - left < 2 ? Math.max(0, aligned) : Math.max(0, left - distance);
-            this.animateScroll(target);
-            this.restartRing();
-            return;
-          }
+          if (stride <= 1) return;
+          const base = this.destination == null
+            ? Math.round(this.viewport.scrollLeft / stride)
+            : this.destination;
+          const next = Math.max(0, Math.min(items.length - 1, base + direction));
+          if (next === base) return;
+          this.destination = next;
+          this.animateScroll(this.slideLeft(items[next]), { duration: 500, ease: featureEase });
+          this.restartRing();
+          return;
         }
         // A short track can hit the end before the next card's snap point.
         // Previous still has to return to the start.
@@ -375,14 +438,20 @@ if (!customElements.get('sgym-carousel')) {
         const start = items.length ? this.slideLeft(items[0]) : 0;
         const lastLeft = items.length ? this.slideLeft(items[items.length - 1]) : 0;
         const showcase = this.closest('.sgym-showcase');
-        const end = showcase ? this.revealEnd() : max;
-        if (showcase) this.classList.toggle('is-at-end', end <= 2 || left >= end - 2);
-        if (this.prev) this.prev.disabled = !loop && (showcase ? left <= 2 : left <= start + 2);
-        if (this.next) {
-          this.next.disabled = !loop && (showcase
-            ? end <= 2 || left >= end - 2
-            : max <= 2 || left >= lastLeft - 2 || left >= max - 2);
+        if (showcase) {
+          const stride = items[0] ? items[0].getBoundingClientRect().width + this.gap() : 0;
+          const stepEnd = stride > 0 && items.length ? this.slideLeft(items[items.length - 1]) : 0;
+          const limit = Math.min(stepEnd, max);
+          const atStart = left <= 2;
+          const atEnd = limit <= 2 || left >= limit - 2;
+          this.classList.toggle('is-scrolled', !atStart);
+          this.classList.toggle('is-at-end', atEnd);
+          if (this.prev) this.prev.disabled = !loop && atStart;
+          if (this.next) this.next.disabled = !loop && atEnd;
+          return;
         }
+        if (this.prev) this.prev.disabled = !loop && left <= start + 2;
+        if (this.next) this.next.disabled = !loop && (max <= 2 || left >= lastLeft - 2 || left >= max - 2);
       }
     }
   );

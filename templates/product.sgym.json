@@ -434,13 +434,31 @@
             "title": "120 kg Widerstand",
             "text": "<p>The electric motors provide 60 kg of precise resistance per side.</p>"
           }
+        },
+        "display": {
+          "type": "card",
+          "settings": {
+            "fallback_asset": "sgym-live-app-poster.jpg",
+            "title": "21\" Touch Display",
+            "text": "<p>The 21″ touch display runs Sportstech Live with workouts, plans, and tracking.</p>"
+          }
+        },
+        "partner": {
+          "type": "card",
+          "settings": {
+            "fallback_asset": "sgym-mode-partner.jpg",
+            "title": "Partner Mode",
+            "text": "<p>Train as a duo, double your progress.</p>"
+          }
         }
       },
       "block_order": [
         "safety",
         "pulley",
         "lowering",
-        "resistance"
+        "resistance",
+        "display",
+        "partner"
       ],
       "settings": {
         "kicker": "sGym Pro Design",

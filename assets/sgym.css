@@ -2756,20 +2756,36 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
   position: relative;
 }
 
+.sgym-showcase .sgym-carousel::before,
 .sgym-showcase .sgym-carousel::after {
   content: "";
   position: absolute;
   top: 0;
   bottom: 0;
-  right: calc(50% - 50cqi);
   width: min(110px, 16vw);
   pointer-events: none;
-  background: linear-gradient(90deg, rgba(213, 214, 216, 0), #d5d6d8 72%);
   z-index: 3;
+  transition: opacity 0.3s ease;
+}
+
+.sgym-showcase .sgym-carousel::before {
+  left: 0;
+  opacity: 0;
+  background: linear-gradient(90deg, #d5d6d8, rgba(213, 214, 216, 0));
+}
+
+.sgym-showcase .sgym-carousel.is-scrolled::before {
+  opacity: 1;
+}
+
+.sgym-showcase .sgym-carousel::after {
+  right: calc(50% - 50cqi);
+  opacity: 1;
+  background: linear-gradient(90deg, rgba(213, 214, 216, 0), #d5d6d8 72%);
 }
 
 .sgym-showcase .sgym-carousel.is-at-end::after {
-  visibility: hidden;
+  opacity: 0;
 }
 
 .sgym-showcase .sgym-carousel__arrows {
@@ -2785,20 +2801,46 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
   height: clamp(34px, calc(34px + (100vw - 1024px) * 20 / 416), 54px);
 }
 
+.sgym-showcase .sgym-arrow img {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.2s ease;
+}
+
+.sgym-showcase .sgym-arrow .is-rest {
+  opacity: 1;
+}
+
+.sgym-showcase .sgym-arrow .is-active,
 .sgym-showcase .sgym-arrow .is-disabled {
-  display: none;
+  opacity: 0;
+}
+
+.sgym-showcase .sgym-arrow:not(:disabled):hover .is-rest,
+.sgym-showcase .sgym-arrow:not(:disabled):focus-visible .is-rest {
+  opacity: 0;
+}
+
+.sgym-showcase .sgym-arrow:not(:disabled):hover .is-active,
+.sgym-showcase .sgym-arrow:not(:disabled):focus-visible .is-active {
+  opacity: 1;
 }
 
 .sgym-showcase .sgym-arrow:disabled {
   opacity: 1;
 }
 
+.sgym-showcase .sgym-arrow:disabled .is-rest,
 .sgym-showcase .sgym-arrow:disabled .is-active {
-  display: none;
+  opacity: 0;
 }
 
 .sgym-showcase .sgym-arrow:disabled .is-disabled {
-  display: block;
+  opacity: 1;
+}
+
+.sgym-showcase .sgym-arrow:disabled img {
+  transition: none;
 }
 
 .sgym-showcase .sgym-viewport {
@@ -2811,12 +2853,56 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
 }
 
 .sgym-showcase .sgym-track {
-  gap: clamp(20px, calc(20px + (100vw - 1024px) * 10 / 416), 30px);
+  width: max-content;
+  gap: 20px;
+}
+
+/* Three full cards plus a peek. The visible row is (section + wrap) / 2,
+   so the card tracks that width instead of capping at the 373px Figma size.
+   A cap let four cards sit flush once the row passed ~1580px. */
+@media screen and (min-width: 990px) {
+  .sgym-showcase .sgym-feature-card {
+    width: calc((100cqi - 40px) / 3.58);
+  }
+
+  .sgym-showcase .sgym-track {
+    gap: calc((100cqi - 40px) / 3.58 * 30 / 373);
+  }
+}
+
+@media screen and (min-width: 1326px) {
+  .sgym-showcase .sgym-feature-card {
+    width: calc((100cqi + 1246px) / 7.16);
+  }
+
+  .sgym-showcase .sgym-track {
+    gap: calc((100cqi + 1246px) / 7.16 * 30 / 373);
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .sgym-showcase .sgym-feature-card {
+    width: calc((100cqi - 97px) / 3.58);
+  }
+
+  .sgym-showcase .sgym-track {
+    gap: calc((100cqi - 97px) / 3.58 * 30 / 373);
+  }
+}
+
+@media screen and (min-width: 1440px) {
+  .sgym-showcase .sgym-feature-card {
+    width: calc((100cqi + 1246px) / 7.16);
+  }
+
+  .sgym-showcase .sgym-track {
+    gap: calc((100cqi + 1246px) / 7.16 * 30 / 373);
+  }
 }
 
 .sgym-feature-card {
   position: relative;
-  width: clamp(250px, calc(250px + (100vw - 1024px) * 123 / 416), 373px);
+  width: min(250px, 78vw);
   height: auto;
   border-radius: clamp(10px, calc(10px + (100vw - 1024px) * 4 / 416), 14px);
   background: #7d848b;
