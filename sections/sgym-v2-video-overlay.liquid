@@ -1,0 +1,30 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <div class="vov" id="video-overlay" role="dialog" aria-modal="true" aria-label="{{ section.settings.label | escape }}" hidden>
+    <div class="vov__box">
+      {% render 'sgym-v2-img', file: section.settings.image_file, image: section.settings.image, width: 1100, height: 619, alt: section.settings.image_alt, img_class: 'vov__poster', loading: 'lazy', sizes: '(min-width: 900px) 1100px, 100vw' %}
+      {%- if section.settings.video_url != blank -%}
+        <video class="vov__video" src="{{ section.settings.video_url }}" playsinline {% if section.settings.image != blank %}poster="{{ section.settings.image | image_url: width: 1600 }}"{% else %}poster="{{ section.settings.image_file | prepend: 'sgym-v2-' | asset_url }}"{% endif %}></video>
+      {%- endif -%}
+      <button class="vov__close" type="button" data-overlay-close aria-label="{{ section.settings.close_label | escape }}"><img src="{{ 'sgym-v2-974a7.svg' | asset_url }}" width="40" height="40" alt=""></button>
+    </div>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Video",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "text", "id": "label", "label": "Dialogtitel", "default": "Video: sGym Pro" },
+    { "type": "text", "id": "close_label", "label": "Schließen-Button", "default": "Video schließen" },
+    { "type": "image_picker", "id": "image", "label": "Standbild" },
+    { "type": "text", "id": "image_file", "label": "Fallback-Datei", "default": "246-1109.webp" },
+    { "type": "text", "id": "image_alt", "label": "Bildbeschreibung", "default": "Videostandbild: Bedienelement am Griff des sGym Pro" },
+    { "type": "url", "id": "video_url", "label": "Video-URL (optional)" }
+  ],
+  "presets": [{ "name": "sGym v2 Video" }]
+}
+{% endschema %}

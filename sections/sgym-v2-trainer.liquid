@@ -1,0 +1,84 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <section class="tr" id="trainer" data-node="227:1175" data-node-mobile="228:359" aria-labelledby="tr-title">
+    <div class="tr__head">
+      <p class="tr__tag">{{ section.settings.tag }}</p>
+      <h2 class="tr__title reveal" id="tr-title">{{ section.settings.heading }}</h2>
+      <p class="tr__sub">{{ section.settings.subheading }}</p>
+    </div>
+    <div class="tr__viewport" tabindex="0" aria-label="Trainer-Karussell">
+      <ul class="tr__row">
+        {%- for block in section.blocks -%}
+          <li class="tr__card tr__card--{{ block.settings.layout }}{% if block.settings.mobile_only %} only-m{% endif %}" {{ block.shopify_attributes }}>
+            <img class="tr__tex tr__tex--a" src="{{ 'sgym-v2-4b841.png' | asset_url }}" width="406" height="406" alt="" loading="lazy"><img class="tr__tex tr__tex--b" src="{{ 'sgym-v2-4b841.png' | asset_url }}" width="406" height="406" alt="" loading="lazy">
+            {%- if block.settings.layout == 'tim' -%}
+              <span class="tr__rot">{% render 'sgym-v2-img', file: block.settings.file, image: block.settings.image, width: block.settings.width, height: block.settings.height, alt: block.settings.alt, img_class: 'tr__portrait', loading: 'lazy', sizes: '280px' %}</span>
+            {%- elsif block.settings.layout == 'carlo' -%}
+              {% render 'sgym-v2-img', file: block.settings.file, image: block.settings.image, width: block.settings.width, height: block.settings.height, alt: block.settings.alt, img_class: 'tr__portrait fi-d', loading: 'lazy', sizes: '280px' %}
+              {% render 'sgym-v2-img', file: block.settings.file_m, image: block.settings.image_m, width: 1024, height: 683, alt: '', img_class: 'tr__portrait fi-m', loading: 'lazy', sizes: '280px' %}
+            {%- else -%}
+              {% render 'sgym-v2-img', file: block.settings.file, image: block.settings.image, width: block.settings.width, height: block.settings.height, alt: block.settings.alt, img_class: 'tr__portrait', loading: 'lazy', sizes: '280px' %}
+            {%- endif -%}
+            <span class="tr__fade" aria-hidden="true"></span>
+            <div class="tr__text"><p class="tr__eyebrow">{{ block.settings.eyebrow }}</p><h3 class="tr__name">{{ block.settings.name }}</h3><p class="tr__desc">{{ block.settings.text }}</p></div>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+    <img class="tr__dots fi-d" src="{{ 'sgym-v2-f34e5.svg' | asset_url }}" width="129" height="14" alt="">
+    <img class="tr__dots fi-m" src="{{ 'sgym-v2-80ed8.svg' | asset_url }}" width="129" height="14" alt="">
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Trainer",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "tag", "label": "Kicker", "default": "TRAINER" },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Lerne deine Coaches kennen" },
+    { "type": "textarea", "id": "subheading", "label": "Unterzeile", "default": "Unsere Trainer begleiten dich durch jedes Workout – mit Expertise, Motivation und Power." }
+  ],
+  "blocks": [
+    {
+      "type": "coach",
+      "name": "Trainer",
+      "settings": [
+        { "type": "select", "id": "layout", "label": "Layout", "default": "lina", "options": [
+          { "value": "carlo", "label": "Carlo" },
+          { "value": "lina", "label": "Lina" },
+          { "value": "tim", "label": "Tim" },
+          { "value": "lauren", "label": "Lauren" },
+          { "value": "florentina", "label": "Florentina" }
+        ] },
+        { "type": "checkbox", "id": "mobile_only", "label": "Nur mobil", "default": false },
+        { "type": "text", "id": "eyebrow", "label": "Kicker", "default": "TRAINER" },
+        { "type": "text", "id": "name", "label": "Name", "default": "Lina" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Volle Power mit Ganzkörper-Workouts und entspannten Mobility-Einheiten!" },
+        { "type": "image_picker", "id": "image", "label": "Porträt" },
+        { "type": "text", "id": "file", "label": "Fallback-Datei", "default": "f5395.webp" },
+        { "type": "text", "id": "alt", "label": "Bildbeschreibung", "default": "Trainerin Lina" },
+        { "type": "text", "id": "width", "label": "Breite", "default": "683" },
+        { "type": "text", "id": "height", "label": "Höhe", "default": "1024" },
+        { "type": "image_picker", "id": "image_m", "label": "Porträt Mobil (Carlo)" },
+        { "type": "text", "id": "file_m", "label": "Fallback Mobil", "default": "9abe3.webp" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "sGym v2 Trainer",
+      "blocks": [
+        { "type": "coach", "settings": { "layout": "carlo", "mobile_only": false, "eyebrow": "TRAINER", "name": "Carlo", "text": "Pusht dein Krafttraining mit dynamischen Workouts für jedes Level.", "file": "26bf3.webp", "alt": "Trainer Carlo", "width": "1024", "height": "683", "file_m": "9abe3.webp" } },
+        { "type": "coach", "settings": { "layout": "lina", "mobile_only": false, "eyebrow": "TRAINER", "name": "Lina", "text": "Volle Power mit Ganzkörper-Workouts und entspannten Mobility-Einheiten!", "file": "f5395.webp", "alt": "Trainerin Lina", "width": "683", "height": "1024", "file_m": "9abe3.webp" } },
+        { "type": "coach", "settings": { "layout": "tim", "mobile_only": false, "eyebrow": "TRAINER", "name": "Tim", "text": "Spannende Kraft-Challenges für dein nächstes Fitnesslevel!", "file": "92ee9.webp", "alt": "Trainer Tim", "width": "1024", "height": "577", "file_m": "9abe3.webp" } },
+        { "type": "coach", "settings": { "layout": "lauren", "mobile_only": false, "eyebrow": "TRAINER", "name": "Lauren", "text": "Funktionelles Training für mehr Ausdauer & Ganzkörperkraft.", "file": "d0a04.webp", "alt": "Trainerin Lauren", "width": "682", "height": "1024", "file_m": "9abe3.webp" } },
+        { "type": "coach", "settings": { "layout": "florentina", "mobile_only": true, "eyebrow": "TRAINER", "name": "Florentina", "text": "Pusht dein Krafttraining mit dynamischen Workouts für jedes Level.", "file": "4f4ac.webp", "alt": "Trainerin Florentina", "width": "786", "height": "714", "file_m": "9abe3.webp" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

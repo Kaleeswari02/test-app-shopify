@@ -1,0 +1,80 @@
+{% render 'sgym-v2-assets' %}
+{%- liquid
+  assign faq_meta = product.metafields.custom.sgym_v2_faq.value | default: product.metafields.custom.sgym_v2_faq
+  assign use_meta = false
+  if faq_meta != blank and faq_meta contains '|'
+    assign use_meta = true
+  endif
+-%}
+<div class="sgym-v2">
+  <section class="faq" id="faq" data-node="227:1178" data-node-mobile="228:362" aria-labelledby="faq-title">
+    <h2 class="faq__title reveal" id="faq-title">{{ section.settings.heading }}</h2>
+    <div class="faq__card">
+      {%- if use_meta -%}
+        {%- assign items = faq_meta | split: '---' -%}
+        {%- for item in items -%}
+          {%- assign body = item | strip -%}
+          {%- if body != blank -%}
+            {%- assign q = body | split: '|' | first | strip -%}
+            {%- assign rest = body | remove_first: q | remove_first: '|' | strip -%}
+            {%- assign flag = rest | split: '|' | first | strip | downcase -%}
+            {%- if flag == 'open' or flag == 'closed' -%}
+              {%- assign answer = rest | remove_first: flag | remove_first: '|' | strip -%}
+            {%- else -%}
+              {%- assign flag = 'closed' -%}
+              {%- assign answer = rest -%}
+            {%- endif -%}
+            <div class="faq__item{% if flag == 'open' %} is-open{% endif %}" data-acc {% if flag == 'open' %}data-open-desktop{% endif %}>
+              <h3><button class="faq__head" type="button" data-acc-btn aria-expanded="{% if flag == 'open' %}true{% else %}false{% endif %}" aria-controls="faq-{{ section.id }}-{{ forloop.index }}" id="faq-{{ section.id }}-{{ forloop.index }}-btn"><span>{{ q }}</span><img class="faq__ico faq__ico--plus" src="{{ 'sgym-v2-56d22.svg' | asset_url }}" width="24" height="24" alt=""><img class="faq__ico faq__ico--minus" src="{{ 'sgym-v2-0493d.svg' | asset_url }}" width="24" height="24" alt=""></button></h3>
+              <div class="faq__panel" id="faq-{{ section.id }}-{{ forloop.index }}" role="region" aria-labelledby="faq-{{ section.id }}-{{ forloop.index }}-btn" {% unless flag == 'open' %}hidden{% endunless %}><p>{{ answer }}</p></div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          <div class="faq__item{% if block.settings.open_desktop %} is-open{% endif %}" data-acc {% if block.settings.open_desktop %}data-open-desktop{% endif %} {{ block.shopify_attributes }}>
+            <h3><button class="faq__head" type="button" data-acc-btn aria-expanded="{% if block.settings.open_desktop %}true{% else %}false{% endif %}" aria-controls="faq-{{ section.id }}-{{ forloop.index }}" id="faq-{{ section.id }}-{{ forloop.index }}-btn"><span>{{ block.settings.question }}</span><img class="faq__ico faq__ico--plus" src="{{ 'sgym-v2-56d22.svg' | asset_url }}" width="24" height="24" alt=""><img class="faq__ico faq__ico--minus" src="{{ 'sgym-v2-0493d.svg' | asset_url }}" width="24" height="24" alt=""></button></h3>
+            <div class="faq__panel" id="faq-{{ section.id }}-{{ forloop.index }}" role="region" aria-labelledby="faq-{{ section.id }}-{{ forloop.index }}-btn" {% unless block.settings.open_desktop %}hidden{% endunless %}>{{ block.settings.answer }}</div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 FAQ",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "max_blocks": 16,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "FAQs" },
+    { "type": "paragraph", "content": "Optional überschreibt das Metafeld custom.sgym_v2_faq die Blöcke. Einträge mit --- trennen. Format: Frage|open|Antwort oder Frage|closed|Antwort." }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "Frage",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Frage", "default": "Was ist das sGym Pro?" },
+        { "type": "richtext", "id": "answer", "label": "Antwort", "default": "<p>Das sGym Pro ist eine intelligente, smarte Kraftstation mit integriertem Display.</p>" },
+        { "type": "checkbox", "id": "open_desktop", "label": "Auf Desktop geöffnet", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "sGym v2 FAQ",
+      "blocks": [
+        { "type": "question", "settings": { "question": "Was ist das sGym Pro?", "open_desktop": true, "answer": "<p>Das sGym Pro ist eine intelligente, smarte Kraftstation mit integriertem Display. Der Widerstand wird nicht über Gewichtsplatten, sondern über moderne Motoren erzeugt und ist dadurch besonders präzise und flexibel steuerbar. Mit einem maximalen Trainingsgewicht von 120 kg lassen sich vielseitige Workouts für alle Leistungsstufen durchführen. Über 300 integrierte Übungsvideos stehen dir direkt zur Verfügung, ergänzt durch weitere Trainingsvideos. Trotz seiner Leistungsfähigkeit benötigt das Gerät nur wenig Platz und eignet sich daher auch für kleinere Räume. Es ermöglicht ein vollständiges Ganzkörpertraining und unterstützt dich dabei, deine individuellen Fitnessziele effektiv zu erreichen.</p>" } },
+        { "type": "question", "settings": { "question": "Welche maximale Last unterstützt das sGym Pro und erfolgt der Antrieb über Elektromotoren?", "open_desktop": false, "answer": "<p>Das sGym Pro bietet einen Widerstand von bis zu 120 kg, aufgeteilt in 60 kg pro Arm. Angetrieben wird das System von zwei Elektromotoren.</p>" } },
+        { "type": "question", "settings": { "question": "Wie wird der Widerstand beim Training erzeugt?", "open_desktop": false, "answer": "<p>Der Widerstand entsteht durch die elektromagnetische Kraft der Motoren, wodurch er präzise und stufenlos steuerbar ist.</p>" } },
+        { "type": "question", "settings": { "question": "Ist der Widerstand in beide Bewegungsrichtungen (konzentrisch und exzentrisch) vorhanden?", "open_desktop": false, "answer": "<p>Ja. Beim konzentrischen Training, wenn das Gewicht nach oben gedrückt oder gezogen wird, spürst du den Widerstand ebenso wie beim exzentrischen Training, wenn du langsam nachgibst und das Gewicht wieder absenkst. So wird der Muskel in beiden Phasen der Bewegung gleichmäßig belastet, was das Training intensiver und effektiver macht.</p>" } },
+        { "type": "question", "settings": { "question": "Welche Trainingsmodi sind vorhanden?", "open_desktop": false, "answer": "<p>Partnermodus, Light-Modus und Weighted-Modus – mehr dazu im Abschnitt <a href=\"#trainingsmodi\">Trainingsmodi</a>.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

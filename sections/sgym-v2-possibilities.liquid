@@ -1,0 +1,79 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <section class="poss" id="moeglichkeiten" data-node="227:1165" data-node-mobile="228:349" aria-labelledby="poss-title">
+    <div class="poss__card" data-tabs>
+      <div class="poss__device">
+        <img class="poss__glow fi-d" src="{{ 'sgym-v2-806ad.svg' | asset_url }}" width="438" height="670" alt="">
+        <img class="poss__glow fi-m" src="{{ 'sgym-v2-f5c88.svg' | asset_url }}" width="438" height="670" alt="">
+        <span class="poss__screen-bg" aria-hidden="true"></span>
+        {%- assign poss_i = 0 -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.modi -%}
+            <span class="poss__shot poss__shot--modi" data-panel-img="{{ poss_i }}">
+              {% render 'sgym-v2-img', file: block.settings.file, image: block.settings.image, width: 596, height: 1280, alt: block.settings.alt, loading: 'lazy', sizes: '320px' %}
+            </span>
+          {%- else -%}
+            {% render 'sgym-v2-img', file: block.settings.file, image: block.settings.image, width: 596, height: 1060, alt: block.settings.alt, img_class: 'poss__shot', loading: 'lazy', sizes: '320px', panel: poss_i %}
+          {%- endif -%}
+          {%- assign poss_i = poss_i | plus: 1 -%}
+        {%- endfor -%}
+      </div>
+      <div class="poss__copy">
+        <h2 class="poss__title reveal" id="poss-title">{{ section.settings.heading }}</h2>
+        <div class="poss__list">
+          <span class="poss__indicator" data-tab-indicator aria-hidden="true"></span>
+          <div role="tablist" aria-label="{{ section.settings.tabs_label | escape }}">
+            {%- assign poss_i = 0 -%}
+            {%- for block in section.blocks -%}
+              <button class="poss__tab" role="tab" id="poss-tab-{{ poss_i }}" aria-controls="poss-panel-{{ poss_i }}" aria-selected="{% if poss_i == 0 %}true{% else %}false{% endif %}" type="button" {% unless poss_i == 0 %}tabindex="-1"{% endunless %} {{ block.shopify_attributes }}>{{ block.settings.title }}</button>
+              {%- assign poss_i = poss_i | plus: 1 -%}
+            {%- endfor -%}
+          </div>
+          {%- assign poss_i = 0 -%}
+          {%- for block in section.blocks -%}
+            <p class="poss__panel" role="tabpanel" id="poss-panel-{{ poss_i }}" aria-labelledby="poss-tab-{{ poss_i }}" {% unless poss_i == 0 %}hidden{% endunless %}>{{ block.settings.text }}</p>
+            {%- assign poss_i = poss_i | plus: 1 -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Möglichkeiten",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "max_blocks": 3,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Endlose Möglichkeiten für dein Krafttraining" },
+    { "type": "text", "id": "tabs_label", "label": "Reiter-Gruppe", "default": "Möglichkeiten" }
+  ],
+  "blocks": [
+    {
+      "type": "tab",
+      "name": "Reiter",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titel", "default": "Workouts" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Das sGym Pro bietet dir ein komplettes Ganzkörpertraining mit einer Vielzahl an Übungen – vom Bankdrücken bis zu Dips." },
+        { "type": "image_picker", "id": "image", "label": "Display-Bild" },
+        { "type": "text", "id": "file", "label": "Fallback-Datei", "default": "d7128.webp" },
+        { "type": "text", "id": "alt", "label": "Bildbeschreibung", "default": "Workout-Ansicht auf dem sGym Pro Display" },
+        { "type": "checkbox", "id": "modi", "label": "Trainingsmodi-Zuschnitt", "default": false }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "sGym v2 Möglichkeiten",
+      "blocks": [
+        { "type": "tab", "settings": { "title": "Workouts", "text": "Das sGym Pro bietet dir ein komplettes Ganzkörpertraining mit einer Vielzahl an Übungen – vom Bankdrücken bis zu Dips.", "file": "d7128.webp", "alt": "Workout-Ansicht auf dem sGym Pro Display", "modi": false } },
+        { "type": "tab", "settings": { "title": "Trainingspläne", "text": "Strukturierte Pläne für Muskelaufbau, Kraft und Ausdauer – passend zu deinem Level.", "file": "8368c.webp", "alt": "Trainingsplan-Ansicht auf dem sGym Pro Display", "modi": false } },
+        { "type": "tab", "settings": { "title": "Trainingsmodi", "text": "Standard, exzentrisch, isokinetisch oder elastisch – wähle deinen Widerstandsmodus.", "file": "dd650.webp", "alt": "Trainingsmodi-Ansicht auf dem sGym Pro Display", "modi": true } }
+      ]
+    }
+  ]
+}
+{% endschema %}

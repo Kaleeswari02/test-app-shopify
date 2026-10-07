@@ -1,0 +1,58 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <section class="trust" id="vertrauen" data-node="227:1174" data-node-mobile="228:358" aria-labelledby="trust-title">
+    <h2 class="trust__title reveal" id="trust-title">{{ section.settings.heading }}</h2>
+    <ul class="trust__row">
+      {%- for block in section.blocks -%}
+        <li class="trust__item trust__item--{{ block.settings.modifier }}" {{ block.shopify_attributes }}>
+          <img class="fi-d" src="{{ block.settings.icon_d | prepend: 'sgym-v2-' | asset_url }}" width="44" height="44" alt="">
+          <img class="fi-m" src="{{ block.settings.icon_m | prepend: 'sgym-v2-' | asset_url }}" width="28" height="28" alt="">
+          <p class="trust__name"><span class="only-d">{{ block.settings.name_d }}</span><span class="only-m">{{ block.settings.name_m }}</span></p>
+          <p class="trust__desc"><span class="only-d">{{ block.settings.desc_d }}</span><span class="only-m">{{ block.settings.desc_m }}</span></p>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Vertrauen",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "max_blocks": 6,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Ein Shop, dem du vertrauen kannst" }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Vorteil",
+      "settings": [
+        { "type": "select", "id": "modifier", "label": "Layout", "default": "test", "options": [
+          { "value": "test", "label": "Testen" },
+          { "value": "ship", "label": "Versand" },
+          { "value": "warranty", "label": "Garantie" }
+        ] },
+        { "type": "text", "id": "icon_d", "label": "Icon Desktop", "default": "83aa8.svg" },
+        { "type": "text", "id": "icon_m", "label": "Icon Mobil", "default": "4e593.svg" },
+        { "type": "text", "id": "name_d", "label": "Titel Desktop", "default": "30 Tage testen" },
+        { "type": "text", "id": "name_m", "label": "Titel Mobil", "default": "30 Tage testen" },
+        { "type": "text", "id": "desc_d", "label": "Text Desktop", "default": "Mit Geld-zurück-Garantie." },
+        { "type": "text", "id": "desc_m", "label": "Text Mobil", "default": "Geld-zurück-Garantie." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "sGym v2 Vertrauen",
+      "blocks": [
+        { "type": "item", "settings": { "modifier": "test", "icon_d": "83aa8.svg", "icon_m": "4e593.svg", "name_d": "30 Tage testen", "name_m": "30 Tage testen", "desc_d": "Mit Geld-zurück-Garantie.", "desc_m": "Geld-zurück-Garantie." } },
+        { "type": "item", "settings": { "modifier": "ship", "icon_d": "bd523.svg", "icon_m": "475d3.svg", "name_d": "Kostenloser Versand & Rückversand", "name_m": "Kostenloser Versand", "desc_d": "Schnell, unkompliziert und komplett kostenlos.", "desc_m": "Inkl. Rückversand." } },
+        { "type": "item", "settings": { "modifier": "warranty", "icon_d": "9e7c0.svg", "icon_m": "631ab.svg", "name_d": "2 Jahre Garantie", "name_m": "2 Jahre Garantie", "desc_d": "Sicheres und sorgenfreies Training – garantiert.", "desc_m": "Sorgenfrei trainieren." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

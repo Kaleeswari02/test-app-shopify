@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="345" height="175" viewBox="0 0 345 175" fill="none" xmlns="http://www.w3.org/2000/svg">
+<foreignObject x="-24" y="-24" width="393" height="223"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(12px);clip-path:url(#bgblur_0_0_4_clip_path);height:100%;width:100%"></div></foreignObject><path id="Product Background" data-figma-bg-blur-radius="24" d="M16 0.5H329C337.56 0.500007 344.5 7.43959 344.5 16V159C344.5 167.56 337.56 174.5 329 174.5H16C7.43959 174.5 0.5 167.56 0.5 159V16C0.500001 7.43959 7.43959 0.5 16 0.5Z" fill="#3E3E3E" fill-opacity="0.6" stroke="url(#paint0_linear_0_4)"/>
+<defs>
+<clipPath id="bgblur_0_0_4_clip_path" transform="translate(24 24)"><path d="M16 0.5H329C337.56 0.500007 344.5 7.43959 344.5 16V159C344.5 167.56 337.56 174.5 329 174.5H16C7.43959 174.5 0.5 167.56 0.5 159V16C0.500001 7.43959 7.43959 0.5 16 0.5Z"/>
+</clipPath><linearGradient id="paint0_linear_0_4" x1="345" y1="175.184" x2="15" y2="0.183599" gradientUnits="userSpaceOnUse">
+<stop stop-color="#989898"/>
+<stop offset="1" stop-color="#F1EBEB"/>
+</linearGradient>
+</defs>
+</svg>

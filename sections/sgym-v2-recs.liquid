@@ -1,0 +1,57 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <section class="recs" id="empfohlen" data-node="227:1163" data-node-mobile="228:347" aria-label="{{ section.settings.aria_label | escape }}">
+    <div class="recs__band"><h2 class="recs__title reveal"><span>{{ section.settings.title_prefix }}</span><b>{{ section.settings.title_strong }}</b></h2></div>
+    <div class="recs__strip" data-recs-strip>
+      <ul class="recs__track">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'photo' -%}
+            <li class="recs__card" style="{{ block.settings.crop }}" {{ block.shopify_attributes }}>
+              {% render 'sgym-v2-img', file: block.settings.file, image: block.settings.image, width: 1200, height: 800, alt: block.settings.alt, loading: 'lazy', sizes: '220px' %}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+    <img class="recs__dots" src="{{ 'sgym-v2-7f1ec.svg' | asset_url }}" width="60" height="14" alt="">
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Empfohlen",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "title_prefix", "label": "Titel Anfang", "default": "Empfohlen von " },
+    { "type": "text", "id": "title_strong", "label": "Titel fett", "default": "#SaschaHuber" },
+    { "type": "text", "id": "aria_label", "label": "Abschnittsname", "default": "Empfohlen von #SaschaHuber" }
+  ],
+  "blocks": [
+    {
+      "type": "photo",
+      "name": "Foto",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Foto" },
+        { "type": "text", "id": "file", "label": "Fallback-Datei", "default": "56e84.webp" },
+        { "type": "text", "id": "alt", "label": "Bildbeschreibung", "default": "Sascha Huber trainiert an der sGym Pro" },
+        { "type": "text", "id": "crop", "label": "Zuschnitt (CSS)", "default": "--l:-38.01%;--t:-2.62%;--w:219.67%;--h:102.45%" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "sGym v2 Empfohlen",
+      "blocks": [
+        { "type": "photo", "settings": { "file": "56e84.webp", "alt": "Sascha Huber trainiert an der sGym Pro (1)", "crop": "--l:-38.01%;--t:-2.62%;--w:219.67%;--h:102.45%" } },
+        { "type": "photo", "settings": { "file": "76269.webp", "alt": "Sascha Huber trainiert an der sGym Pro (2)", "crop": "--l:-57.53%;--t:0.06%;--w:214.60%;--h:100.09%" } },
+        { "type": "photo", "settings": { "file": "02b46.webp", "alt": "Sascha Huber trainiert an der sGym Pro (3)", "crop": "--l:-59.14%;--t:-6.94%;--w:234.52%;--h:109.38%" } },
+        { "type": "photo", "settings": { "file": "67167.webp", "alt": "Sascha Huber trainiert an der sGym Pro (4)", "crop": "--l:-64.86%;--t:-4.81%;--w:227.35%;--h:106.03%" } },
+        { "type": "photo", "settings": { "file": "08ff4.webp", "alt": "Sascha Huber trainiert an der sGym Pro (5)", "crop": "--l:-75.67%;--t:-0.66%;--w:216.19%;--h:100.83%" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

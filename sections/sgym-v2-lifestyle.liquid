@@ -1,0 +1,62 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <section class="life" id="lifestyle" data-node="227:1172" data-node-mobile="228:356" aria-label="{{ section.settings.aria_label | escape }}">
+    <div class="life__slides" data-slides data-autoplay="{{ section.settings.autoplay }}" aria-roledescription="Karussell">
+      <div class="life__stage" data-slides-stage>
+        {%- assign total = section.blocks.size -%}
+        {%- for block in section.blocks -%}
+          <figure class="life__slide life__slide--{{ forloop.index }}{% if forloop.first %} is-active{% endif %}" data-slide aria-roledescription="Folie" aria-label="{{ forloop.index }} von {{ total }}" {{ block.shopify_attributes }}>
+            {% render 'sgym-v2-img', file: block.settings.file, image: block.settings.image, width: block.settings.width, height: block.settings.height, alt: block.settings.alt, loading: 'lazy', sizes: '100vw' %}
+          </figure>
+        {%- endfor -%}
+      </div>
+      <div class="life__ctrl">
+        <button class="life__toggle" type="button" data-slides-toggle aria-pressed="false" aria-label="Diashow pausieren"><img class="fi-d" src="{{ 'sgym-v2-15f4c.svg' | asset_url }}" width="44" height="44" alt=""><img class="fi-m" src="{{ 'sgym-v2-f30f7.svg' | asset_url }}" width="40" height="40" alt=""></button>
+        <div class="life__dots">
+          {%- for block in section.blocks -%}
+            <button type="button" data-slide-dot aria-label="Bild {{ forloop.index }}"></button>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Lifestyle",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "aria_label", "label": "Abschnittsname", "default": "Lifestyle-Galerie" },
+    { "type": "text", "id": "autoplay", "label": "Autoplay in Millisekunden", "default": "3500" }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Bild",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Bild" },
+        { "type": "text", "id": "file", "label": "Fallback-Datei", "default": "f252c.webp" },
+        { "type": "text", "id": "alt", "label": "Bildbeschreibung", "default": "Training mit dem sGym Pro im Wohnzimmer" },
+        { "type": "text", "id": "width", "label": "Breite", "default": "2400" },
+        { "type": "text", "id": "height", "label": "Höhe", "default": "1800" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "sGym v2 Lifestyle",
+      "blocks": [
+        { "type": "slide", "settings": { "file": "f252c.webp", "alt": "Training mit dem sGym Pro im Wohnzimmer", "width": "2400", "height": "1800" } },
+        { "type": "slide", "settings": { "file": "615c5.webp", "alt": "Partnertraining am sGym Pro", "width": "2400", "height": "1200" } },
+        { "type": "slide", "settings": { "file": "f3ec7.webp", "alt": "sGym Pro im hellen Wohnraum", "width": "2400", "height": "1583" } },
+        { "type": "slide", "settings": { "file": "e48e6.png", "alt": "sGym Pro Detailansicht", "width": "240", "height": "240" } },
+        { "type": "slide", "settings": { "file": "c1b75.png", "alt": "sGym Pro Seitenansicht", "width": "240", "height": "240" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

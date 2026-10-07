@@ -1,0 +1,40 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <section class="sys" id="ein-system" data-node="227:1166" data-node-mobile="228:350" aria-labelledby="sys-title">
+    <div class="sys__card">
+      <div class="sys__row">
+        <div class="sys__copy">
+          <h2 class="sys__title reveal" id="sys-title"><span>{{ section.settings.title_a }}</span> <span>{{ section.settings.title_b }}</span></h2>
+          <p class="sys__sub"><span>{{ section.settings.sub_a }}</span> <span>{{ section.settings.sub_b }}</span></p>
+        </div>
+        <div class="sys__media">
+          {% render 'sgym-v2-img', file: section.settings.image_file, image: section.settings.image, width: 1626, height: 906, alt: section.settings.image_alt, img_class: 'sys__img', loading: 'lazy', sizes: '(min-width: 900px) 668px, 100vw' %}
+          {%- if section.settings.video_url != blank -%}
+            <video class="sgym-v2-video" src="{{ section.settings.video_url }}" muted loop playsinline></video>
+          {%- endif -%}
+          <button class="vctrl sys__vctrl" type="button" data-vctrl aria-pressed="false" aria-label="Video pausieren"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 System",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "text", "id": "title_a", "label": "Titel Zeile 1", "default": "Ein System." },
+    { "type": "text", "id": "title_b", "label": "Titel Zeile 2", "default": "Unendliche Vielfalt." },
+    { "type": "text", "id": "sub_a", "label": "Text Zeile 1", "default": "Dein gesamtes Trainingsrepertoire in einem Gerät." },
+    { "type": "text", "id": "sub_b", "label": "Text Zeile 2", "default": "Mehr Übungen. Mehr Abwechslung. Mehr Fortschritt." },
+    { "type": "image_picker", "id": "image", "label": "Bild" },
+    { "type": "text", "id": "image_file", "label": "Fallback-Datei", "default": "9ca35.webp" },
+    { "type": "text", "id": "image_alt", "label": "Bildbeschreibung", "default": "Verschiedene Übungen am sGym Pro" },
+    { "type": "url", "id": "video_url", "label": "Video-URL (optional)" }
+  ],
+  "presets": [{ "name": "sGym v2 System" }]
+}
+{% endschema %}

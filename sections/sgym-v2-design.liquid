@@ -1,0 +1,118 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <section class="design" id="design" data-node="227:1164" data-node-mobile="228:348" aria-labelledby="design-title">
+    <div class="design__head">
+      <p class="design__eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 class="design__title reveal" id="design-title">{{ section.settings.heading }}</h2>
+    </div>
+    <div class="design__stage" aria-hidden="true">
+      {% render 'sgym-v2-img', file: section.settings.product_file, image: section.settings.product_image, width: 1500, height: 1500, alt: '', img_class: 'design__product fi-d', loading: 'lazy', sizes: '(min-width: 900px) 720px, 100vw' %}
+      {% render 'sgym-v2-img', file: section.settings.product_file_m, image: section.settings.product_image_m, width: 1500, height: 1500, alt: '', img_class: 'design__product-m fi-m', loading: 'lazy', sizes: '100vw' %}
+      <img class="design__shadow fi-m" src="{{ 'sgym-v2-33b08.svg' | asset_url }}" width="295" height="296" alt="">
+    </div>
+    <div class="kf" data-carousel="kf">
+      <div class="kf__head only-d">
+        <h3 class="kf__title">{{ section.settings.features_title }}</h3>
+        <div class="arrows">
+          <button class="arrow arrow--prev" type="button" data-carousel-prev aria-label="Vorherige Features"><img src="{{ 'sgym-v2-2cfd4.svg' | asset_url }}" width="54" height="54" alt=""></button>
+          <button class="arrow" type="button" data-carousel-next aria-label="Nächste Features"><img src="{{ 'sgym-v2-81b83.svg' | asset_url }}" width="54" height="54" alt=""></button>
+        </div>
+      </div>
+      <div class="kf__viewport" data-carousel-viewport>
+        <ul class="kf__track">
+          {%- for block in section.blocks -%}
+            <li class="kfcard{% if block.settings.modifier != blank and block.settings.modifier != 'none' %} {{ block.settings.modifier }}{% endif %}{% if block.settings.visibility != 'both' %} {{ block.settings.visibility }}{% endif %}" {{ block.shopify_attributes }}>
+              <div class="kfcard__media{% if block.settings.warm %} kfcard__media--warm{% endif %}">
+                {% render 'sgym-v2-img', file: block.settings.file, image: block.settings.image, width: block.settings.width, height: block.settings.height, alt: block.settings.alt, loading: 'lazy', sizes: '(min-width: 900px) 420px, 86vw' %}
+                {%- if block.settings.video_url != blank -%}
+                  <video class="sgym-v2-video" src="{{ block.settings.video_url }}" muted loop playsinline></video>
+                {%- endif -%}
+                {%- if block.settings.show_control -%}
+                  <button class="vctrl vctrl--sm{% if block.settings.control_mobile_only %} only-m{% endif %}" type="button" data-vctrl aria-pressed="false" aria-label="Video pausieren"></button>
+                {%- endif -%}
+              </div>
+              <div class="kfcard__text">
+                <h4>{{ block.settings.title }}</h4>
+                {%- if block.settings.text_m != blank -%}
+                  <p class="only-d">{{ block.settings.text }}</p>
+                  <p class="only-m">{{ block.settings.text_m }}</p>
+                {%- else -%}
+                  <p>{{ block.settings.text }}</p>
+                {%- endif -%}
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+      <div class="counter only-m">
+        <p><span data-carousel-index>1</span> von <span data-carousel-total>2</span></p>
+        <div class="counter__btns">
+          <button type="button" data-carousel-prev aria-label="Zurück" class="counter__prev"><img src="{{ 'sgym-v2-b9515.svg' | asset_url }}" width="34" height="34" alt=""></button>
+          <button type="button" data-carousel-next aria-label="Weiter"><img src="{{ 'sgym-v2-e8e77.svg' | asset_url }}" width="34" height="34" alt=""></button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Design",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Dachzeile", "default": "sGym Pro Design" },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Bis ins letzte Detail durchdacht" },
+    { "type": "text", "id": "features_title", "label": "Karussell-Titel", "default": "Key Features" },
+    { "type": "image_picker", "id": "product_image", "label": "Produktbild Desktop" },
+    { "type": "text", "id": "product_file", "label": "Fallback Desktop", "default": "d5f79.webp" },
+    { "type": "image_picker", "id": "product_image_m", "label": "Produktbild Mobil" },
+    { "type": "text", "id": "product_file_m", "label": "Fallback Mobil", "default": "a7b0f.webp" }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Feature",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titel", "default": "Safety Spotter" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Mit dem integrierten Safety Spotter passt du den Widerstand an und schaltest ihn bei Überlastung automatisch ab – perfekt für Drop-Sets." },
+        { "type": "textarea", "id": "text_m", "label": "Text Mobil (optional)", "default": "Passt den Widerstand an und stoppt bei Überlastung automatisch – ideal für Drop-Sets." },
+        { "type": "image_picker", "id": "image", "label": "Bild" },
+        { "type": "text", "id": "file", "label": "Fallback-Datei", "default": "poster-safety-spotter.jpg" },
+        { "type": "text", "id": "alt", "label": "Bildbeschreibung", "default": "Safety Spotter am Griff der sGym Pro" },
+        { "type": "text", "id": "width", "label": "Breite", "default": "746" },
+        { "type": "text", "id": "height", "label": "Höhe", "default": "652" },
+        { "type": "select", "id": "modifier", "label": "Kartenstil", "default": "none", "options": [
+          { "value": "none", "label": "Standard" },
+          { "value": "kfcard--fold", "label": "Absenkfunktion" },
+          { "value": "kfcard--kg", "label": "120 kg" },
+          { "value": "kfcard--display", "label": "Display" }
+        ] },
+        { "type": "select", "id": "visibility", "label": "Sichtbarkeit", "default": "both", "options": [
+          { "value": "both", "label": "Beide" },
+          { "value": "only-d", "label": "Nur Desktop" },
+          { "value": "only-m", "label": "Nur Mobil" }
+        ] },
+        { "type": "checkbox", "id": "warm", "label": "Warmer Hintergrund", "default": false },
+        { "type": "checkbox", "id": "show_control", "label": "Video-Button", "default": true },
+        { "type": "checkbox", "id": "control_mobile_only", "label": "Video-Button nur mobil", "default": true },
+        { "type": "url", "id": "video_url", "label": "Video-URL (optional)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "sGym v2 Design",
+      "blocks": [
+        { "type": "card", "settings": { "title": "Safety Spotter", "text": "Mit dem integrierten Safety Spotter passt du den Widerstand an und schaltest ihn bei Überlastung automatisch ab – perfekt für Drop-Sets.", "text_m": "Passt den Widerstand an und stoppt bei Überlastung automatisch – ideal für Drop-Sets.", "file": "poster-safety-spotter.jpg", "alt": "Safety Spotter am Griff der sGym Pro", "width": "746", "height": "652", "modifier": "none", "visibility": "both", "warm": false, "show_control": true, "control_mobile_only": true } },
+        { "type": "card", "settings": { "title": "Vielseitiger Kabelzug", "text": "Der 12-fach verstellbare Kabelzug mit seitlicher Bodenhalterung ermöglicht dir zahlreiche Zug-, Druck- und Rotationsübungen.", "text_m": "", "file": "poster-kabelzug.jpg", "alt": "Kabelzug-Umlenkrolle der sGym Pro", "width": "746", "height": "652", "modifier": "none", "visibility": "only-d", "warm": false, "show_control": false, "control_mobile_only": false } },
+        { "type": "card", "settings": { "title": "Automatische Absenkfunktion", "text": "Die Bodenplatte benötigt weniger als 1,5 m², senkt sich automatisch ab und lässt sich dank Transportrollen leicht bewegen.", "text_m": "", "file": "177ef.webp", "alt": "sGym Pro mit abgesenkter Bodenplatte", "width": "1496", "height": "1306", "modifier": "kfcard--fold", "visibility": "only-d", "warm": true, "show_control": true, "control_mobile_only": false } },
+        { "type": "card", "settings": { "title": "120 kg Widerstand", "text": "Die elektrischen Motoren bieten pro Seite 60 kg präzisen Widerstand.", "text_m": "", "file": "poster-120kg.jpg", "alt": "Bodenplatte und Motoreinheit der sGym Pro", "width": "890", "height": "778", "modifier": "kfcard--kg", "visibility": "only-d", "warm": false, "show_control": false, "control_mobile_only": false } },
+        { "type": "card", "settings": { "title": "21\" Display", "text": "Mit dem 360 Grad schwenkbaren Touch-Display sind deine Workouts so flexibel wie nie!", "text_m": "", "file": "177ef.webp", "alt": "21 Zoll Touch-Display der sGym Pro", "width": "1496", "height": "1306", "modifier": "kfcard--display", "visibility": "only-m", "warm": true, "show_control": true, "control_mobile_only": false } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,29 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <section class="elegant" id="elegant" data-node="227:1167" data-node-mobile="228:351" aria-labelledby="elegant-title">
+    <div class="elegant__card">
+      {% render 'sgym-v2-img', file: section.settings.image_file, image: section.settings.image, width: 2492, height: 2492, alt: section.settings.image_alt, img_class: 'elegant__img', loading: 'lazy', sizes: '(min-width: 900px) 1246px, 100vw' %}
+      <span class="elegant__fade" aria-hidden="true"></span>
+      <img class="elegant__mark elegant__mark--a fi-d" src="{{ 'sgym-v2-e52f7.svg' | asset_url }}" width="52" height="65" alt="">
+      <img class="elegant__mark elegant__mark--b fi-d" src="{{ 'sgym-v2-b632e.svg' | asset_url }}" width="52" height="65" alt="">
+      <img class="elegant__mark fi-m" src="{{ 'sgym-v2-e5e1c.svg' | asset_url }}" width="26" height="33" alt="">
+      <h2 class="elegant__title reveal" id="elegant-title">{{ section.settings.heading }}</h2>
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Elegant",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Elegant. Kompakt. Einzigartig." },
+    { "type": "image_picker", "id": "image", "label": "Bild" },
+    { "type": "text", "id": "image_file", "label": "Fallback-Datei", "default": "08602.webp" },
+    { "type": "text", "id": "image_alt", "label": "Bildbeschreibung", "default": "sGym Pro zusammengeklappt vor einer Fensterfront" }
+  ],
+  "presets": [{ "name": "sGym v2 Elegant" }]
+}
+{% endschema %}

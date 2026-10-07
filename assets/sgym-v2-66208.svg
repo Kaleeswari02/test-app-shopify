@@ -1,0 +1,10 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="162.219" height="82.2852" viewBox="0 0 162.219 82.2852" fill="none" xmlns="http://www.w3.org/2000/svg">
+<foreignObject x="-11.2848" y="-11.2848" width="184.789" height="104.855"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(5.64px);clip-path:url(#bgblur_0_0_4_clip_path);height:100%;width:100%"></div></foreignObject><path id="Product Background" data-figma-bg-blur-radius="11.2848" d="M7.52344 0.235352H154.696C158.721 0.235452 161.984 3.49839 161.984 7.52344V74.7617C161.984 78.7868 158.721 82.0497 154.696 82.0498H7.52344C3.49832 82.0498 0.235352 78.7868 0.235352 74.7617V7.52344C0.235352 3.49832 3.49832 0.235352 7.52344 0.235352Z" fill="#3E3E3E" fill-opacity="0.6" stroke="url(#paint0_linear_0_4)" stroke-width="0.470201"/>
+<defs>
+<clipPath id="bgblur_0_0_4_clip_path" transform="translate(11.2848 11.2848)"><path d="M7.52344 0.235352H154.696C158.721 0.235452 161.984 3.49839 161.984 7.52344V74.7617C161.984 78.7868 158.721 82.0497 154.696 82.0498H7.52344C3.49832 82.0498 0.235352 78.7868 0.235352 74.7617V7.52344C0.235352 3.49832 3.49832 0.235352 7.52344 0.235352Z"/>
+</clipPath><linearGradient id="paint0_linear_0_4" x1="162.219" y1="82.3715" x2="7.05302" y2="0.0863231" gradientUnits="userSpaceOnUse">
+<stop stop-color="#989898"/>
+<stop offset="1" stop-color="#F1EBEB"/>
+</linearGradient>
+</defs>
+</svg>

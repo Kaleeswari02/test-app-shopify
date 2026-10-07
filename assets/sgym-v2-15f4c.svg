@@ -1,0 +1,12 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Play Button Container">
+<foreignObject x="-27.908" y="-27.908" width="99.8161" height="99.8161"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(13.95px);clip-path:url(#bgblur_0_0_22_clip_path);height:100%;width:100%"></div></foreignObject><g id="Kreis" data-figma-bg-blur-radius="27.908">
+<circle cx="22" cy="22" r="22" fill="#6D6D6D" fill-opacity="0.6"/>
+<circle cx="22" cy="22" r="21.5" stroke="white" stroke-opacity="0.5"/>
+</g>
+<path id="Path 5" fill-rule="evenodd" clip-rule="evenodd" d="M20.1498 15.1368C19.4813 14.6594 18.5527 15.1372 18.5527 15.9587V28.0624C18.5527 28.8839 19.4813 29.3617 20.1498 28.8842L28.6223 22.8324C29.1863 22.4296 29.1863 21.5915 28.6223 21.1887L24.1628 18.0033L20.1498 15.1368Z" fill="white"/>
+</g>
+<defs>
+<clipPath id="bgblur_0_0_22_clip_path" transform="translate(27.908 27.908)"><circle cx="22" cy="22" r="22"/>
+</clipPath></defs>
+</svg>
