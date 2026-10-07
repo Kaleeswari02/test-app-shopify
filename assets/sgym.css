@@ -2739,7 +2739,10 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
 }
 
 .sgym-showcase .sgym-carousel__head {
+  position: relative;
+  z-index: 4;
   margin-bottom: 40px;
+  background: #d5d6d8;
 }
 
 .sgym-showcase .sgym-carousel__head h3 {
@@ -2765,10 +2768,15 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
   z-index: 3;
 }
 
+.sgym-showcase .sgym-carousel.is-at-end::after {
+  visibility: hidden;
+}
+
 .sgym-showcase .sgym-carousel__arrows {
   gap: 5px;
   backdrop-filter: blur(18.1px);
   border-radius: 40px;
+  z-index: 5;
 }
 
 .sgym-showcase .sgym-arrow,
@@ -2794,6 +2802,10 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
 }
 
 .sgym-showcase .sgym-viewport {
+  overflow-x: auto;
+  /* Card-start snaps sit past the short overflow, so mandatory snap
+     pulls every gesture back to 0. Rest wherever the scroll lands. */
+  scroll-snap-type: none;
   margin-right: calc(50% - 50cqi);
   padding-right: calc(50cqi - 50%);
 }

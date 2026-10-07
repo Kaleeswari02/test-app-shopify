@@ -5,7 +5,19 @@ if (!customElements.get('sgym-carousel')) {
       connectedCallback() {
         this.viewport = this.querySelector('[data-sgym-viewport]');
         this.track = this.querySelector('[data-sgym-track]');
-        if (!this.viewport || !this.track) return;
+        if (!this.viewport || !this.track) {
+          if (!this.pendingBind) {
+            this.pendingBind = true;
+            const retry = () => {
+              this.pendingBind = false;
+              if (this.isConnected) this.connectedCallback();
+            };
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', retry, { once: true });
+            else requestAnimationFrame(retry);
+          }
+          return;
+        }
+        this.pendingBind = false;
 
         this.prev = this.querySelector('[data-sgym-prev]');
         this.next = this.querySelector('[data-sgym-next]');
@@ -117,7 +129,11 @@ if (!customElements.get('sgym-carousel')) {
         const gap = this.gap();
         const pad = this.scrollPad();
         const width = Math.max(0, this.viewport.clientWidth - pad * 2);
-        return Math.max(1, Math.round((width + gap) / (first.getBoundingClientRect().width + gap)));
+        const count = (width + gap) / (first.getBoundingClientRect().width + gap);
+        // A partial card is still hidden. Floor it so the page step matches
+        // the cards that are fully on screen.
+        const visible = this.closest('.sgym-showcase') ? Math.floor(count) : Math.round(count);
+        return Math.max(1, visible);
       }
 
       pageCount() {
@@ -146,6 +162,19 @@ if (!customElements.get('sgym-carousel')) {
 
       maxScroll() {
         return Math.max(0, this.viewport.scrollWidth - this.viewport.clientWidth);
+      }
+
+      // Scroll offset where the last card's right edge meets the viewport's
+      // right edge. Trailing padding can make maxScroll larger than that.
+      revealEnd() {
+        const items = this.slides();
+        const last = items[items.length - 1];
+        const max = this.maxScroll();
+        if (!last) return max;
+        const view = this.viewport.getBoundingClientRect();
+        const rect = last.getBoundingClientRect();
+        const end = this.viewport.scrollLeft + rect.right - view.right;
+        return Math.max(0, Math.min(max, end));
       }
 
       // Centre a scrolling row on its section. Track padding and
@@ -281,6 +310,29 @@ if (!customElements.get('sgym-carousel')) {
       move(direction) {
         const items = this.slides();
         if (!items.length) return;
+        // Key features overflows by less than a card. Step by the fully
+        // visible run, and clamp to the real scroll range, so next can
+        // bring the last card fully into view and previous can return.
+        if (this.closest('.sgym-showcase') && this.dataset.loop !== 'true') {
+          const left = this.viewport.scrollLeft;
+          const end = this.revealEnd();
+          const stride = items[0].getBoundingClientRect().width + this.gap();
+          const distance = Math.max(stride, this.pageSize() * stride);
+          if (direction > 0 && left < end - 2) {
+            this.destination = null;
+            this.animateScroll(Math.min(end, left + distance));
+            this.restartRing();
+            return;
+          }
+          if (direction < 0 && left > 2) {
+            this.destination = null;
+            const aligned = Math.floor((left - 1) / stride) * stride;
+            const target = end - left < 2 ? Math.max(0, aligned) : Math.max(0, left - distance);
+            this.animateScroll(target);
+            this.restartRing();
+            return;
+          }
+        }
         // A short track can hit the end before the next card's snap point.
         // Previous still has to return to the start.
         if (direction < 0 && this.destination == null && this.viewport.scrollLeft > 2 && this.activeIndex() === 0) {
@@ -322,8 +374,15 @@ if (!customElements.get('sgym-carousel')) {
         const items = this.slides();
         const start = items.length ? this.slideLeft(items[0]) : 0;
         const lastLeft = items.length ? this.slideLeft(items[items.length - 1]) : 0;
-        if (this.prev) this.prev.disabled = !loop && left <= start + 2;
-        if (this.next) this.next.disabled = !loop && (max <= 2 || left >= lastLeft - 2 || left >= max - 2);
+        const showcase = this.closest('.sgym-showcase');
+        const end = showcase ? this.revealEnd() : max;
+        if (showcase) this.classList.toggle('is-at-end', end <= 2 || left >= end - 2);
+        if (this.prev) this.prev.disabled = !loop && (showcase ? left <= 2 : left <= start + 2);
+        if (this.next) {
+          this.next.disabled = !loop && (showcase
+            ? end <= 2 || left >= end - 2
+            : max <= 2 || left >= lastLeft - 2 || left >= max - 2);
+        }
       }
     }
   );
