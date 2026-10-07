@@ -127,10 +127,14 @@ if (!customElements.get('sgym-carousel')) {
         return this.pageCount();
       }
 
+      scrollPad() {
+        return parseFloat(getComputedStyle(this.viewport).scrollPaddingLeft) || 0;
+      }
+
       activeIndex() {
         const items = this.slides();
         if (!items.length) return 0;
-        const left = this.viewport.scrollLeft;
+        const left = this.viewport.scrollLeft + this.scrollPad();
         let index = 0;
         items.forEach((item, i) => {
           if (this.slideLeft(item) <= left + 8) index = i;
@@ -142,20 +146,14 @@ if (!customElements.get('sgym-carousel')) {
         return Math.max(0, this.viewport.scrollWidth - this.viewport.clientWidth);
       }
 
-      // Centre the coach row in the grey section. Symmetric padding sizes the
-      // scrollport to the visible cards, so the first and last cards share one
-      // inset and the old end spacer is not needed.
+      // Centre the coach row in the grey section. Track padding and
+      // scroll-padding use one inset, so the first and last cards share it.
       centerCoaches() {
-        const spacer = this.track.querySelector('[data-sgym-spacer]');
-        if (!this.closest('.sgym-coach')) {
-          this.style.paddingLeft = '';
-          this.style.paddingRight = '';
-          return;
-        }
-        spacer?.remove();
+        if (!this.closest('.sgym-coach')) return;
+        this.track.querySelector('[data-sgym-spacer]')?.remove();
         const items = this.slides();
         if (!items.length) return;
-        const available = this.clientWidth;
+        const available = this.viewport.clientWidth;
         const card = items[0].getBoundingClientRect().width;
         const gap = this.gap();
         if (available <= 0 || card <= 0) return;
@@ -169,18 +167,8 @@ if (!customElements.get('sgym-carousel')) {
           else break;
         }
         const visible = Math.min(content, visibleCount * card + Math.max(0, visibleCount - 1) * gap);
-        const windowWidth = Math.min(visible, available);
-        const inset = Math.max(0, (available - windowWidth) / 2);
-        this.style.boxSizing = 'border-box';
-        this.style.paddingLeft = `${inset}px`;
-        this.style.paddingRight = `${inset}px`;
-        const snap = 'center';
-        this.viewport.style.scrollPaddingLeft = '0px';
-        this.viewport.style.scrollPaddingRight = '0px';
-        this.viewport.style.scrollSnapType = 'x mandatory';
-        items.forEach((item) => {
-          item.style.scrollSnapAlign = snap;
-        });
+        const inset = Math.max(0, (available - Math.min(visible, available)) / 2);
+        this.style.setProperty('--sgym-coach-inset', `${inset}px`);
       }
 
       ensureReachable() {
@@ -249,10 +237,7 @@ if (!customElements.get('sgym-carousel')) {
         const items = this.slides();
         const target = items[Math.max(0, Math.min(index, items.length - 1))];
         if (!target) return;
-        const snap = getComputedStyle(target).scrollSnapAlign;
-        const targetLeft = this.slideLeft(target);
-        const centered = targetLeft - (this.viewport.clientWidth - target.getBoundingClientRect().width) / 2;
-        const left = Math.max(0, Math.min(snap === 'center' ? centered : targetLeft, this.maxScroll()));
+        const left = Math.max(0, Math.min(this.slideLeft(target) - this.scrollPad(), this.maxScroll()));
         this.animateScroll(left);
         this.update();
       }
