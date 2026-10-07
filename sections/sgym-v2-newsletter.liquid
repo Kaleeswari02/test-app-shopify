@@ -1,0 +1,48 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <div class="ft-wrap">
+    <section class="ft-news" id="newsletter" data-node-mobile="228:363" aria-labelledby="news-title">
+      <div class="ft-news__card">
+        <div class="ft-news__media" aria-hidden="true">
+          {% render 'sgym-v2-img', file: section.settings.image_file, image: section.settings.image, width: 1852, height: 533, alt: '', img_class: '', loading: 'lazy', sizes: '100vw' %}
+        </div>
+        <div class="ft-news__body">
+          <p class="ft-news__kicker">{{ section.settings.kicker }}</p>
+          <h2 class="ft-news__title" id="news-title">{{ section.settings.heading }}</h2>
+          <p class="ft-news__text"><span class="only-d">{{ section.settings.text_desktop }}</span><span class="only-m">{{ section.settings.text_mobile }}</span></p>
+          <form class="ft-news__form" data-newsletter novalidate data-msg-ok="{{ section.settings.msg_ok | escape }}" data-msg-bad="{{ section.settings.msg_bad | escape }}">
+            <label class="ft-news__field">
+              <input type="email" name="email" placeholder=" " autocomplete="email" required aria-describedby="news-msg-{{ section.id }}">
+              <span class="ft-news__ph">{{ section.settings.placeholder }}</span>
+            </label>
+            <button class="ft-news__cta only-d" type="submit">{{ section.settings.button_label }}</button>
+            <button class="ft-news__go only-m" type="submit" aria-label="{{ section.settings.button_label | escape }}"><img src="{{ 'sgym-v2-a52e9.svg' | asset_url }}" width="36" height="36" alt=""></button>
+            <p class="ft-news__msg" id="news-msg-{{ section.id }}" role="status" hidden></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Newsletter",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "Sportstech News" },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "SEI EINER DER ERSTEN" },
+    { "type": "textarea", "id": "text_desktop", "label": "Text Desktop", "default": "Melde dich jetzt an und erhalte die neuesten Produkt-Updates, Workouts, News und exklusive Angebote – direkt in dein Postfach!" },
+    { "type": "textarea", "id": "text_mobile", "label": "Text Mobil", "default": "Produkt-Updates, Workouts und exklusive Angebote – direkt in dein Postfach!" },
+    { "type": "text", "id": "placeholder", "label": "Platzhalter", "default": "E-Mail-Adresse eingeben" },
+    { "type": "text", "id": "button_label", "label": "Button", "default": "5% RABATT SICHERN" },
+    { "type": "text", "id": "msg_ok", "label": "Erfolgsmeldung", "default": "Danke! Bitte bestätige deine Anmeldung in deinem Postfach." },
+    { "type": "text", "id": "msg_bad", "label": "Fehlermeldung", "default": "Bitte gib eine gültige E-Mail-Adresse ein." },
+    { "type": "image_picker", "id": "image", "label": "Hintergrundbild" },
+    { "type": "text", "id": "image_file", "label": "Fallback-Datei", "default": "199bc.png" }
+  ],
+  "presets": [{ "name": "sGym v2 Newsletter" }]
+}
+{% endschema %}

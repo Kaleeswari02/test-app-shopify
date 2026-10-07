@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Play Button Container">
+<foreignObject x="-34" y="-34" width="108" height="108"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(17px);clip-path:url(#bgblur_0_0_28_clip_path);height:100%;width:100%"></div></foreignObject><circle id="Oval" data-figma-bg-blur-radius="34" cx="20" cy="20" r="20" fill="#4C4C4C" fill-opacity="0.5"/>
+<path id="Path 5" fill-rule="evenodd" clip-rule="evenodd" d="M18.1625 13.2589C16.8387 12.3134 15 13.2596 15 14.8864V25.3283C15 26.955 16.8387 27.9013 18.1625 26.9557L25.4718 21.7348C26.5885 20.9371 26.5885 19.2775 25.4718 18.4799L18.1625 13.2589Z" fill="white"/>
+</g>
+<defs>
+<clipPath id="bgblur_0_0_28_clip_path" transform="translate(34 34)"><circle cx="20" cy="20" r="20"/>
+</clipPath></defs>
+</svg>

@@ -1,0 +1,1587 @@
+/*
+ * sGym Pro product page v2.
+ * Assign this template to the sGym Pro product in Shopify admin.
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "sgym-v2-hero",
+      "settings": {
+        "heading": "sGym Pro",
+        "subheading": "Die nächste Generation des Krafttrainings",
+        "video_label": "VIDEO ANSEHEN",
+        "scroll_label": "Zum Produkt scrollen",
+        "image_file": "91f1b.webp",
+        "image_alt": "Mann trainiert Klimmzüge an der sGym Pro Kraftstation"
+      }
+    },
+    "product": {
+      "type": "sgym-v2-product",
+      "settings": {
+        "use_product_title": true,
+        "heading": "sGym Pro Kraftstation",
+        "aria_label": "sGym Pro Kraftstation kaufen",
+        "lead": "Krafttraining mit elektrischem Widerstand bis 120 kg und über 400 Übungen, geführt über das 21\" Display – dazu Klimmzug, Dip-Station und unter 1,5m² Stellfläche.",
+        "gallery_alt": "sGym Pro Kraftstation Frontansicht",
+        "rating_value": "4.8",
+        "rating_count": "249",
+        "rating_suffix": "Bewertungen",
+        "show_asterisk": true,
+        "tax_1": "Inkl. MwSt.",
+        "tax_2": "Lieferung im Preis enthalten",
+        "options_label": "Produktoptionen",
+        "atc_label": "Zum Warenkorb hinzufügen",
+        "sold_label": "Ausverkauft",
+        "stock_title": "Sofort verfügbar",
+        "stock_text": "in 1-4 Werktagen geliefert",
+        "tp_label": "Hervorragend",
+        "tp_count": "Über 8.000 Bewertungen",
+        "ask_title": "Hast du eine Frage zum Produkt?",
+        "ask_placeholder": "Stell eine Frage...",
+        "bestprice": "* 30-Tage-Bestpreis: 2.549,00 €"
+      },
+      "blocks": {
+        "image_1": {
+          "type": "image",
+          "settings": {
+            "file": "3dce1.png",
+            "play": false
+          }
+        },
+        "image_2": {
+          "type": "image",
+          "settings": {
+            "file": "c1b75.png",
+            "play": false
+          }
+        },
+        "image_3": {
+          "type": "image",
+          "settings": {
+            "file": "10115.png",
+            "play": false
+          }
+        },
+        "image_4": {
+          "type": "image",
+          "settings": {
+            "file": "e48e6.png",
+            "play": false
+          }
+        },
+        "image_5": {
+          "type": "image",
+          "settings": {
+            "file": "fe26d.png",
+            "play": false
+          }
+        },
+        "image_6": {
+          "type": "image",
+          "settings": {
+            "file": "52702.png",
+            "play": false
+          }
+        },
+        "image_7": {
+          "type": "image",
+          "settings": {
+            "file": "53dcc.png",
+            "play": false
+          }
+        },
+        "image_8": {
+          "type": "image",
+          "settings": {
+            "file": "0ccd1.png",
+            "play": false
+          }
+        },
+        "image_9": {
+          "type": "image",
+          "settings": {
+            "file": "e3bc9.png",
+            "play": false
+          }
+        },
+        "image_10": {
+          "type": "image",
+          "settings": {
+            "file": "03c0a.png",
+            "play": false
+          }
+        },
+        "image_11": {
+          "type": "image",
+          "settings": {
+            "file": "6cdaa.png",
+            "play": false
+          }
+        },
+        "image_12": {
+          "type": "image",
+          "settings": {
+            "file": "1584c.png",
+            "play": true
+          }
+        },
+        "info_13": {
+          "type": "info",
+          "settings": {
+            "title": "Highlights",
+            "kind": "expand",
+            "anchor": "#technische-daten",
+            "body": "<p>• Bis zu 120 kg elektrischer Widerstand (2 × 60 kg)<br>• 21″ Display mit über 300 integrierten Übungsvideos<br>• Klimmzugstange, Dipstation und Safety Spotter<br>• Klappbar – unter 1,5 m² Stellfläche</p>"
+          }
+        },
+        "info_14": {
+          "type": "info",
+          "settings": {
+            "title": "Technische Daten",
+            "kind": "link",
+            "anchor": "#technische-daten",
+            "body": "<p>Technische Daten</p>"
+          }
+        },
+        "info_15": {
+          "type": "info",
+          "settings": {
+            "title": "Lieferung, Garantie & Service",
+            "kind": "expand",
+            "anchor": "#technische-daten",
+            "body": "<p>• Kostenloser Versand – Lieferung in 1–4 Werktagen<br>• 30 Tage kostenlose Rückgabe<br>• 2 Jahre Garantie<br>• 0% Finanzierung verfügbar</p>"
+          }
+        },
+        "feature_16": {
+          "type": "feature",
+          "settings": {
+            "icon_d": "2c06c.svg",
+            "icon_m": "11310.svg",
+            "strong": "400+",
+            "text": "Übungsvarianten"
+          }
+        },
+        "feature_17": {
+          "type": "feature",
+          "settings": {
+            "icon_d": "bfa2f.svg",
+            "icon_m": "7526a.svg",
+            "strong": "120 kg",
+            "text": "Elektrischer Widerstand"
+          }
+        },
+        "feature_18": {
+          "type": "feature",
+          "settings": {
+            "icon_d": "ebf22.svg",
+            "icon_m": "a9759.svg",
+            "strong": "Nur 2 m²",
+            "text": "Stellfläche benötigt"
+          }
+        },
+        "feature_19": {
+          "type": "feature",
+          "settings": {
+            "icon_d": "c3fab.svg",
+            "icon_m": "05613.svg",
+            "strong": "21\" Display",
+            "text": "mit Sportstech Live App"
+          }
+        },
+        "feature_20": {
+          "type": "feature",
+          "settings": {
+            "icon_d": "c5989.svg",
+            "icon_m": "fa4f4.svg",
+            "strong": "Ganzkörpertraining",
+            "text": "für alle Muskelgruppen"
+          }
+        },
+        "option_21": {
+          "type": "option",
+          "settings": {
+            "key": "standard",
+            "selected": true,
+            "label": "Standard",
+            "subline": "Im Preis enthalten",
+            "auswahl": "Standard",
+            "fallback_price": "2.999,00 €",
+            "fallback_uvp": "3.499,00 €",
+            "fallback_save": "500,00 € gespart"
+          }
+        },
+        "option_22": {
+          "type": "option",
+          "settings": {
+            "key": "allrounder",
+            "selected": false,
+            "label": "Allrounder Bundle (inkl. sGym Rower + sGym Bench)",
+            "subline": "+ 400 €",
+            "auswahl": "Allrounder Bundle",
+            "fallback_price": "3.399,00 €",
+            "fallback_uvp": "3.999,00 €",
+            "fallback_save": "600,00 € gespart"
+          }
+        },
+        "option_23": {
+          "type": "option",
+          "settings": {
+            "key": "cardio",
+            "selected": false,
+            "label": "Cardio Bundle (inkl. sGym Rower)",
+            "subline": "+ 300 €",
+            "auswahl": "Cardio Bundle",
+            "fallback_price": "3.299,00 €",
+            "fallback_uvp": "3.799,00 €",
+            "fallback_save": "500,00 € gespart"
+          }
+        },
+        "option_24": {
+          "type": "option",
+          "settings": {
+            "key": "performer",
+            "selected": false,
+            "label": "Performer Bundle (inkl. sGym Bench)",
+            "subline": "+ 145 €",
+            "auswahl": "Performer Bundle",
+            "fallback_price": "3.144,00 €",
+            "fallback_uvp": "3.999,00 €",
+            "fallback_save": "855,00 € gespart"
+          }
+        },
+        "trust_25": {
+          "type": "trust",
+          "settings": {
+            "icon": "a2a99.svg",
+            "line_1": "Kostenloser",
+            "line_2": "Versand"
+          }
+        },
+        "trust_26": {
+          "type": "trust",
+          "settings": {
+            "icon": "2de11.svg",
+            "line_1": "2 Jahre",
+            "line_2": "Garantie"
+          }
+        },
+        "trust_27": {
+          "type": "trust",
+          "settings": {
+            "icon": "4b598.svg",
+            "line_1": "4 Millionen",
+            "line_2": "Kunden"
+          }
+        },
+        "ask_28": {
+          "type": "ask",
+          "settings": {
+            "text": "Welche Trainingsmodi bietet das Gerät?"
+          }
+        },
+        "ask_29": {
+          "type": "ask",
+          "settings": {
+            "text": "Wie hoch ist der maximale Widerstand?"
+          }
+        }
+      },
+      "block_order": [
+        "image_1",
+        "image_2",
+        "image_3",
+        "image_4",
+        "image_5",
+        "image_6",
+        "image_7",
+        "image_8",
+        "image_9",
+        "image_10",
+        "image_11",
+        "image_12",
+        "info_13",
+        "info_14",
+        "info_15",
+        "feature_16",
+        "feature_17",
+        "feature_18",
+        "feature_19",
+        "feature_20",
+        "option_21",
+        "option_22",
+        "option_23",
+        "option_24",
+        "trust_25",
+        "trust_26",
+        "trust_27",
+        "ask_28",
+        "ask_29"
+      ]
+    },
+    "recs": {
+      "type": "sgym-v2-recs",
+      "settings": {
+        "title_prefix": "Empfohlen von ",
+        "title_strong": "#SaschaHuber",
+        "aria_label": "Empfohlen von #SaschaHuber"
+      },
+      "blocks": {
+        "photo_1": {
+          "type": "photo",
+          "settings": {
+            "file": "56e84.webp",
+            "alt": "Sascha Huber trainiert an der sGym Pro (1)",
+            "crop": "--l:-38.01%;--t:-2.62%;--w:219.67%;--h:102.45%"
+          }
+        },
+        "photo_2": {
+          "type": "photo",
+          "settings": {
+            "file": "76269.webp",
+            "alt": "Sascha Huber trainiert an der sGym Pro (2)",
+            "crop": "--l:-57.53%;--t:0.06%;--w:214.60%;--h:100.09%"
+          }
+        },
+        "photo_3": {
+          "type": "photo",
+          "settings": {
+            "file": "02b46.webp",
+            "alt": "Sascha Huber trainiert an der sGym Pro (3)",
+            "crop": "--l:-59.14%;--t:-6.94%;--w:234.52%;--h:109.38%"
+          }
+        },
+        "photo_4": {
+          "type": "photo",
+          "settings": {
+            "file": "67167.webp",
+            "alt": "Sascha Huber trainiert an der sGym Pro (4)",
+            "crop": "--l:-64.86%;--t:-4.81%;--w:227.35%;--h:106.03%"
+          }
+        },
+        "photo_5": {
+          "type": "photo",
+          "settings": {
+            "file": "08ff4.webp",
+            "alt": "Sascha Huber trainiert an der sGym Pro (5)",
+            "crop": "--l:-75.67%;--t:-0.66%;--w:216.19%;--h:100.83%"
+          }
+        }
+      },
+      "block_order": [
+        "photo_1",
+        "photo_2",
+        "photo_3",
+        "photo_4",
+        "photo_5"
+      ]
+    },
+    "design": {
+      "type": "sgym-v2-design",
+      "settings": {
+        "eyebrow": "sGym Pro Design",
+        "heading": "Bis ins letzte Detail durchdacht",
+        "features_title": "Key Features",
+        "product_file": "d5f79.webp",
+        "product_file_m": "a7b0f.webp"
+      },
+      "blocks": {
+        "card_1": {
+          "type": "card",
+          "settings": {
+            "title": "Safety Spotter",
+            "text": "Mit dem integrierten Safety Spotter passt du den Widerstand an und schaltest ihn bei Überlastung automatisch ab – perfekt für Drop-Sets.",
+            "text_m": "Passt den Widerstand an und stoppt bei Überlastung automatisch – ideal für Drop-Sets.",
+            "file": "poster-safety-spotter.jpg",
+            "alt": "Safety Spotter am Griff der sGym Pro",
+            "width": "746",
+            "height": "652",
+            "modifier": "none",
+            "visibility": "both",
+            "warm": false,
+            "show_control": true,
+            "control_mobile_only": true
+          }
+        },
+        "card_2": {
+          "type": "card",
+          "settings": {
+            "title": "Vielseitiger Kabelzug",
+            "text": "Der 12-fach verstellbare Kabelzug mit seitlicher Bodenhalterung ermöglicht dir zahlreiche Zug-, Druck- und Rotationsübungen.",
+            "text_m": "",
+            "file": "poster-kabelzug.jpg",
+            "alt": "Kabelzug-Umlenkrolle der sGym Pro",
+            "width": "746",
+            "height": "652",
+            "modifier": "none",
+            "visibility": "only-d",
+            "warm": false,
+            "show_control": false,
+            "control_mobile_only": false
+          }
+        },
+        "card_3": {
+          "type": "card",
+          "settings": {
+            "title": "Automatische Absenkfunktion",
+            "text": "Die Bodenplatte benötigt weniger als 1,5 m², senkt sich automatisch ab und lässt sich dank Transportrollen leicht bewegen.",
+            "text_m": "",
+            "file": "177ef.webp",
+            "alt": "sGym Pro mit abgesenkter Bodenplatte",
+            "width": "1496",
+            "height": "1306",
+            "modifier": "kfcard--fold",
+            "visibility": "only-d",
+            "warm": true,
+            "show_control": true,
+            "control_mobile_only": false
+          }
+        },
+        "card_4": {
+          "type": "card",
+          "settings": {
+            "title": "120 kg Widerstand",
+            "text": "Die elektrischen Motoren bieten pro Seite 60 kg präzisen Widerstand.",
+            "text_m": "",
+            "file": "poster-120kg.jpg",
+            "alt": "Bodenplatte und Motoreinheit der sGym Pro",
+            "width": "890",
+            "height": "778",
+            "modifier": "kfcard--kg",
+            "visibility": "only-d",
+            "warm": false,
+            "show_control": false,
+            "control_mobile_only": false
+          }
+        },
+        "card_5": {
+          "type": "card",
+          "settings": {
+            "title": "21\" Display",
+            "text": "Mit dem 360 Grad schwenkbaren Touch-Display sind deine Workouts so flexibel wie nie!",
+            "text_m": "",
+            "file": "177ef.webp",
+            "alt": "21 Zoll Touch-Display der sGym Pro",
+            "width": "1496",
+            "height": "1306",
+            "modifier": "kfcard--display",
+            "visibility": "only-m",
+            "warm": true,
+            "show_control": true,
+            "control_mobile_only": false
+          }
+        }
+      },
+      "block_order": [
+        "card_1",
+        "card_2",
+        "card_3",
+        "card_4",
+        "card_5"
+      ]
+    },
+    "possibilities": {
+      "type": "sgym-v2-possibilities",
+      "settings": {
+        "heading": "Endlose Möglichkeiten für dein Krafttraining",
+        "tabs_label": "Möglichkeiten"
+      },
+      "blocks": {
+        "tab_1": {
+          "type": "tab",
+          "settings": {
+            "title": "Workouts",
+            "text": "Das sGym Pro bietet dir ein komplettes Ganzkörpertraining mit einer Vielzahl an Übungen – vom Bankdrücken bis zu Dips.",
+            "file": "d7128.webp",
+            "alt": "Workout-Ansicht auf dem sGym Pro Display",
+            "modi": false
+          }
+        },
+        "tab_2": {
+          "type": "tab",
+          "settings": {
+            "title": "Trainingspläne",
+            "text": "Strukturierte Pläne für Muskelaufbau, Kraft und Ausdauer – passend zu deinem Level.",
+            "file": "8368c.webp",
+            "alt": "Trainingsplan-Ansicht auf dem sGym Pro Display",
+            "modi": false
+          }
+        },
+        "tab_3": {
+          "type": "tab",
+          "settings": {
+            "title": "Trainingsmodi",
+            "text": "Standard, exzentrisch, isokinetisch oder elastisch – wähle deinen Widerstandsmodus.",
+            "file": "dd650.webp",
+            "alt": "Trainingsmodi-Ansicht auf dem sGym Pro Display",
+            "modi": true
+          }
+        }
+      },
+      "block_order": [
+        "tab_1",
+        "tab_2",
+        "tab_3"
+      ]
+    },
+    "system": {
+      "type": "sgym-v2-system",
+      "settings": {
+        "title_a": "Ein System.",
+        "title_b": "Unendliche Vielfalt.",
+        "sub_a": "Dein gesamtes Trainingsrepertoire in einem Gerät.",
+        "sub_b": "Mehr Übungen. Mehr Abwechslung. Mehr Fortschritt.",
+        "image_file": "9ca35.webp",
+        "image_alt": "Verschiedene Übungen am sGym Pro"
+      }
+    },
+    "elegant": {
+      "type": "sgym-v2-elegant",
+      "settings": {
+        "heading": "Elegant. Kompakt. Einzigartig.",
+        "image_file": "08602.webp",
+        "image_alt": "sGym Pro zusammengeklappt vor einer Fensterfront"
+      }
+    },
+    "kombinieren": {
+      "type": "sgym-v2-kombinieren",
+      "settings": {
+        "heading": "Kombinieren & profitieren!",
+        "hint": "Wähle das passende Bundle in der Kaufbox aus."
+      },
+      "blocks": {
+        "bundle_1": {
+          "type": "bundle",
+          "settings": {
+            "bundle": "performer",
+            "title": "Hantelbank",
+            "text": "Die Schräg- und Flachbank, belastbar bis 360 kg, gibt dir bei jeder Übung stabilen Halt und erweitert deine Trainingsmöglichkeiten.",
+            "file": "87925.webp",
+            "alt": "sGym Pro mit Hantelbank",
+            "img_class": "kombi__img kombi__img--bank"
+          }
+        },
+        "bundle_2": {
+          "type": "bundle",
+          "settings": {
+            "bundle": "cardio",
+            "title": "Rudergerät",
+            "text": "Kombiniere Cardio und Kraft für ein ganzheitliches Trainingserlebnis.",
+            "file": "7bfab.webp",
+            "alt": "sGym Pro mit Rudergerät",
+            "img_class": "kombi__img kombi__img--row"
+          }
+        }
+      },
+      "block_order": [
+        "bundle_1",
+        "bundle_2"
+      ]
+    },
+    "smart": {
+      "type": "sgym-v2-smart",
+      "settings": {
+        "heading": "Mehr als nur dein Smart Gym.",
+        "subheading": "Mit dem sGym Pro erhältst du Zugang zu einem smarten, digitalen Ökosystem, das Training, Daten und Coaching nahtlos verbindet.",
+        "link": "https://www.sportstech.de/live-app"
+      }
+    },
+    "modes": {
+      "type": "sgym-v2-modes",
+      "settings": {
+        "heading": "Dynamische Trainingsmodi",
+        "subheading": "Ob allein oder mit Partner – du findest immer das passende Setup für deine Ziele.",
+        "autoplay": "4000"
+      },
+      "blocks": {
+        "mode_1": {
+          "type": "mode",
+          "settings": {
+            "tab": "Partnermodus",
+            "title_a": "Partner-",
+            "title_b": "modus",
+            "text": "Trainiere zu zweit – für doppelten Fortschritt.",
+            "text_m": "Gemeinsam trainieren, doppelt profitieren.",
+            "layout": "partner",
+            "file": "f3ec7.webp",
+            "alt": "",
+            "banner_file": "615c5.webp",
+            "banner_alt": "Zwei Personen trainieren gemeinsam im Partnermodus am sGym Pro"
+          }
+        },
+        "mode_2": {
+          "type": "mode",
+          "settings": {
+            "tab": "Light-Modus",
+            "title_a": "Light-",
+            "title_b": "Modus",
+            "text": "Sanft starten, Technik verfeinern.",
+            "text_m": "",
+            "layout": "base",
+            "file": "f3ec7.webp",
+            "alt": "sGym Pro im Light-Modus",
+            "banner_file": "615c5.webp",
+            "banner_alt": ""
+          }
+        },
+        "mode_3": {
+          "type": "mode",
+          "settings": {
+            "tab": "Weighted-Modus",
+            "title_a": "Weighted-",
+            "title_b": "Modus",
+            "text": "Wie freie Gewichte – nur präziser.",
+            "text_m": "",
+            "layout": "cover",
+            "file": "10115.png",
+            "alt": "sGym Pro im Weighted-Modus",
+            "banner_file": "615c5.webp",
+            "banner_alt": ""
+          }
+        }
+      },
+      "block_order": [
+        "mode_1",
+        "mode_2",
+        "mode_3"
+      ]
+    },
+    "accessories": {
+      "type": "sgym-v2-accessories",
+      "settings": {
+        "tag": "ZUBEHÖR",
+        "heading": "Das richtige Zubehör für jedes Workout",
+        "subheading": "Das komplette Trainings-Setup für optimale Ergebnisse."
+      },
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "title": "Safety Spotter",
+            "text": "Mehr Sicherheit und Stabilität – ideal für Kniebeugen und Bankdrücken.",
+            "file": "6a900.webp",
+            "alt": "Remote",
+            "img_class": "acc__img"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "title": "Knöchelriemen",
+            "text": "Für gezieltes Bein- und Po-Training am Kabelzug – sicher fixiert.",
+            "file": "8c7bb.webp",
+            "alt": "Knöchelriemen",
+            "img_class": "acc__img"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "title": "Trizepsseil",
+            "text": "Für gezieltes Bein- und Po-Training am Kabelzug – sicher fixiert.",
+            "file": "fb91b.webp",
+            "alt": "Trizepsseil",
+            "img_class": "acc__img"
+          }
+        },
+        "item_4": {
+          "type": "item",
+          "settings": {
+            "title": "Einzelgriffe",
+            "text": "Für gezieltes Bein- und Po-Training am Kabelzug – sicher fixiert.",
+            "file": "20ab5.webp",
+            "alt": "Einzelgriffe",
+            "img_class": "acc__img"
+          }
+        },
+        "item_5": {
+          "type": "item",
+          "settings": {
+            "title": "Bodenschutzmatte",
+            "text": "Für gezieltes Bein- und Po-Training am Kabelzug – sicher fixiert.",
+            "file": "ae9e2.webp",
+            "alt": "Bodenschutzmatte",
+            "img_class": "acc__img"
+          }
+        },
+        "item_6": {
+          "type": "item",
+          "settings": {
+            "title": "Klimmzugstange",
+            "text": "Für gezieltes Bein- und Po-Training am Kabelzug – sicher fixiert.",
+            "file": "6c880.webp",
+            "alt": "Klimmzugstange",
+            "img_class": "acc__img acc__img--sm"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3",
+        "item_4",
+        "item_5",
+        "item_6"
+      ]
+    },
+    "lifestyle": {
+      "type": "sgym-v2-lifestyle",
+      "settings": {
+        "aria_label": "Lifestyle-Galerie",
+        "autoplay": "3500"
+      },
+      "blocks": {
+        "slide_1": {
+          "type": "slide",
+          "settings": {
+            "file": "f252c.webp",
+            "alt": "Training mit dem sGym Pro im Wohnzimmer",
+            "width": "2400",
+            "height": "1800"
+          }
+        },
+        "slide_2": {
+          "type": "slide",
+          "settings": {
+            "file": "615c5.webp",
+            "alt": "Partnertraining am sGym Pro",
+            "width": "2400",
+            "height": "1200"
+          }
+        },
+        "slide_3": {
+          "type": "slide",
+          "settings": {
+            "file": "f3ec7.webp",
+            "alt": "sGym Pro im hellen Wohnraum",
+            "width": "2400",
+            "height": "1583"
+          }
+        },
+        "slide_4": {
+          "type": "slide",
+          "settings": {
+            "file": "e48e6.png",
+            "alt": "sGym Pro Detailansicht",
+            "width": "240",
+            "height": "240"
+          }
+        },
+        "slide_5": {
+          "type": "slide",
+          "settings": {
+            "file": "c1b75.png",
+            "alt": "sGym Pro Seitenansicht",
+            "width": "240",
+            "height": "240"
+          }
+        }
+      },
+      "block_order": [
+        "slide_1",
+        "slide_2",
+        "slide_3",
+        "slide_4",
+        "slide_5"
+      ]
+    },
+    "sascha": {
+      "type": "sgym-v2-sascha",
+      "settings": {
+        "stars_label": "4,5 von 5 Sternen",
+        "eyebrow": "Keine Ausreden mit #SaschaHuber!",
+        "heading": "Empfohlen von einem der größten Home-Fitness-Influencer im deutschsprachigen Raum.",
+        "image_file": "a53cd.webp",
+        "image_alt": "Sascha Huber trainiert am sGym Pro"
+      }
+    },
+    "trust": {
+      "type": "sgym-v2-trust",
+      "settings": {
+        "heading": "Ein Shop, dem du vertrauen kannst"
+      },
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "modifier": "test",
+            "icon_d": "83aa8.svg",
+            "icon_m": "4e593.svg",
+            "name_d": "30 Tage testen",
+            "name_m": "30 Tage testen",
+            "desc_d": "Mit Geld-zurück-Garantie.",
+            "desc_m": "Geld-zurück-Garantie."
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "modifier": "ship",
+            "icon_d": "bd523.svg",
+            "icon_m": "475d3.svg",
+            "name_d": "Kostenloser Versand & Rückversand",
+            "name_m": "Kostenloser Versand",
+            "desc_d": "Schnell, unkompliziert und komplett kostenlos.",
+            "desc_m": "Inkl. Rückversand."
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "modifier": "warranty",
+            "icon_d": "9e7c0.svg",
+            "icon_m": "631ab.svg",
+            "name_d": "2 Jahre Garantie",
+            "name_m": "2 Jahre Garantie",
+            "desc_d": "Sicheres und sorgenfreies Training – garantiert.",
+            "desc_m": "Sorgenfrei trainieren."
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3"
+      ]
+    },
+    "trainer": {
+      "type": "sgym-v2-trainer",
+      "settings": {
+        "tag": "TRAINER",
+        "heading": "Lerne deine Coaches kennen",
+        "subheading": "Unsere Trainer begleiten dich durch jedes Workout – mit Expertise, Motivation und Power."
+      },
+      "blocks": {
+        "coach_1": {
+          "type": "coach",
+          "settings": {
+            "layout": "carlo",
+            "mobile_only": false,
+            "eyebrow": "TRAINER",
+            "name": "Carlo",
+            "text": "Pusht dein Krafttraining mit dynamischen Workouts für jedes Level.",
+            "file": "26bf3.webp",
+            "alt": "Trainer Carlo",
+            "width": "1024",
+            "height": "683",
+            "file_m": "9abe3.webp"
+          }
+        },
+        "coach_2": {
+          "type": "coach",
+          "settings": {
+            "layout": "lina",
+            "mobile_only": false,
+            "eyebrow": "TRAINER",
+            "name": "Lina",
+            "text": "Volle Power mit Ganzkörper-Workouts und entspannten Mobility-Einheiten!",
+            "file": "f5395.webp",
+            "alt": "Trainerin Lina",
+            "width": "683",
+            "height": "1024",
+            "file_m": "9abe3.webp"
+          }
+        },
+        "coach_3": {
+          "type": "coach",
+          "settings": {
+            "layout": "tim",
+            "mobile_only": false,
+            "eyebrow": "TRAINER",
+            "name": "Tim",
+            "text": "Spannende Kraft-Challenges für dein nächstes Fitnesslevel!",
+            "file": "92ee9.webp",
+            "alt": "Trainer Tim",
+            "width": "1024",
+            "height": "577",
+            "file_m": "9abe3.webp"
+          }
+        },
+        "coach_4": {
+          "type": "coach",
+          "settings": {
+            "layout": "lauren",
+            "mobile_only": false,
+            "eyebrow": "TRAINER",
+            "name": "Lauren",
+            "text": "Funktionelles Training für mehr Ausdauer & Ganzkörperkraft.",
+            "file": "d0a04.webp",
+            "alt": "Trainerin Lauren",
+            "width": "682",
+            "height": "1024",
+            "file_m": "9abe3.webp"
+          }
+        },
+        "coach_5": {
+          "type": "coach",
+          "settings": {
+            "layout": "florentina",
+            "mobile_only": true,
+            "eyebrow": "TRAINER",
+            "name": "Florentina",
+            "text": "Pusht dein Krafttraining mit dynamischen Workouts für jedes Level.",
+            "file": "4f4ac.webp",
+            "alt": "Trainerin Florentina",
+            "width": "786",
+            "height": "714",
+            "file_m": "9abe3.webp"
+          }
+        }
+      },
+      "block_order": [
+        "coach_1",
+        "coach_2",
+        "coach_3",
+        "coach_4",
+        "coach_5"
+      ]
+    },
+    "reviews": {
+      "type": "sgym-v2-reviews",
+      "settings": {
+        "note": "PLATZHALTER · BEISPIEL-BEWERTUNGEN",
+        "heading": "Kundenrezensionen",
+        "average": "4,8",
+        "count": "249",
+        "count_suffix": "Bewertungen",
+        "videos_title": "Bewertungen mit Videos",
+        "photos_title": "Bewertungen mit Fotos",
+        "see_all": "Alle ansehen",
+        "rating_label": "Bewertung: 5 Sterne",
+        "write_label": "Rezension schreiben",
+        "empty": "Keine Bewertungen für diese Auswahl."
+      },
+      "blocks": {
+        "bar_1": {
+          "type": "bar",
+          "settings": {
+            "stars": "5",
+            "percent": "74%",
+            "file_d": "7e5e6.svg",
+            "file_m": "e587c.svg",
+            "width_d": "313",
+            "margin": "margin-left:-3px;margin-right:0px"
+          }
+        },
+        "bar_2": {
+          "type": "bar",
+          "settings": {
+            "stars": "4",
+            "percent": "14%",
+            "file_d": "44227.svg",
+            "file_m": "03644.svg",
+            "width_d": "313",
+            "margin": "margin-left:-3px;margin-right:0px"
+          }
+        },
+        "bar_3": {
+          "type": "bar",
+          "settings": {
+            "stars": "3",
+            "percent": "5%",
+            "file_d": "4a5ab.svg",
+            "file_m": "04782.svg",
+            "width_d": "313",
+            "margin": "margin-left:-3px;margin-right:0px"
+          }
+        },
+        "bar_4": {
+          "type": "bar",
+          "settings": {
+            "stars": "2",
+            "percent": "6%",
+            "file_d": "2aa4e.svg",
+            "file_m": "d1ecb.svg",
+            "width_d": "313",
+            "margin": "margin-left:-2px;margin-right:-1px"
+          }
+        },
+        "bar_5": {
+          "type": "bar",
+          "settings": {
+            "stars": "1",
+            "percent": "1%",
+            "file_d": "0024b.svg",
+            "file_m": "2b6a8.svg",
+            "width_d": "315",
+            "margin": "margin-left:-2px;margin-right:-3px"
+          }
+        },
+        "clip_6": {
+          "type": "clip",
+          "settings": {
+            "place": "videos",
+            "extra": false,
+            "file": "0ccd1.png",
+            "label": "Kundenvideo 1 abspielen"
+          }
+        },
+        "clip_7": {
+          "type": "clip",
+          "settings": {
+            "place": "videos",
+            "extra": false,
+            "file": "e3bc9.png",
+            "label": "Kundenvideo 2 abspielen"
+          }
+        },
+        "clip_8": {
+          "type": "clip",
+          "settings": {
+            "place": "videos",
+            "extra": false,
+            "file": "6cdaa.png",
+            "label": "Kundenvideo 3 abspielen"
+          }
+        },
+        "clip_9": {
+          "type": "clip",
+          "settings": {
+            "place": "videos",
+            "extra": false,
+            "file": "3dce1.png",
+            "label": "Kundenvideo 4 abspielen"
+          }
+        },
+        "clip_10": {
+          "type": "clip",
+          "settings": {
+            "place": "videos",
+            "extra": false,
+            "file": "c1b75.png",
+            "label": "Kundenvideo 5 abspielen"
+          }
+        },
+        "clip_11": {
+          "type": "clip",
+          "settings": {
+            "place": "videos",
+            "extra": false,
+            "file": "e48e6.png",
+            "label": "Kundenvideo 6 abspielen"
+          }
+        },
+        "clip_12": {
+          "type": "clip",
+          "settings": {
+            "place": "videos",
+            "extra": false,
+            "file": "52702.png",
+            "label": "Kundenvideo 7 abspielen"
+          }
+        },
+        "clip_13": {
+          "type": "clip",
+          "settings": {
+            "place": "videos",
+            "extra": false,
+            "file": "0ccd1.png",
+            "label": "Kundenvideo 8 abspielen"
+          }
+        },
+        "clip_14": {
+          "type": "clip",
+          "settings": {
+            "place": "photos",
+            "extra": false,
+            "file": "03c0a.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_15": {
+          "type": "clip",
+          "settings": {
+            "place": "photos",
+            "extra": false,
+            "file": "6cdaa.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_16": {
+          "type": "clip",
+          "settings": {
+            "place": "photos",
+            "extra": false,
+            "file": "3dce1.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_17": {
+          "type": "clip",
+          "settings": {
+            "place": "photos",
+            "extra": false,
+            "file": "c1b75.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_18": {
+          "type": "clip",
+          "settings": {
+            "place": "photos",
+            "extra": false,
+            "file": "10115.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_19": {
+          "type": "clip",
+          "settings": {
+            "place": "photos",
+            "extra": false,
+            "file": "e48e6.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_20": {
+          "type": "clip",
+          "settings": {
+            "place": "photos",
+            "extra": false,
+            "file": "fe26d.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_21": {
+          "type": "clip",
+          "settings": {
+            "place": "photos",
+            "extra": false,
+            "file": "52702.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_22": {
+          "type": "clip",
+          "settings": {
+            "place": "photos",
+            "extra": false,
+            "file": "53dcc.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_23": {
+          "type": "clip",
+          "settings": {
+            "place": "mphotos",
+            "extra": false,
+            "file": "e3bc9.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_24": {
+          "type": "clip",
+          "settings": {
+            "place": "mphotos",
+            "extra": false,
+            "file": "03c0a.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_25": {
+          "type": "clip",
+          "settings": {
+            "place": "mphotos",
+            "extra": false,
+            "file": "6cdaa.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_26": {
+          "type": "clip",
+          "settings": {
+            "place": "mphotos",
+            "extra": false,
+            "file": "3dce1.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_27": {
+          "type": "clip",
+          "settings": {
+            "place": "mphotos",
+            "extra": true,
+            "file": "c1b75.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_28": {
+          "type": "clip",
+          "settings": {
+            "place": "mphotos",
+            "extra": true,
+            "file": "10115.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_29": {
+          "type": "clip",
+          "settings": {
+            "place": "mphotos",
+            "extra": true,
+            "file": "e48e6.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_30": {
+          "type": "clip",
+          "settings": {
+            "place": "mphotos",
+            "extra": true,
+            "file": "fe26d.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_31": {
+          "type": "clip",
+          "settings": {
+            "place": "mvideos",
+            "extra": false,
+            "file": "c1b75.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_32": {
+          "type": "clip",
+          "settings": {
+            "place": "mvideos",
+            "extra": false,
+            "file": "10115.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_33": {
+          "type": "clip",
+          "settings": {
+            "place": "mvideos",
+            "extra": false,
+            "file": "e48e6.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_34": {
+          "type": "clip",
+          "settings": {
+            "place": "mvideos",
+            "extra": false,
+            "file": "fe26d.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_35": {
+          "type": "clip",
+          "settings": {
+            "place": "mvideos",
+            "extra": true,
+            "file": "0ccd1.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_36": {
+          "type": "clip",
+          "settings": {
+            "place": "mvideos",
+            "extra": true,
+            "file": "52702.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "clip_37": {
+          "type": "clip",
+          "settings": {
+            "place": "mvideos",
+            "extra": true,
+            "file": "53dcc.png",
+            "label": "Kundenfoto"
+          }
+        },
+        "review_38": {
+          "type": "review",
+          "settings": {
+            "viewport": "desktop",
+            "date_iso": "2024-05-07",
+            "date_label": "07/05/2024",
+            "name": "Platzhalter-Kundin A",
+            "text": "[PLATZHALTER] Kompakt, leise und das Display mit den Übungsvideos motiviert enorm. Lieferung und Aufbau liefen problemlos.",
+            "stars": "5",
+            "verified": true,
+            "has_photos": true,
+            "photo_1": "e48e6.png",
+            "photo_2": "fe26d.png",
+            "photo_3": "52702.png"
+          }
+        },
+        "review_39": {
+          "type": "review",
+          "settings": {
+            "viewport": "desktop",
+            "date_iso": "2023-04-27",
+            "date_label": "27.04.2023",
+            "name": "Platzhalter-Kundin B",
+            "text": "[PLATZHALTER] Ideal für frühe Morgenstunden – leise Motoren, präziser Widerstand und in Sekunden zusammengeklappt.",
+            "stars": "5",
+            "verified": true,
+            "has_photos": false,
+            "photo_1": "",
+            "photo_2": "",
+            "photo_3": ""
+          }
+        },
+        "review_40": {
+          "type": "review",
+          "settings": {
+            "viewport": "desktop",
+            "date_iso": "2024-05-07",
+            "date_label": "07/05/2024",
+            "name": "Platzhalter-Kunde C",
+            "text": "[PLATZHALTER] Endlich Ganzkörpertraining zu Hause ohne Gewichtsplatten. Der Partnermodus ist ein echtes Highlight.",
+            "stars": "5",
+            "verified": true,
+            "has_photos": true,
+            "photo_1": "e48e6.png",
+            "photo_2": "fe26d.png",
+            "photo_3": "52702.png"
+          }
+        },
+        "review_41": {
+          "type": "review",
+          "settings": {
+            "viewport": "mobile",
+            "date_iso": "2023-04-27",
+            "date_label": "27.04.2023",
+            "name": "Platzhalter-Kundin A",
+            "text": "[PLATZHALTER] Kompakt, leise und das Display mit den Übungsvideos motiviert enorm. Lieferung und Aufbau liefen problemlos.",
+            "stars": "5",
+            "verified": true,
+            "has_photos": true,
+            "photo_1": "52702.png",
+            "photo_2": "53dcc.png",
+            "photo_3": "0ccd1.png"
+          }
+        },
+        "review_42": {
+          "type": "review",
+          "settings": {
+            "viewport": "mobile",
+            "date_iso": "2023-04-27",
+            "date_label": "27.04.2023",
+            "name": "Platzhalter-Kunde C",
+            "text": "[PLATZHALTER] Ideal für frühe Morgenstunden – leise Motoren, präziser Widerstand und in Sekunden zusammengeklappt.",
+            "stars": "5",
+            "verified": true,
+            "has_photos": true,
+            "photo_1": "52702.png",
+            "photo_2": "53dcc.png",
+            "photo_3": "0ccd1.png"
+          }
+        },
+        "review_43": {
+          "type": "review",
+          "settings": {
+            "viewport": "mobile",
+            "date_iso": "2024-05-07",
+            "date_label": "07/05/2024",
+            "name": "Platzhalter-Kundin B",
+            "text": "[PLATZHALTER] Endlich Ganzkörpertraining zu Hause ohne Gewichtsplatten. Der Partnermodus ist ein echtes Highlight.",
+            "stars": "5",
+            "verified": true,
+            "has_photos": false,
+            "photo_1": "",
+            "photo_2": "",
+            "photo_3": ""
+          }
+        }
+      },
+      "block_order": [
+        "bar_1",
+        "bar_2",
+        "bar_3",
+        "bar_4",
+        "bar_5",
+        "clip_6",
+        "clip_7",
+        "clip_8",
+        "clip_9",
+        "clip_10",
+        "clip_11",
+        "clip_12",
+        "clip_13",
+        "clip_14",
+        "clip_15",
+        "clip_16",
+        "clip_17",
+        "clip_18",
+        "clip_19",
+        "clip_20",
+        "clip_21",
+        "clip_22",
+        "clip_23",
+        "clip_24",
+        "clip_25",
+        "clip_26",
+        "clip_27",
+        "clip_28",
+        "clip_29",
+        "clip_30",
+        "clip_31",
+        "clip_32",
+        "clip_33",
+        "clip_34",
+        "clip_35",
+        "clip_36",
+        "clip_37",
+        "review_38",
+        "review_39",
+        "review_40",
+        "review_41",
+        "review_42",
+        "review_43"
+      ]
+    },
+    "specs": {
+      "type": "sgym-v2-specs",
+      "settings": {
+        "heading": "Technische Daten"
+      },
+      "blocks": {
+        "group_1": {
+          "type": "group",
+          "settings": {
+            "title": "Abmessung allgemein",
+            "open": true,
+            "rows": "Produktmaße zusammengeklappt mit Klimmzugstange|218 × 91 × 44 cm\nProduktmaße ausgeklappt mit Klimmzugstange|218 × 91 × 160 cm\nProduktmaße ausgeklappt ohne Klimmzugstange|196 × 91 × 160 cm\nProduktmaße zusammengeklappt ohne Klimmzugstange|196 × 91 × 44 cm\nVerpackungsmaße (L × B × H)|205 × 91 × 49 cm\nNettogewicht|115 kg\nBruttogewicht|140 kg"
+          }
+        },
+        "group_2": {
+          "type": "group",
+          "settings": {
+            "title": "Konsole",
+            "open": false,
+            "rows": "Netzspannung und Frequenz|100–240 V AC, 50–60 Hz\nNennleistung|1500 W\nMaximale Ausgangsleistung|max. 1500 W, Nennleistung 550 W\nBluetooth-Frequenzband|2,4 GHz\nWLAN|2,4G: 2,412–2,484 GHz / 5G: 5,180–5,825 GHz\nMaximale abgestrahlte Sendeleistung|16,75 dBm"
+          }
+        },
+        "group_3": {
+          "type": "group",
+          "settings": {
+            "title": "Allgemeine Informationen",
+            "open": false,
+            "rows": "Trainingsgewicht|120 kg\nLieferumfang|Kraftstation, Handbuch, 2× Einzelgriffe, Langhantel, Trizepsgriff, Knöchelriemen, Safety Spotter, Langhantelpolster, Dipstange, Klimmzugstange, Extender Seile, Trainingsgürtel\nHauptmerkmale|Safety Spotter, klappbare Bodenplatte, Supportmodus, Weightedmodus, Ruderaufsatzmöglichkeit, Dipstation, Klimmzugstange\nMax. Nutzergewicht Klimmzugstange|200 kg\nMax. Nutzergewicht Dipstange|120 kg\nDipstation|Ja\nEVA Polster|Nein"
+          }
+        },
+        "group_4": {
+          "type": "group",
+          "settings": {
+            "title": "Bildschirm-Anzeige",
+            "open": false,
+            "rows": "Display|21 Zoll\nVerknüpfung zur Sportstech Live App|Ja"
+          }
+        }
+      },
+      "block_order": [
+        "group_1",
+        "group_2",
+        "group_3",
+        "group_4"
+      ]
+    },
+    "faq": {
+      "type": "sgym-v2-faq",
+      "settings": {
+        "heading": "FAQs"
+      },
+      "blocks": {
+        "question_1": {
+          "type": "question",
+          "settings": {
+            "question": "Was ist das sGym Pro?",
+            "answer": "<p>Das sGym Pro ist eine intelligente, smarte Kraftstation mit integriertem Display. Der Widerstand wird nicht über Gewichtsplatten, sondern über moderne Motoren erzeugt und ist dadurch besonders präzise und flexibel steuerbar. Mit einem maximalen Trainingsgewicht von 120 kg lassen sich vielseitige Workouts für alle Leistungsstufen durchführen. Über 300 integrierte Übungsvideos stehen dir direkt zur Verfügung, ergänzt durch weitere Trainingsvideos. Trotz seiner Leistungsfähigkeit benötigt das Gerät nur wenig Platz und eignet sich daher auch für kleinere Räume. Es ermöglicht ein vollständiges Ganzkörpertraining und unterstützt dich dabei, deine individuellen Fitnessziele effektiv zu erreichen.</p>",
+            "open_desktop": true
+          }
+        },
+        "question_2": {
+          "type": "question",
+          "settings": {
+            "question": "Welche maximale Last unterstützt das sGym Pro und erfolgt der Antrieb über Elektromotoren?",
+            "answer": "<p>Das sGym Pro bietet einen Widerstand von bis zu 120 kg, aufgeteilt in 60 kg pro Arm. Angetrieben wird das System von zwei Elektromotoren.</p>",
+            "open_desktop": false
+          }
+        },
+        "question_3": {
+          "type": "question",
+          "settings": {
+            "question": "Wie wird der Widerstand beim Training erzeugt?",
+            "answer": "<p>Der Widerstand entsteht durch die elektromagnetische Kraft der Motoren, wodurch er präzise und stufenlos steuerbar ist.</p>",
+            "open_desktop": false
+          }
+        },
+        "question_4": {
+          "type": "question",
+          "settings": {
+            "question": "Ist der Widerstand in beide Bewegungsrichtungen (konzentrisch und exzentrisch) vorhanden?",
+            "answer": "<p>Ja. Beim konzentrischen Training, wenn das Gewicht nach oben gedrückt oder gezogen wird, spürst du den Widerstand ebenso wie beim exzentrischen Training, wenn du langsam nachgibst und das Gewicht wieder absenkst. So wird der Muskel in beiden Phasen der Bewegung gleichmäßig belastet, was das Training intensiver und effektiver macht.</p>",
+            "open_desktop": false
+          }
+        },
+        "question_5": {
+          "type": "question",
+          "settings": {
+            "question": "Welche Trainingsmodi sind vorhanden?",
+            "answer": "<p>Partnermodus, Light-Modus und Weighted-Modus – mehr dazu im Abschnitt <a href=\"#trainingsmodi\">Trainingsmodi</a>.</p>",
+            "open_desktop": false
+          }
+        }
+      },
+      "block_order": [
+        "question_1",
+        "question_2",
+        "question_3",
+        "question_4",
+        "question_5"
+      ]
+    },
+    "newsletter": {
+      "type": "sgym-v2-newsletter",
+      "settings": {
+        "kicker": "Sportstech News",
+        "heading": "SEI EINER DER ERSTEN",
+        "text_desktop": "Melde dich jetzt an und erhalte die neuesten Produkt-Updates, Workouts, News und exklusive Angebote – direkt in dein Postfach!",
+        "text_mobile": "Produkt-Updates, Workouts und exklusive Angebote – direkt in dein Postfach!",
+        "placeholder": "E-Mail-Adresse eingeben",
+        "button_label": "5% RABATT SICHERN",
+        "msg_ok": "Danke! Bitte bestätige deine Anmeldung in deinem Postfach.",
+        "msg_bad": "Bitte gib eine gültige E-Mail-Adresse ein.",
+        "image_file": "199bc.png"
+      }
+    },
+    "overlay": {
+      "type": "sgym-v2-video-overlay",
+      "settings": {
+        "label": "Video: sGym Pro",
+        "close_label": "Video schließen",
+        "image_file": "246-1109.webp",
+        "image_alt": "Videostandbild: Bedienelement am Griff des sGym Pro"
+      }
+    }
+  },
+  "order": [
+    "hero",
+    "product",
+    "recs",
+    "design",
+    "possibilities",
+    "system",
+    "elegant",
+    "kombinieren",
+    "smart",
+    "modes",
+    "accessories",
+    "lifestyle",
+    "sascha",
+    "trust",
+    "trainer",
+    "reviews",
+    "specs",
+    "faq",
+    "newsletter",
+    "overlay"
+  ]
+}

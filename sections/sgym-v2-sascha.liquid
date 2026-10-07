@@ -1,0 +1,39 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <section class="sascha" id="sascha-huber" data-node="227:1173" data-node-mobile="228:357" aria-labelledby="sascha-title">
+    <div class="sascha__head">
+      <div class="sascha__stars" role="img" aria-label="{{ section.settings.stars_label | escape }}">
+        <img src="{{ 'sgym-v2-9696e.svg' | asset_url }}" width="24" height="24" alt=""><img src="{{ 'sgym-v2-9696e.svg' | asset_url }}" width="24" height="24" alt=""><img src="{{ 'sgym-v2-9696e.svg' | asset_url }}" width="24" height="24" alt=""><img src="{{ 'sgym-v2-9696e.svg' | asset_url }}" width="24" height="24" alt=""><img src="{{ 'sgym-v2-7ad71.svg' | asset_url }}" width="24" height="24" alt="">
+      </div>
+      <p class="sascha__eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 class="sascha__title reveal" id="sascha-title">{{ section.settings.heading }}</h2>
+    </div>
+    <div class="sascha__media">
+      {% render 'sgym-v2-img', file: section.settings.image_file, image: section.settings.image, width: 2400, height: 1800, alt: section.settings.image_alt, img_class: 'sascha__img', loading: 'lazy', sizes: '(min-width: 900px) 1200px, 100vw' %}
+      {%- if section.settings.video_url != blank -%}
+        <video class="sgym-v2-video" src="{{ section.settings.video_url }}" muted loop playsinline></video>
+      {%- endif -%}
+      <button class="sascha__sound" type="button" data-mute aria-pressed="true" aria-label="Ton einschalten"><img class="fi-d" src="{{ 'sgym-v2-a01d2.svg' | asset_url }}" width="44" height="44" alt=""><img class="fi-m" src="{{ 'sgym-v2-473a8.svg' | asset_url }}" width="35" height="35" alt=""></button>
+      <button class="vctrl sascha__vctrl" type="button" data-vctrl aria-pressed="false" aria-label="Video pausieren"></button>
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Sascha",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    { "type": "text", "id": "stars_label", "label": "Sterne (Barrierefreiheit)", "default": "4,5 von 5 Sternen" },
+    { "type": "text", "id": "eyebrow", "label": "Dachzeile", "default": "Keine Ausreden mit #SaschaHuber!" },
+    { "type": "textarea", "id": "heading", "label": "Überschrift", "default": "Empfohlen von einem der größten Home-Fitness-Influencer im deutschsprachigen Raum." },
+    { "type": "image_picker", "id": "image", "label": "Bild" },
+    { "type": "text", "id": "image_file", "label": "Fallback-Datei", "default": "a53cd.webp" },
+    { "type": "text", "id": "image_alt", "label": "Bildbeschreibung", "default": "Sascha Huber trainiert am sGym Pro" },
+    { "type": "url", "id": "video_url", "label": "Video-URL (optional)" }
+  ],
+  "presets": [{ "name": "sGym v2 Sascha" }]
+}
+{% endschema %}

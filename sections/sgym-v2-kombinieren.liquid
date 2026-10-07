@@ -1,0 +1,74 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <section class="kombi" id="kombinieren" data-node="227:1168" data-node-mobile="228:352" aria-labelledby="kombi-title" data-carousel="kombi">
+    <h2 class="kombi__title reveal" id="kombi-title">{{ section.settings.heading }}</h2>
+    <div class="kombi__viewport" data-carousel-viewport>
+      <div class="kombi__row">
+        {%- assign kombi_i = 0 -%}
+        {%- for block in section.blocks -%}
+          <button class="kombi__card{% if kombi_i == 1 %} kombi__card--row{% endif %}" type="button" data-bundle="{{ block.settings.bundle }}" aria-describedby="kombi-hint" {{ block.shopify_attributes }}>
+            <span class="kombi__media">
+              {% render 'sgym-v2-img', file: block.settings.file, image: block.settings.image, width: 1442, height: 1189, alt: block.settings.alt, img_class: block.settings.img_class, loading: 'lazy', sizes: '(min-width: 900px) 50vw, 86vw' %}
+            </span>
+            <span class="kombi__text">
+              <span class="kombi__name">{{ block.settings.title }}</span>
+              <span class="kombi__desc">{{ block.settings.text }}</span>
+            </span>
+          </button>
+          {%- assign kombi_i = kombi_i | plus: 1 -%}
+        {%- endfor -%}
+      </div>
+    </div>
+    <p class="sr-only" id="kombi-hint">{{ section.settings.hint }}</p>
+    <div class="counter kombi__counter only-m">
+      <p><span data-carousel-index>1</span> von <span data-carousel-total>2</span></p>
+      <div class="counter__btns">
+        <button type="button" data-carousel-prev aria-label="Zurück" class="counter__prev"><img src="{{ 'sgym-v2-b9515.svg' | asset_url }}" width="34" height="34" alt=""></button>
+        <button type="button" data-carousel-next aria-label="Weiter"><img src="{{ 'sgym-v2-e8e77.svg' | asset_url }}" width="34" height="34" alt=""></button>
+      </div>
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Kombinieren",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Kombinieren & profitieren!" },
+    { "type": "text", "id": "hint", "label": "Hinweis für Screenreader", "default": "Wähle das passende Bundle in der Kaufbox aus." }
+  ],
+  "blocks": [
+    {
+      "type": "bundle",
+      "name": "Bundle",
+      "settings": [
+        { "type": "select", "id": "bundle", "label": "Kaufbox-Option", "default": "performer", "options": [
+          { "value": "performer", "label": "Performer" },
+          { "value": "cardio", "label": "Cardio" },
+          { "value": "allrounder", "label": "Allrounder" },
+          { "value": "standard", "label": "Standard" }
+        ] },
+        { "type": "text", "id": "title", "label": "Titel", "default": "Hantelbank" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Die Schräg- und Flachbank, belastbar bis 360 kg, gibt dir bei jeder Übung stabilen Halt und erweitert deine Trainingsmöglichkeiten." },
+        { "type": "image_picker", "id": "image", "label": "Bild" },
+        { "type": "text", "id": "file", "label": "Fallback-Datei", "default": "87925.webp" },
+        { "type": "text", "id": "alt", "label": "Bildbeschreibung", "default": "sGym Pro mit Hantelbank" },
+        { "type": "text", "id": "img_class", "label": "Bild-Klasse", "default": "kombi__img kombi__img--bank" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "sGym v2 Kombinieren",
+      "blocks": [
+        { "type": "bundle", "settings": { "bundle": "performer", "title": "Hantelbank", "text": "Die Schräg- und Flachbank, belastbar bis 360 kg, gibt dir bei jeder Übung stabilen Halt und erweitert deine Trainingsmöglichkeiten.", "file": "87925.webp", "alt": "sGym Pro mit Hantelbank", "img_class": "kombi__img kombi__img--bank" } },
+        { "type": "bundle", "settings": { "bundle": "cardio", "title": "Rudergerät", "text": "Kombiniere Cardio und Kraft für ein ganzheitliches Trainingserlebnis.", "file": "7bfab.webp", "alt": "sGym Pro mit Rudergerät", "img_class": "kombi__img kombi__img--row" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

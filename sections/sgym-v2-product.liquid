@@ -1,0 +1,681 @@
+{% render 'sgym-v2-assets' %}
+<script src="{{ 'product-form.js' | asset_url }}" defer></script>
+{%- liquid
+  assign selected_key = ''
+  assign fallback_key = 'standard'
+  assign fallback_id = ''
+  if product != blank and product.selected_or_first_available_variant != blank
+    assign fallback_id = product.selected_or_first_available_variant.id
+  endif
+  if product != blank
+    for block in section.blocks
+      if block.type == 'option'
+        if block.settings.selected
+          assign fallback_key = block.settings.key
+        endif
+        assign key = block.settings.key | downcase
+        for variant in product.variants
+          assign blob = variant.title | downcase
+          if variant.option1 != blank
+            assign blob = blob | append: ' ' | append: variant.option1 | downcase
+          endif
+          if variant.option2 != blank
+            assign blob = blob | append: ' ' | append: variant.option2 | downcase
+          endif
+          if variant.option3 != blank
+            assign blob = blob | append: ' ' | append: variant.option3 | downcase
+          endif
+          if variant.sku != blank
+            assign blob = blob | append: ' ' | append: variant.sku | downcase
+          endif
+          if key != blank and blob contains key
+            if variant.id == fallback_id
+              assign selected_key = block.settings.key
+            endif
+            break
+          endif
+        endfor
+      endif
+    endfor
+  endif
+  if selected_key == blank
+    assign selected_key = fallback_key
+  endif
+
+  assign sel_preis = '2.999,00 €'
+  assign sel_uvp = '3.499,00 €'
+  assign sel_save = '500,00 € gespart'
+  assign sel_auswahl = 'Standard'
+  assign sel_id = fallback_id
+  assign sel_available = true
+  for block in section.blocks
+    if block.type == 'option' and block.settings.key == selected_key
+      assign sel_preis = block.settings.fallback_price
+      assign sel_uvp = block.settings.fallback_uvp
+      assign sel_save = block.settings.fallback_save
+      assign sel_auswahl = block.settings.auswahl
+      if product != blank
+        assign key = block.settings.key | downcase
+        for variant in product.variants
+          assign blob = variant.title | downcase
+          if variant.option1 != blank
+            assign blob = blob | append: ' ' | append: variant.option1 | downcase
+          endif
+          if variant.option2 != blank
+            assign blob = blob | append: ' ' | append: variant.option2 | downcase
+          endif
+          if variant.option3 != blank
+            assign blob = blob | append: ' ' | append: variant.option3 | downcase
+          endif
+          if variant.sku != blank
+            assign blob = blob | append: ' ' | append: variant.sku | downcase
+          endif
+          if key != blank and blob contains key
+            assign sel_id = variant.id
+            assign sel_available = variant.available
+            assign sel_preis = variant.price | money
+            if variant.compare_at_price > variant.price
+              assign sel_uvp = variant.compare_at_price | money
+              assign sel_delta = variant.compare_at_price | minus: variant.price
+              assign sel_save = sel_delta | money | append: ' gespart'
+            endif
+            break
+          endif
+        endfor
+      endif
+    endif
+  endfor
+
+  assign use_media = false
+  if product != blank and product.media.size > 0
+    assign use_media = true
+  endif
+  assign rating_value = section.settings.rating_value
+  assign rating_count = section.settings.rating_count
+  if product.metafields.reviews.rating.value.rating != blank
+    assign rating_value = product.metafields.reviews.rating.value.rating
+  endif
+  if product.metafields.reviews.rating_count != blank
+    assign rating_count = product.metafields.reviews.rating_count
+  endif
+  assign product_form_id = 'Sg2Product-' | append: section.id
+  assign main_src = ''
+  assign main_alt = section.settings.gallery_alt
+-%}
+<div class="sgym-v2">
+  <section class="product" id="produkt" data-node="227:1162" data-node-mobile="228:346" aria-label="{{ section.settings.aria_label | escape }}">
+    <div class="product__inner">
+      <div class="gallery" data-gallery>
+        <div class="gallery__thumbs" role="group" aria-label="Produktbilder">
+          {%- if use_media -%}
+            {%- assign gi = 0 -%}
+            {%- for media in product.media -%}
+              {%- if media.preview_image != blank -%}
+                {%- assign gi = gi | plus: 1 -%}
+                {%- assign full = media.preview_image | image_url: width: 1600 -%}
+                {%- if main_src == blank -%}
+                  {%- assign main_src = full -%}
+                  {%- if media.alt != blank -%}{%- assign main_alt = media.alt -%}{%- endif -%}
+                {%- endif -%}
+                <button class="gallery__thumb{% if media.media_type == 'video' or media.media_type == 'external_video' %} gallery__thumb--video{% endif %}" type="button" data-gallery-thumb="{{ gi | minus: 1 }}" data-full="{{ full }}" {% if gi == 1 %}aria-current="true"{% endif %} aria-label="Bild {{ gi }} anzeigen">
+                  {{ media.preview_image | image_url: width: 240 | image_tag: widths: '80, 120, 160, 240', sizes: '72px', width: 240, height: 240, alt: '', loading: 'lazy' }}
+                  {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                    <span class="gallery__play" aria-hidden="true"><img src="{{ 'sgym-v2-f9fed.svg' | asset_url }}" width="28" height="28" alt=""><img class="gallery__play-tri" src="{{ 'sgym-v2-716f3.svg' | asset_url }}" width="10" height="12" alt=""></span>
+                  {%- endif -%}
+                </button>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            {%- assign gi = 0 -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'image' -%}
+                {%- assign gi = gi | plus: 1 -%}
+                {%- if block.settings.image != blank -%}
+                  {%- assign full = block.settings.image | image_url: width: 1600 -%}
+                {%- else -%}
+                  {%- assign full = block.settings.file | prepend: 'sgym-v2-' | asset_url -%}
+                {%- endif -%}
+                {%- if main_src == blank -%}{%- assign main_src = full -%}{%- endif -%}
+                <button class="gallery__thumb{% if block.settings.play %} gallery__thumb--video{% endif %}" type="button" data-gallery-thumb="{{ gi | minus: 1 }}" data-full="{{ full }}" {% if gi == 1 %}aria-current="true"{% endif %} aria-label="Bild {{ gi }} anzeigen" {{ block.shopify_attributes }}>
+                  {% render 'sgym-v2-img', file: block.settings.file, image: block.settings.image, width: 240, height: 240, alt: '', loading: 'lazy', sizes: '72px', widths: '80, 120, 160, 240' %}
+                  {%- if block.settings.play -%}
+                    <span class="gallery__play" aria-hidden="true"><img src="{{ 'sgym-v2-f9fed.svg' | asset_url }}" width="28" height="28" alt=""><img class="gallery__play-tri" src="{{ 'sgym-v2-716f3.svg' | asset_url }}" width="10" height="12" alt=""></span>
+                  {%- endif -%}
+                </button>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+        <div class="gallery__stage">
+          <img class="gallery__main" src="{{ main_src }}" width="240" height="240" alt="{{ main_alt | escape }}" data-gallery-main>
+          <button class="gallery__arrow gallery__arrow--prev" type="button" data-gallery-step="-1" aria-label="Vorheriges Bild"><img src="{{ 'sgym-v2-1125c.svg' | asset_url }}" width="18" height="18" alt=""></button>
+          <button class="gallery__arrow gallery__arrow--next" type="button" data-gallery-step="1" aria-label="Nächstes Bild"><img src="{{ 'sgym-v2-1125c.svg' | asset_url }}" width="18" height="18" alt=""></button>
+        </div>
+      </div>
+
+      <div class="buybox">
+        <div class="buybox__title">
+          <h2 class="buybox__name">{% if section.settings.use_product_title and product.title != blank %}{{ product.title }}{% else %}{{ section.settings.heading }}{% endif %}</h2>
+          <a class="rating" href="#bewertungen">
+            <span class="stars" aria-hidden="true"><img src="{{ 'sgym-v2-61b9a.svg' | asset_url }}" width="14" height="14" alt=""><img src="{{ 'sgym-v2-61b9a.svg' | asset_url }}" width="14" height="14" alt=""><img src="{{ 'sgym-v2-61b9a.svg' | asset_url }}" width="14" height="14" alt=""><img src="{{ 'sgym-v2-61b9a.svg' | asset_url }}" width="14" height="14" alt=""><span class="star-half"><img src="{{ 'sgym-v2-6b161.svg' | asset_url }}" width="14" height="14" alt=""><span><img src="{{ 'sgym-v2-61b9a.svg' | asset_url }}" width="14" height="14" alt=""></span></span></span>
+            <span>{{ rating_value }}</span><span class="rating__div" aria-hidden="true"></span><span>{{ rating_count }} {{ section.settings.rating_suffix }}</span>
+          </a>
+        </div>
+
+        <div class="buybox__desc">
+          <p class="buybox__lead">{{ section.settings.lead }}</p>
+          <div class="infobox">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'info' -%}
+                {%- if block.settings.kind == 'link' -%}
+                  <a class="infoacc__head infoacc__link" href="{{ block.settings.anchor }}" {{ block.shopify_attributes }}><span>{{ block.settings.title }}</span><img src="{{ 'sgym-v2-136fb.svg' | asset_url }}" width="18" height="18" alt=""></a>
+                {%- else -%}
+                  <div class="infoacc" data-acc {{ block.shopify_attributes }}>
+                    <button class="infoacc__head" type="button" aria-expanded="false" aria-controls="info-{{ section.id }}-{{ forloop.index }}"><span>{{ block.settings.title }}</span><img src="{{ 'sgym-v2-c6a17.svg' | asset_url }}" width="18" height="18" alt=""></button>
+                    <div class="infoacc__body" id="info-{{ section.id }}-{{ forloop.index }}" hidden>{{ block.settings.body }}</div>
+                  </div>
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+
+        <div class="price">
+          <div class="price__row">
+            <p class="price__now"><span data-var="kaufbox/preis">{{ sel_preis }}</span>{% if section.settings.show_asterisk %}<sup>*</sup>{% endif %}</p>
+            <s class="price__uvp" data-var="kaufbox/uvp">{{ sel_uvp }}</s>
+            <span class="price__save" data-var="kaufbox/ersparnis">{{ sel_save }}</span>
+          </div>
+          <p class="price__tax"><span>{{ section.settings.tax_1 }}</span><span aria-hidden="true">·</span><span>{{ section.settings.tax_2 }}</span></p>
+        </div>
+
+        <ul class="features" aria-label="Produktmerkmale">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'feature' -%}
+              <li {{ block.shopify_attributes }}><img src="{{ block.settings.icon_d | prepend: 'sgym-v2-' | asset_url }}" width="24" height="24" alt="" class="fi-d"><img src="{{ block.settings.icon_m | prepend: 'sgym-v2-' | asset_url }}" width="24" height="24" alt="" class="fi-m"><p><b>{{ block.settings.strong }}</b><span>{{ block.settings.text }}</span></p></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+        <div class="options" id="kaufbox-optionen">
+          <p class="options__label"><span>{{ section.settings.options_label }}</span><b data-var="kaufbox/auswahl">{{ sel_auswahl }}</b></p>
+          <div class="options__list" role="radiogroup" aria-label="{{ section.settings.options_label | escape }}">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'option' -%}
+                <button class="option{% if block.settings.key == selected_key %} is-selected{% endif %}" type="button" role="radio" aria-checked="{% if block.settings.key == selected_key %}true{% else %}false{% endif %}" data-option="{{ block.settings.key }}" {{ block.shopify_attributes }}><b>{{ block.settings.label }}</b><span>{{ block.settings.subline }}</span></button>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+
+        {%- if product != blank -%}
+          <product-form class="sgym-v2-atc" data-section-id="{{ section.id }}">
+            <div class="product-form__error-message-wrapper" role="alert" hidden>
+              <span class="svg-wrapper">{{ 'icon-error.svg' | inline_asset_content }}</span>
+              <span class="product-form__error-message"></span>
+            </div>
+            {%- form 'product', product, id: product_form_id, class: 'form', novalidate: 'novalidate', data-type: 'add-to-cart-form' -%}
+              <input type="hidden" name="id" value="{{ sel_id }}" class="product-variant-id" {% if sel_available == false %}disabled{% endif %}>
+              <button class="cta" type="submit" name="add" data-add-to-cart {% if sel_available == false %}disabled aria-disabled="true"{% endif %}>
+                <span data-atc-label>{% if sel_available == false %}{{ section.settings.sold_label }}{% else %}{{ section.settings.atc_label }}{% endif %}</span>
+                {% render 'loading-spinner' %}
+              </button>
+            {%- endform -%}
+          </product-form>
+        {%- else -%}
+          <button class="cta" type="button" data-add-to-cart data-fallback-cart><span data-atc-label>{{ section.settings.atc_label }}</span></button>
+        {%- endif -%}
+
+        <p class="stock"><img src="{{ 'sgym-v2-6420c.svg' | asset_url }}" width="7" height="7" alt=""><b>{{ section.settings.stock_title }}</b><span aria-hidden="true">·</span><span>{{ section.settings.stock_text }}</span></p>
+
+        <ul class="trustrow">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'trust' -%}
+              <li {{ block.shopify_attributes }}><img src="{{ block.settings.icon | prepend: 'sgym-v2-' | asset_url }}" width="20" height="20" alt=""><p>{{ block.settings.line_1 }}<br>{{ block.settings.line_2 }}</p></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+
+        <div class="tp">
+          <div class="tp__top">
+            <img class="tp__logo fi-d" src="{{ 'sgym-v2-1da80.svg' | asset_url }}" width="92" height="23" alt="Trustpilot">
+            <img class="tp__logo fi-m" src="{{ 'sgym-v2-6343a.svg' | asset_url }}" width="64" height="16" alt="Trustpilot">
+            <span class="tp__stars fi-d" aria-hidden="true"><img src="{{ 'sgym-v2-43344.svg' | asset_url }}" width="23" height="23" alt=""><img src="{{ 'sgym-v2-43344.svg' | asset_url }}" width="23" height="23" alt=""><img src="{{ 'sgym-v2-43344.svg' | asset_url }}" width="23" height="23" alt=""><img src="{{ 'sgym-v2-43344.svg' | asset_url }}" width="23" height="23" alt=""><img src="{{ 'sgym-v2-da003.svg' | asset_url }}" width="23" height="23" alt=""></span>
+            <span class="tp__stars tp__stars--m fi-m" aria-hidden="true"><img src="{{ 'sgym-v2-8bed0.svg' | asset_url }}" width="16" height="16" alt=""><img src="{{ 'sgym-v2-8bed0.svg' | asset_url }}" width="16" height="16" alt=""><img src="{{ 'sgym-v2-8bed0.svg' | asset_url }}" width="16" height="16" alt=""><img src="{{ 'sgym-v2-8bed0.svg' | asset_url }}" width="16" height="16" alt=""><img src="{{ 'sgym-v2-11c15.svg' | asset_url }}" width="16" height="16" alt=""></span>
+            <b>{{ section.settings.tp_label }}</b><span class="tp__sep" aria-hidden="true"></span>
+          </div>
+          <p class="tp__count">{{ section.settings.tp_count }}</p>
+        </div>
+
+        <form class="ask" data-ask onsubmit="return false">
+          <p class="ask__title">{{ section.settings.ask_title }}</p>
+          <div class="ask__chips">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'ask' -%}
+                <button class="ask__chip" type="button" data-ask-chip {{ block.shopify_attributes }}><img src="{{ 'sgym-v2-290fe.svg' | asset_url }}" width="24" height="24" alt=""><span>{{ block.settings.text }}</span></button>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          <label class="ask__input"><span class="sr-only">Frage</span><input type="text" placeholder=" " data-ask-input><span class="ask__ph" aria-hidden="true">{{ section.settings.ask_placeholder }}</span><img src="{{ 'sgym-v2-bb579.svg' | asset_url }}" width="24" height="24" alt=""><button type="submit" class="ask__send" aria-label="Frage senden"><img src="{{ 'sgym-v2-ed7d8.svg' | asset_url }}" width="24" height="24" alt=""></button></label>
+        </form>
+
+        <p class="bestprice">{{ section.settings.bestprice }}</p>
+      </div>
+    </div>
+  </section>
+  <script type="application/json" id="sgym-v2-options">
+    {
+      {%- assign json_first = true -%}
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'option' -%}
+          {%- liquid
+            assign opt_id = ''
+            assign opt_available = true
+            assign opt_preis = block.settings.fallback_price
+            assign opt_uvp = block.settings.fallback_uvp
+            assign opt_save = block.settings.fallback_save
+            assign opt_image = ''
+            if block.settings.image != blank
+              assign opt_image = block.settings.image | image_url: width: 1600
+            endif
+            if product != blank
+              assign key = block.settings.key | downcase
+              for variant in product.variants
+                assign blob = variant.title | downcase
+                if variant.option1 != blank
+                  assign blob = blob | append: ' ' | append: variant.option1 | downcase
+                endif
+                if variant.option2 != blank
+                  assign blob = blob | append: ' ' | append: variant.option2 | downcase
+                endif
+                if variant.option3 != blank
+                  assign blob = blob | append: ' ' | append: variant.option3 | downcase
+                endif
+                if variant.sku != blank
+                  assign blob = blob | append: ' ' | append: variant.sku | downcase
+                endif
+                if key != blank and blob contains key
+                  assign opt_id = variant.id
+                  assign opt_available = variant.available
+                  assign opt_preis = variant.price | money
+                  if variant.compare_at_price > variant.price
+                    assign opt_uvp = variant.compare_at_price | money
+                    assign opt_delta = variant.compare_at_price | minus: variant.price
+                    assign opt_save = opt_delta | money | append: ' gespart'
+                  endif
+                  if variant.featured_image != blank
+                    assign opt_image = variant.featured_image | image_url: width: 1600
+                  endif
+                  break
+                endif
+              endfor
+            endif
+          -%}
+          {%- unless json_first -%},{%- endunless -%}
+          {%- assign json_first = false -%}
+          {{ block.settings.key | json }}: {
+            "id": {% if opt_id != blank %}{{ opt_id }}{% else %}null{% endif %},
+            "available": {% if opt_available %}true{% else %}false{% endif %},
+            "auswahl": {{ block.settings.auswahl | json }},
+            "preis": {{ opt_preis | json }},
+            "uvp": {{ opt_uvp | json }},
+            "ersparnis": {{ opt_save | json }},
+            "image": {{ opt_image | json }},
+            "fallbackId": {% if fallback_id != blank %}{{ fallback_id }}{% else %}null{% endif %},
+            "atcLabel": {{ section.settings.atc_label | json }},
+            "soldLabel": {{ section.settings.sold_label | json }}
+          }
+        {%- endif -%}
+      {%- endfor -%}
+    }
+  </script>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Produkt",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "max_blocks": 40,
+  "settings": [
+    { "type": "checkbox", "id": "use_product_title", "label": "Produkttitel verwenden", "default": true },
+    { "type": "text", "id": "heading", "label": "Titel Fallback", "default": "sGym Pro Kraftstation" },
+    { "type": "text", "id": "aria_label", "label": "Abschnittsname", "default": "sGym Pro Kraftstation kaufen" },
+    { "type": "textarea", "id": "lead", "label": "Einleitung", "default": "Krafttraining mit elektrischem Widerstand bis 120 kg und über 400 Übungen, geführt über das 21\" Display – dazu Klimmzug, Dip-Station und unter 1,5m² Stellfläche." },
+    { "type": "text", "id": "gallery_alt", "label": "Hauptbild Beschreibung", "default": "sGym Pro Kraftstation Frontansicht" },
+    { "type": "text", "id": "rating_value", "label": "Bewertung", "default": "4.8" },
+    { "type": "text", "id": "rating_count", "label": "Anzahl Bewertungen", "default": "249" },
+    { "type": "text", "id": "rating_suffix", "label": "Bewertungs-Zusatz", "default": "Bewertungen" },
+    { "type": "checkbox", "id": "show_asterisk", "label": "Sternchen am Preis", "default": true },
+    { "type": "text", "id": "tax_1", "label": "Steuerhinweis", "default": "Inkl. MwSt." },
+    { "type": "text", "id": "tax_2", "label": "Lieferhinweis", "default": "Lieferung im Preis enthalten" },
+    { "type": "text", "id": "options_label", "label": "Optionen-Label", "default": "Produktoptionen" },
+    { "type": "text", "id": "atc_label", "label": "Warenkorb-Button", "default": "Zum Warenkorb hinzufügen" },
+    { "type": "text", "id": "sold_label", "label": "Ausverkauft", "default": "Ausverkauft" },
+    { "type": "text", "id": "stock_title", "label": "Verfügbarkeit", "default": "Sofort verfügbar" },
+    { "type": "text", "id": "stock_text", "label": "Lieferzeit", "default": "in 1-4 Werktagen geliefert" },
+    { "type": "text", "id": "tp_label", "label": "Trustpilot", "default": "Hervorragend" },
+    { "type": "text", "id": "tp_count", "label": "Trustpilot Anzahl", "default": "Über 8.000 Bewertungen" },
+    { "type": "text", "id": "ask_title", "label": "Frage-Titel", "default": "Hast du eine Frage zum Produkt?" },
+    { "type": "text", "id": "ask_placeholder", "label": "Frage-Platzhalter", "default": "Stell eine Frage..." },
+    { "type": "text", "id": "bestprice", "label": "Bestpreis", "default": "* 30-Tage-Bestpreis: 2.549,00 €" }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Galeriebild",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Bild" },
+        { "type": "text", "id": "file", "label": "Fallback-Datei", "default": "3dce1.png" },
+        { "type": "checkbox", "id": "play", "label": "Play-Icon", "default": false }
+      ]
+    },
+    {
+      "type": "info",
+      "name": "Infozeile",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titel", "default": "Highlights" },
+        { "type": "select", "id": "kind", "label": "Verhalten", "default": "expand", "options": [
+          { "value": "expand", "label": "Aufklappen" },
+          { "value": "link", "label": "Link" }
+        ] },
+        { "type": "text", "id": "anchor", "label": "Link-Ziel", "default": "#technische-daten" },
+        { "type": "richtext", "id": "body", "label": "Text", "default": "<p>• Bis zu 120 kg elektrischer Widerstand (2 × 60 kg)<br>• 21″ Display mit über 300 integrierten Übungsvideos<br>• Klimmzugstange, Dipstation und Safety Spotter<br>• Klappbar – unter 1,5 m² Stellfläche</p>" }
+      ]
+    },
+    {
+      "type": "feature",
+      "name": "Merkmal",
+      "settings": [
+        { "type": "text", "id": "icon_d", "label": "Icon Desktop", "default": "2c06c.svg" },
+        { "type": "text", "id": "icon_m", "label": "Icon Mobil", "default": "11310.svg" },
+        { "type": "text", "id": "strong", "label": "Fett", "default": "400+" },
+        { "type": "text", "id": "text", "label": "Text", "default": "Übungsvarianten" }
+      ]
+    },
+    {
+      "type": "option",
+      "name": "Option",
+      "settings": [
+        { "type": "select", "id": "key", "label": "Schlüssel", "default": "standard", "options": [
+          { "value": "standard", "label": "Standard" },
+          { "value": "allrounder", "label": "Allrounder" },
+          { "value": "cardio", "label": "Cardio" },
+          { "value": "performer", "label": "Performer" }
+        ] },
+        { "type": "checkbox", "id": "selected", "label": "Vorausgewählt", "default": false },
+        { "type": "text", "id": "label", "label": "Button", "default": "Standard" },
+        { "type": "text", "id": "subline", "label": "Zusatz", "default": "Im Preis enthalten" },
+        { "type": "text", "id": "auswahl", "label": "Auswahlname", "default": "Standard" },
+        { "type": "text", "id": "fallback_price", "label": "Preis ohne Variante", "default": "2.999,00 €" },
+        { "type": "text", "id": "fallback_uvp", "label": "UVP ohne Variante", "default": "3.499,00 €" },
+        { "type": "text", "id": "fallback_save", "label": "Ersparnis ohne Variante", "default": "500,00 € gespart" },
+        { "type": "image_picker", "id": "image", "label": "Variantenbild (Fallback)" }
+      ]
+    },
+    {
+      "type": "trust",
+      "name": "Trust",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon", "default": "a2a99.svg" },
+        { "type": "text", "id": "line_1", "label": "Zeile 1", "default": "Kostenloser" },
+        { "type": "text", "id": "line_2", "label": "Zeile 2", "default": "Versand" }
+      ]
+    },
+    {
+      "type": "ask",
+      "name": "Frage",
+      "settings": [
+        { "type": "text", "id": "text", "label": "Chip", "default": "Welche Trainingsmodi bietet das Gerät?" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "sGym v2 Produkt", "blocks": [
+  {
+    "type": "image",
+    "settings": {
+      "file": "3dce1.png",
+      "play": false
+    }
+  },
+  {
+    "type": "image",
+    "settings": {
+      "file": "c1b75.png",
+      "play": false
+    }
+  },
+  {
+    "type": "image",
+    "settings": {
+      "file": "10115.png",
+      "play": false
+    }
+  },
+  {
+    "type": "image",
+    "settings": {
+      "file": "e48e6.png",
+      "play": false
+    }
+  },
+  {
+    "type": "image",
+    "settings": {
+      "file": "fe26d.png",
+      "play": false
+    }
+  },
+  {
+    "type": "image",
+    "settings": {
+      "file": "52702.png",
+      "play": false
+    }
+  },
+  {
+    "type": "image",
+    "settings": {
+      "file": "53dcc.png",
+      "play": false
+    }
+  },
+  {
+    "type": "image",
+    "settings": {
+      "file": "0ccd1.png",
+      "play": false
+    }
+  },
+  {
+    "type": "image",
+    "settings": {
+      "file": "e3bc9.png",
+      "play": false
+    }
+  },
+  {
+    "type": "image",
+    "settings": {
+      "file": "03c0a.png",
+      "play": false
+    }
+  },
+  {
+    "type": "image",
+    "settings": {
+      "file": "6cdaa.png",
+      "play": false
+    }
+  },
+  {
+    "type": "image",
+    "settings": {
+      "file": "1584c.png",
+      "play": true
+    }
+  },
+  {
+    "type": "info",
+    "settings": {
+      "title": "Highlights",
+      "kind": "expand",
+      "anchor": "#technische-daten",
+      "body": "<p>• Bis zu 120 kg elektrischer Widerstand (2 × 60 kg)<br>• 21″ Display mit über 300 integrierten Übungsvideos<br>• Klimmzugstange, Dipstation und Safety Spotter<br>• Klappbar – unter 1,5 m² Stellfläche</p>"
+    }
+  },
+  {
+    "type": "info",
+    "settings": {
+      "title": "Technische Daten",
+      "kind": "link",
+      "anchor": "#technische-daten",
+      "body": "<p>Technische Daten</p>"
+    }
+  },
+  {
+    "type": "info",
+    "settings": {
+      "title": "Lieferung, Garantie & Service",
+      "kind": "expand",
+      "anchor": "#technische-daten",
+      "body": "<p>• Kostenloser Versand – Lieferung in 1–4 Werktagen<br>• 30 Tage kostenlose Rückgabe<br>• 2 Jahre Garantie<br>• 0% Finanzierung verfügbar</p>"
+    }
+  },
+  {
+    "type": "feature",
+    "settings": {
+      "icon_d": "2c06c.svg",
+      "icon_m": "11310.svg",
+      "strong": "400+",
+      "text": "Übungsvarianten"
+    }
+  },
+  {
+    "type": "feature",
+    "settings": {
+      "icon_d": "bfa2f.svg",
+      "icon_m": "7526a.svg",
+      "strong": "120 kg",
+      "text": "Elektrischer Widerstand"
+    }
+  },
+  {
+    "type": "feature",
+    "settings": {
+      "icon_d": "ebf22.svg",
+      "icon_m": "a9759.svg",
+      "strong": "Nur 2 m²",
+      "text": "Stellfläche benötigt"
+    }
+  },
+  {
+    "type": "feature",
+    "settings": {
+      "icon_d": "c3fab.svg",
+      "icon_m": "05613.svg",
+      "strong": "21\" Display",
+      "text": "mit Sportstech Live App"
+    }
+  },
+  {
+    "type": "feature",
+    "settings": {
+      "icon_d": "c5989.svg",
+      "icon_m": "fa4f4.svg",
+      "strong": "Ganzkörpertraining",
+      "text": "für alle Muskelgruppen"
+    }
+  },
+  {
+    "type": "option",
+    "settings": {
+      "key": "standard",
+      "selected": true,
+      "label": "Standard",
+      "subline": "Im Preis enthalten",
+      "auswahl": "Standard",
+      "fallback_price": "2.999,00 €",
+      "fallback_uvp": "3.499,00 €",
+      "fallback_save": "500,00 € gespart"
+    }
+  },
+  {
+    "type": "option",
+    "settings": {
+      "key": "allrounder",
+      "selected": false,
+      "label": "Allrounder Bundle (inkl. sGym Rower + sGym Bench)",
+      "subline": "+ 400 €",
+      "auswahl": "Allrounder Bundle",
+      "fallback_price": "3.399,00 €",
+      "fallback_uvp": "3.999,00 €",
+      "fallback_save": "600,00 € gespart"
+    }
+  },
+  {
+    "type": "option",
+    "settings": {
+      "key": "cardio",
+      "selected": false,
+      "label": "Cardio Bundle (inkl. sGym Rower)",
+      "subline": "+ 300 €",
+      "auswahl": "Cardio Bundle",
+      "fallback_price": "3.299,00 €",
+      "fallback_uvp": "3.799,00 €",
+      "fallback_save": "500,00 € gespart"
+    }
+  },
+  {
+    "type": "option",
+    "settings": {
+      "key": "performer",
+      "selected": false,
+      "label": "Performer Bundle (inkl. sGym Bench)",
+      "subline": "+ 145 €",
+      "auswahl": "Performer Bundle",
+      "fallback_price": "3.144,00 €",
+      "fallback_uvp": "3.999,00 €",
+      "fallback_save": "855,00 € gespart"
+    }
+  },
+  {
+    "type": "trust",
+    "settings": {
+      "icon": "a2a99.svg",
+      "line_1": "Kostenloser",
+      "line_2": "Versand"
+    }
+  },
+  {
+    "type": "trust",
+    "settings": {
+      "icon": "2de11.svg",
+      "line_1": "2 Jahre",
+      "line_2": "Garantie"
+    }
+  },
+  {
+    "type": "trust",
+    "settings": {
+      "icon": "4b598.svg",
+      "line_1": "4 Millionen",
+      "line_2": "Kunden"
+    }
+  },
+  {
+    "type": "ask",
+    "settings": {
+      "text": "Welche Trainingsmodi bietet das Gerät?"
+    }
+  },
+  {
+    "type": "ask",
+    "settings": {
+      "text": "Wie hoch ist der maximale Widerstand?"
+    }
+  }
+] }]
+}
+{% endschema %}

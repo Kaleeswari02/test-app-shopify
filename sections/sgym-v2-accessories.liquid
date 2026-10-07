@@ -1,0 +1,70 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <section class="acc" id="zubehoer" data-node="227:1171" data-node-mobile="228:355" aria-labelledby="acc-title" data-carousel="acc">
+    <div class="acc__head">
+      <p class="acc__tag">{{ section.settings.tag }}</p>
+      <h2 class="acc__title reveal" id="acc-title">{{ section.settings.heading }}</h2>
+      <p class="acc__sub">{{ section.settings.subheading }}</p>
+    </div>
+    <div class="acc__nav only-d">
+      <button class="acc__arrow acc__arrow--prev" type="button" data-carousel-prev aria-label="Vorheriges Zubehör"><img src="{{ 'sgym-v2-075d4.svg' | asset_url }}" width="54" height="54" alt=""></button>
+      <button class="acc__arrow" type="button" data-carousel-next aria-label="Nächstes Zubehör"><img src="{{ 'sgym-v2-0fedc.svg' | asset_url }}" width="54" height="54" alt=""></button>
+    </div>
+    <div class="acc__viewport" data-carousel-viewport tabindex="0" aria-label="Zubehör-Karussell">
+      <ul class="acc__track">
+        {%- for block in section.blocks -%}
+          <li class="acc__card" {{ block.shopify_attributes }}>
+            <img class="acc__bg fi-d" src="{{ 'sgym-v2-cfdb8.svg' | asset_url }}" width="242" height="226" alt="">
+            <img class="acc__bg fi-m" src="{{ 'sgym-v2-1cb75.svg' | asset_url }}" width="242" height="183" alt="">
+            {% render 'sgym-v2-img', file: block.settings.file, image: block.settings.image, width: 456, height: 456, alt: block.settings.alt, img_class: block.settings.img_class, loading: 'lazy', sizes: '180px' %}
+            <p class="acc__name"><span>{{ block.settings.title }}</span><img class="acc__add only-d" src="{{ 'sgym-v2-39ac0.svg' | asset_url }}" width="24" height="24" alt=""></p>
+            <p class="acc__desc only-m">{{ block.settings.text }}</p>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+    <img class="acc__dots only-m" src="{{ 'sgym-v2-10a19.svg' | asset_url }}" width="60" height="14" alt="">
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Zubehör",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "max_blocks": 12,
+  "settings": [
+    { "type": "text", "id": "tag", "label": "Kicker", "default": "ZUBEHÖR" },
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Das richtige Zubehör für jedes Workout" },
+    { "type": "text", "id": "subheading", "label": "Unterzeile", "default": "Das komplette Trainings-Setup für optimale Ergebnisse." }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Zubehör",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Name", "default": "Safety Spotter" },
+        { "type": "textarea", "id": "text", "label": "Text Mobil", "default": "Mehr Sicherheit und Stabilität – ideal für Kniebeugen und Bankdrücken." },
+        { "type": "image_picker", "id": "image", "label": "Bild" },
+        { "type": "text", "id": "file", "label": "Fallback-Datei", "default": "6a900.webp" },
+        { "type": "text", "id": "alt", "label": "Bildbeschreibung", "default": "Remote" },
+        { "type": "text", "id": "img_class", "label": "Bild-Klasse", "default": "acc__img" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "sGym v2 Zubehör",
+      "blocks": [
+        { "type": "item", "settings": { "title": "Safety Spotter", "text": "Mehr Sicherheit und Stabilität – ideal für Kniebeugen und Bankdrücken.", "file": "6a900.webp", "alt": "Remote", "img_class": "acc__img" } },
+        { "type": "item", "settings": { "title": "Knöchelriemen", "text": "Für gezieltes Bein- und Po-Training am Kabelzug – sicher fixiert.", "file": "8c7bb.webp", "alt": "Knöchelriemen", "img_class": "acc__img" } },
+        { "type": "item", "settings": { "title": "Trizepsseil", "text": "Für gezieltes Bein- und Po-Training am Kabelzug – sicher fixiert.", "file": "fb91b.webp", "alt": "Trizepsseil", "img_class": "acc__img" } },
+        { "type": "item", "settings": { "title": "Einzelgriffe", "text": "Für gezieltes Bein- und Po-Training am Kabelzug – sicher fixiert.", "file": "20ab5.webp", "alt": "Einzelgriffe", "img_class": "acc__img" } },
+        { "type": "item", "settings": { "title": "Bodenschutzmatte", "text": "Für gezieltes Bein- und Po-Training am Kabelzug – sicher fixiert.", "file": "ae9e2.webp", "alt": "Bodenschutzmatte", "img_class": "acc__img" } },
+        { "type": "item", "settings": { "title": "Klimmzugstange", "text": "Für gezieltes Bein- und Po-Training am Kabelzug – sicher fixiert.", "file": "6c880.webp", "alt": "Klimmzugstange", "img_class": "acc__img acc__img--sm" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

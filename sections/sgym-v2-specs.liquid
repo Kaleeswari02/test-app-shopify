@@ -1,0 +1,104 @@
+{% render 'sgym-v2-assets' %}
+{%- liquid
+  assign spec_meta = product.metafields.custom.sgym_v2_specs.value | default: product.metafields.custom.sgym_v2_specs
+  assign use_meta = false
+  if spec_meta != blank and spec_meta contains '|'
+    assign use_meta = true
+  endif
+-%}
+<div class="sgym-v2">
+  <section class="specs" id="technische-daten" data-node="227:1177" data-node-mobile="228:361" aria-labelledby="specs-title">
+    <h2 class="specs__title reveal" id="specs-title">{{ section.settings.heading }}</h2>
+    <div class="specs__card">
+      {%- if use_meta -%}
+        {%- assign groups = spec_meta | split: '---' -%}
+        {%- for group in groups -%}
+          {%- assign lines = group | newline_to_br | replace: '<br />', '§' | replace: '<br/>', '§' | replace: '<br>', '§' | split: '§' -%}
+          {%- assign heading = '' -%}
+          {%- assign opened = false -%}
+          {%- assign saw_head = false -%}
+          {%- capture rows -%}
+            {%- for line in lines -%}
+              {%- assign clean = line | strip -%}
+              {%- if clean != blank -%}
+                {%- unless saw_head -%}
+                  {%- assign saw_head = true -%}
+                  {%- assign heading = clean | split: '|' | first | strip -%}
+                  {%- assign flag = clean | split: '|' | last | strip | downcase -%}
+                  {%- if flag == 'open' -%}{%- assign opened = true -%}{%- endif -%}
+                {%- else -%}
+                  {%- assign label = clean | split: '|' | first | strip -%}
+                  {%- assign value = clean | remove_first: label | remove_first: '|' | strip -%}
+                  <div class="specs__row"><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+                {%- endunless -%}
+              {%- endif -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+          {%- if heading != blank -%}
+            <div class="specs__group{% if opened %} is-open{% endif %}" data-acc>
+              <h3><button class="specs__head" type="button" data-acc-btn aria-expanded="{% if opened %}true{% else %}false{% endif %}" aria-controls="specs-{{ section.id }}-{{ forloop.index }}" id="specs-{{ section.id }}-{{ forloop.index }}-btn"><span>{{ heading }}</span><img class="specs__ico specs__ico--plus" src="{{ 'sgym-v2-56d22.svg' | asset_url }}" width="24" height="24" alt=""><img class="specs__ico specs__ico--minus" src="{{ 'sgym-v2-0493d.svg' | asset_url }}" width="24" height="24" alt=""></button></h3>
+              <div class="specs__panel" id="specs-{{ section.id }}-{{ forloop.index }}" role="region" aria-labelledby="specs-{{ section.id }}-{{ forloop.index }}-btn" {% unless opened %}hidden{% endunless %}>
+                <dl class="specs__table">{{ rows }}</dl>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          <div class="specs__group{% if block.settings.open %} is-open{% endif %}" data-acc {{ block.shopify_attributes }}>
+            <h3><button class="specs__head" type="button" data-acc-btn aria-expanded="{% if block.settings.open %}true{% else %}false{% endif %}" aria-controls="specs-{{ section.id }}-{{ forloop.index }}" id="specs-{{ section.id }}-{{ forloop.index }}-btn"><span>{{ block.settings.title }}</span><img class="specs__ico specs__ico--plus" src="{{ 'sgym-v2-56d22.svg' | asset_url }}" width="24" height="24" alt=""><img class="specs__ico specs__ico--minus" src="{{ 'sgym-v2-0493d.svg' | asset_url }}" width="24" height="24" alt=""></button></h3>
+            <div class="specs__panel" id="specs-{{ section.id }}-{{ forloop.index }}" role="region" aria-labelledby="specs-{{ section.id }}-{{ forloop.index }}-btn" {% unless block.settings.open %}hidden{% endunless %}>
+              <dl class="specs__table">
+                {%- assign lines = block.settings.rows | newline_to_br | replace: '<br />', '§' | replace: '<br/>', '§' | replace: '<br>', '§' | split: '§' -%}
+                {%- for line in lines -%}
+                  {%- assign clean = line | strip -%}
+                  {%- if clean contains '|' -%}
+                    {%- assign label = clean | split: '|' | first | strip -%}
+                    {%- assign value = clean | remove_first: label | remove_first: '|' | strip -%}
+                    <div class="specs__row"><dt>{{ label }}</dt><dd>{{ value }}</dd></div>
+                  {%- endif -%}
+                {%- endfor -%}
+              </dl>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Daten",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "max_blocks": 8,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Technische Daten" },
+    { "type": "paragraph", "content": "Optional überschreibt das Metafeld custom.sgym_v2_specs die Blöcke. Gruppen mit --- trennen. Erste Zeile: Titel|open oder Titel|closed. Weitere Zeilen: Merkmal|Wert." }
+  ],
+  "blocks": [
+    {
+      "type": "group",
+      "name": "Gruppe",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titel", "default": "Abmessung allgemein" },
+        { "type": "checkbox", "id": "open", "label": "Geöffnet", "default": false },
+        { "type": "textarea", "id": "rows", "label": "Zeilen (Merkmal|Wert)", "default": "Produktmaße zusammengeklappt mit Klimmzugstange|218 × 91 × 44 cm" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "sGym v2 Daten",
+      "blocks": [
+        { "type": "group", "settings": { "title": "Abmessung allgemein", "open": true, "rows": "Produktmaße zusammengeklappt mit Klimmzugstange|218 × 91 × 44 cm\nProduktmaße ausgeklappt mit Klimmzugstange|218 × 91 × 160 cm\nProduktmaße ausgeklappt ohne Klimmzugstange|196 × 91 × 160 cm\nProduktmaße zusammengeklappt ohne Klimmzugstange|196 × 91 × 44 cm\nVerpackungsmaße (L × B × H)|205 × 91 × 49 cm\nNettogewicht|115 kg\nBruttogewicht|140 kg" } },
+        { "type": "group", "settings": { "title": "Konsole", "open": false, "rows": "Netzspannung und Frequenz|100–240 V AC, 50–60 Hz\nNennleistung|1500 W\nMaximale Ausgangsleistung|max. 1500 W, Nennleistung 550 W\nBluetooth-Frequenzband|2,4 GHz\nWLAN|2,4G: 2,412–2,484 GHz / 5G: 5,180–5,825 GHz\nMaximale abgestrahlte Sendeleistung|16,75 dBm" } },
+        { "type": "group", "settings": { "title": "Allgemeine Informationen", "open": false, "rows": "Trainingsgewicht|120 kg\nLieferumfang|Kraftstation, Handbuch, 2× Einzelgriffe, Langhantel, Trizepsgriff, Knöchelriemen, Safety Spotter, Langhantelpolster, Dipstange, Klimmzugstange, Extender Seile, Trainingsgürtel\nHauptmerkmale|Safety Spotter, klappbare Bodenplatte, Supportmodus, Weightedmodus, Ruderaufsatzmöglichkeit, Dipstation, Klimmzugstange\nMax. Nutzergewicht Klimmzugstange|200 kg\nMax. Nutzergewicht Dipstange|120 kg\nDipstation|Ja\nEVA Polster|Nein" } },
+        { "type": "group", "settings": { "title": "Bildschirm-Anzeige", "open": false, "rows": "Display|21 Zoll\nVerknüpfung zur Sportstech Live App|Ja" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

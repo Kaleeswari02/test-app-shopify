@@ -1,0 +1,21 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="243.428" height="55.5223" viewBox="0 0 243.428 55.5223" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Gruppe">
+<line id="Linie" x1="0.431582" y1="9.5796" x2="243.009" y2="9.5796" stroke="#636365" stroke-width="0.275926" stroke-linecap="round" stroke-dasharray="0.55 0.55"/>
+<line id="Linie_2" x1="0.431582" y1="18.6851" x2="243.009" y2="18.6851" stroke="#636365" stroke-width="0.275926" stroke-linecap="round" stroke-dasharray="0.55 0.55"/>
+<line id="Linie_3" x1="0.431582" y1="27.7905" x2="243.009" y2="27.7905" stroke="#636365" stroke-width="0.275926" stroke-linecap="round" stroke-dasharray="0.55 0.55"/>
+<line id="Linie_4" x1="0.431582" y1="36.896" x2="243.009" y2="36.896" stroke="#636365" stroke-width="0.275926" stroke-linecap="round" stroke-dasharray="0.55 0.55"/>
+<line id="Linie_5" x1="0.431582" y1="46.0015" x2="243.009" y2="46.0015" stroke="#636365" stroke-width="0.275926" stroke-linecap="round" stroke-dasharray="0.55 0.55"/>
+<line id="Linie_6" x1="0.431582" y1="55.3843" x2="243.009" y2="55.3843" stroke="#636365" stroke-width="0.275926" stroke-linecap="round"/>
+<line id="Linie_7" x1="0.431582" y1="0.474133" x2="243.009" y2="0.474133" stroke="#636365" stroke-width="0.275926" stroke-linecap="round" stroke-dasharray="0.55 0.55"/>
+<g id="Gruppe_2">
+<path id="Form" d="M0.0377592 55.5214V39.5177L33.5392 37.1723L69.4794 25.8593L104.521 27.9288L139.434 11.7871L172.936 21.0306H208.491L242.121 0.612096H243.148V55.5214H0.0377592Z" fill="url(#paint0_linear_0_31)" fill-opacity="0.6"/>
+<path id="Form_2" d="M0.0377592 39.5189L33.3482 37.2343L69.3634 25.8116L104.382 27.7915L139.543 11.7997L172.711 20.9379H208.442L243.148 0.475377" stroke="#163CF4" stroke-width="1.1037"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_31" x1="117.742" y1="21.5825" x2="117.742" y2="55.5214" gradientUnits="userSpaceOnUse">
+<stop stop-color="#B7C2F7"/>
+<stop offset="1" stop-color="#6B7291" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>

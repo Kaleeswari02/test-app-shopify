@@ -1,0 +1,99 @@
+{% render 'sgym-v2-assets' %}
+<div class="sgym-v2">
+  <section class="modes" id="trainingsmodi" data-node="227:1170" data-node-mobile="228:354" aria-labelledby="modes-title">
+    <div class="modes__card">
+      <div class="modes__head">
+        <h2 class="modes__title reveal" id="modes-title">{{ section.settings.heading }}</h2>
+        <p class="modes__sub">{{ section.settings.subheading }}</p>
+      </div>
+      <div class="modes__tabs" data-tabs data-autoplay="{{ section.settings.autoplay }}">
+        <div class="modes__bar" role="tablist" aria-label="Trainingsmodus">
+          {%- assign mi = 0 -%}
+          {%- for block in section.blocks -%}
+            <button class="modes__tab" role="tab" id="modes-tab-{{ mi }}" aria-controls="modes-panel-{{ mi }}" aria-selected="{% if mi == 0 %}true{% else %}false{% endif %}" type="button" {% unless mi == 0 %}tabindex="-1"{% endunless %} {{ block.shopify_attributes }}>{{ block.settings.tab }}</button>
+            {%- assign mi = mi | plus: 1 -%}
+          {%- endfor -%}
+        </div>
+        <div class="modes__media">
+          {%- assign mi = 0 -%}
+          {%- for block in section.blocks -%}
+            <div class="modes__panel" role="tabpanel" id="modes-panel-{{ mi }}" aria-labelledby="modes-tab-{{ mi }}" {% unless mi == 0 %}hidden{% endunless %}>
+              {%- if block.settings.layout == 'cover' -%}
+                {% render 'sgym-v2-img', file: block.settings.file, image: block.settings.image, width: 240, height: 240, alt: block.settings.alt, img_class: 'modes__cover', loading: 'lazy', sizes: '100vw' %}
+              {%- else -%}
+                {% render 'sgym-v2-img', file: block.settings.file, image: block.settings.image, width: 2400, height: 1583, alt: block.settings.alt, img_class: 'modes__base', loading: 'lazy', sizes: '100vw' %}
+                {%- if block.settings.layout == 'partner' -%}
+                  {% render 'sgym-v2-img', file: block.settings.banner_file, image: block.settings.banner, width: 2400, height: 1200, alt: block.settings.banner_alt, img_class: 'modes__banner', loading: 'lazy', sizes: '100vw' %}
+                {%- endif -%}
+              {%- endif -%}
+              <div class="modes__info">
+                <img class="modes__info-bg fi-d" src="{{ 'sgym-v2-15e61.svg' | asset_url }}" width="345" height="175" alt="">
+                <img class="modes__info-bg fi-m" src="{{ 'sgym-v2-66208.svg' | asset_url }}" width="162" height="82" alt="">
+                <p class="modes__info-title"><span>{{ block.settings.title_a }}</span> <span>{{ block.settings.title_b }}</span></p>
+                <p class="modes__info-desc">
+                  {%- if block.settings.text_m != blank -%}
+                    <span class="only-d">{{ block.settings.text }}</span><span class="only-m">{{ block.settings.text_m }}</span>
+                  {%- else -%}
+                    {{ block.settings.text }}
+                  {%- endif -%}
+                </p>
+                <img class="modes__info-icon fi-d" src="{{ 'sgym-v2-9e5bc.svg' | asset_url }}" width="58" height="58" alt="">
+                <img class="modes__info-icon fi-m" src="{{ 'sgym-v2-b1545.svg' | asset_url }}" width="28" height="28" alt="">
+              </div>
+            </div>
+            {%- assign mi = mi | plus: 1 -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% schema %}
+{
+  "name": "sGym v2 Trainingsmodi",
+  "tag": "div",
+  "class": "sgym-v2-host",
+  "disabled_on": { "groups": ["header", "footer"] },
+  "enabled_on": { "templates": ["product"] },
+  "max_blocks": 4,
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Überschrift", "default": "Dynamische Trainingsmodi" },
+    { "type": "textarea", "id": "subheading", "label": "Unterzeile", "default": "Ob allein oder mit Partner – du findest immer das passende Setup für deine Ziele." },
+    { "type": "text", "id": "autoplay", "label": "Autoplay in Millisekunden", "default": "4000" }
+  ],
+  "blocks": [
+    {
+      "type": "mode",
+      "name": "Modus",
+      "settings": [
+        { "type": "text", "id": "tab", "label": "Reiter", "default": "Partnermodus" },
+        { "type": "text", "id": "title_a", "label": "Titel Teil 1", "default": "Partner-" },
+        { "type": "text", "id": "title_b", "label": "Titel Teil 2", "default": "modus" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Trainiere zu zweit – für doppelten Fortschritt." },
+        { "type": "textarea", "id": "text_m", "label": "Text Mobil (optional)", "default": "Gemeinsam trainieren, doppelt profitieren." },
+        { "type": "select", "id": "layout", "label": "Layout", "default": "partner", "options": [
+          { "value": "partner", "label": "Partner (zwei Bilder)" },
+          { "value": "base", "label": "Ein Bild" },
+          { "value": "cover", "label": "Cover" }
+        ] },
+        { "type": "image_picker", "id": "image", "label": "Bild" },
+        { "type": "text", "id": "file", "label": "Fallback-Datei", "default": "f3ec7.webp" },
+        { "type": "text", "id": "alt", "label": "Bildbeschreibung", "default": "" },
+        { "type": "image_picker", "id": "banner", "label": "Banner (Partner)" },
+        { "type": "text", "id": "banner_file", "label": "Banner-Datei", "default": "615c5.webp" },
+        { "type": "text", "id": "banner_alt", "label": "Banner-Beschreibung", "default": "Zwei Personen trainieren gemeinsam im Partnermodus am sGym Pro" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "sGym v2 Trainingsmodi",
+      "blocks": [
+        { "type": "mode", "settings": { "tab": "Partnermodus", "title_a": "Partner-", "title_b": "modus", "text": "Trainiere zu zweit – für doppelten Fortschritt.", "text_m": "Gemeinsam trainieren, doppelt profitieren.", "layout": "partner", "file": "f3ec7.webp", "alt": "", "banner_file": "615c5.webp", "banner_alt": "Zwei Personen trainieren gemeinsam im Partnermodus am sGym Pro" } },
+        { "type": "mode", "settings": { "tab": "Light-Modus", "title_a": "Light-", "title_b": "Modus", "text": "Sanft starten, Technik verfeinern.", "text_m": "", "layout": "base", "file": "f3ec7.webp", "alt": "sGym Pro im Light-Modus", "banner_file": "615c5.webp", "banner_alt": "" } },
+        { "type": "mode", "settings": { "tab": "Weighted-Modus", "title_a": "Weighted-", "title_b": "Modus", "text": "Wie freie Gewichte – nur präziser.", "text_m": "", "layout": "cover", "file": "10115.png", "alt": "sGym Pro im Weighted-Modus", "banner_file": "615c5.webp", "banner_alt": "" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
