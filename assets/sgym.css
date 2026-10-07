@@ -3785,8 +3785,24 @@ sgym-carousel:focus-within .sgym-counter__arc {
   line-height: 1.6;
 }
 
+.sgym-coach .sgym-carousel {
+  box-sizing: border-box;
+}
+
+.sgym-coach .sgym-viewport {
+  margin-right: 0;
+  padding-right: 0;
+  scroll-padding-inline: 0;
+}
+
 .sgym-coach .sgym-track {
   gap: 15.5px;
+  width: max-content;
+  margin-inline: auto;
+}
+
+.sgym-coach .sgym-track > li {
+  scroll-snap-align: center;
 }
 
 .sgym-coach-card {

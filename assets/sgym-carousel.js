@@ -61,6 +61,7 @@ if (!customElements.get('sgym-carousel')) {
 
       refresh() {
         if (!this.viewport || !this.track) return;
+        this.centerCoaches();
         this.ensureReachable();
         this.buildDots();
         this.update();
@@ -141,7 +142,52 @@ if (!customElements.get('sgym-carousel')) {
         return Math.max(0, this.viewport.scrollWidth - this.viewport.clientWidth);
       }
 
+      // Centre the coach row in the grey section. Symmetric padding sizes the
+      // scrollport to the visible cards, so the first and last cards share one
+      // inset and the old end spacer is not needed.
+      centerCoaches() {
+        const spacer = this.track.querySelector('[data-sgym-spacer]');
+        if (!this.closest('.sgym-coach')) {
+          this.style.paddingLeft = '';
+          this.style.paddingRight = '';
+          return;
+        }
+        spacer?.remove();
+        const items = this.slides();
+        if (!items.length) return;
+        const available = this.clientWidth;
+        const card = items[0].getBoundingClientRect().width;
+        const gap = this.gap();
+        if (available <= 0 || card <= 0) return;
+        const count = items.length;
+        const stride = card + gap;
+        const content = count * card + Math.max(0, count - 1) * gap;
+        let visibleCount = Math.max(1, Math.min(count, Math.floor((available + gap) / stride)));
+        while (visibleCount < count) {
+          const wider = (visibleCount + 1) * card + visibleCount * gap;
+          if (wider <= available + 1) visibleCount += 1;
+          else break;
+        }
+        const visible = Math.min(content, visibleCount * card + Math.max(0, visibleCount - 1) * gap);
+        const windowWidth = Math.min(visible, available);
+        const inset = Math.max(0, (available - windowWidth) / 2);
+        this.style.boxSizing = 'border-box';
+        this.style.paddingLeft = `${inset}px`;
+        this.style.paddingRight = `${inset}px`;
+        const snap = 'center';
+        this.viewport.style.scrollPaddingLeft = '0px';
+        this.viewport.style.scrollPaddingRight = '0px';
+        this.viewport.style.scrollSnapType = 'x mandatory';
+        items.forEach((item) => {
+          item.style.scrollSnapAlign = snap;
+        });
+      }
+
       ensureReachable() {
+        if (this.closest('.sgym-coach')) {
+          this.track.querySelector('[data-sgym-spacer]')?.remove();
+          return;
+        }
         const items = this.slides();
         const spacer = this.track.querySelector('[data-sgym-spacer]');
         if (this.dataset.loop === 'true' || items.length < 2) {
@@ -203,7 +249,10 @@ if (!customElements.get('sgym-carousel')) {
         const items = this.slides();
         const target = items[Math.max(0, Math.min(index, items.length - 1))];
         if (!target) return;
-        const left = Math.max(0, Math.min(this.slideLeft(target), this.maxScroll()));
+        const snap = getComputedStyle(target).scrollSnapAlign;
+        const targetLeft = this.slideLeft(target);
+        const centered = targetLeft - (this.viewport.clientWidth - target.getBoundingClientRect().width) / 2;
+        const left = Math.max(0, Math.min(snap === 'center' ? centered : targetLeft, this.maxScroll()));
         this.animateScroll(left);
         this.update();
       }
