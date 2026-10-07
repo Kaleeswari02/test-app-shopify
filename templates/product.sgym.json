@@ -608,27 +608,27 @@
         "partner": {
           "type": "mode",
           "settings": {
-            "label": "Partnermodus:",
-            "title": "Partner\nmodus:",
-            "text": "Train as a duo, double your progress.",
+            "label": "Partnermodus",
+            "title": "Partner-\nmodus",
+            "text": "Trainiere zu zweit – für doppelten Fortschritt.",
             "fallback_asset": "sgym-mode-partner.jpg"
           }
         },
         "light": {
           "type": "mode",
           "settings": {
-            "label": "Light mode",
-            "title": "Light\nmode",
-            "text": "Start gently, refine your technique.",
+            "label": "Light-Modus",
+            "title": "Light-\nmodus",
+            "text": "Starte sanft, verfeinere deine Technik.",
             "fallback_asset": "sgym-mode-light.jpg"
           }
         },
         "weighted": {
           "type": "mode",
           "settings": {
-            "label": "Weighted mode",
-            "title": "Weighted\nmode",
-            "text": "Like free weights – only more precise.",
+            "label": "Weighted-Modus",
+            "title": "Weighted-\nmodus",
+            "text": "Wie freie Gewichte – nur präziser.",
             "fallback_asset": "sgym-mode-weighted.jpg"
           }
         }
@@ -639,8 +639,8 @@
         "weighted"
       ],
       "settings": {
-        "heading": "Dynamic training modes",
-        "subheading": "<p>Whether you train solo or with a partner – you'll always find the right setup for your goals.</p>",
+        "heading": "Dynamische Trainingsmodi",
+        "subheading": "<p>Ob allein oder mit Partner – du findest immer das passende Setup für deine Ziele.</p>",
         "heading_font": "archivo_n7",
         "body_font": "inter_n4",
         "padding_top": 50,
