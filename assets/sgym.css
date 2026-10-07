@@ -3088,7 +3088,7 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
     column-gap: calc(20 / 1246 * 100%);
     min-height: 0;
     height: auto;
-    padding: 0 calc(54 / 1246 * 100%) 0 calc(84 / 1246 * 100%);
+    padding: calc(54 / 1246 * 100%) calc(54 / 1246 * 100%) calc(54 / 1246 * 100%) calc(84 / 1246 * 100%);
   }
 
   .sgym-split--dark.sgym-split--image-left {
@@ -3107,7 +3107,7 @@ details[open] > .sgym-acc-summary .sgym-icon--open {
     align-items: stretch;
     gap: 20px;
     min-height: 0;
-    padding: 28px 16px;
+    padding: 28px calc(54 / 1246 * 100%) calc(54 / 1246 * 100%);
   }
 
   .sgym-split--dark .sgym-split__copy,
@@ -3785,28 +3785,56 @@ sgym-carousel:focus-within .sgym-counter__arc {
   line-height: 1.6;
 }
 
-.sgym-coach .sgym-carousel {
+.sgym-coach .sgym-carousel,
+.sgym-showcase .sgym-carousel,
+.sgym--dark .sgym-carousel,
+.sgym-strip .sgym-carousel {
   box-sizing: border-box;
   width: 100cqw;
   max-width: 100cqw;
   margin-left: calc(50% - 50cqw);
 }
 
-.sgym-coach .sgym-viewport {
+.sgym-coach .sgym-viewport,
+.sgym-showcase .sgym-viewport,
+.sgym--dark .sgym-viewport,
+.sgym-strip .sgym-viewport {
+  margin-left: 0;
   margin-right: 0;
+  padding-left: 0;
   padding-right: 0;
-  scroll-padding-inline: var(--sgym-coach-inset, 0px);
-  clip-path: inset(0 var(--sgym-coach-inset, 0px));
+  scroll-padding-inline: var(--sgym-track-inset, 0px);
+  clip-path: inset(0 var(--sgym-track-inset, 0px));
+}
+
+.sgym-coach .sgym-track,
+.sgym-showcase .sgym-track,
+.sgym--dark .sgym-track,
+.sgym-strip .sgym-track {
+  width: max-content;
+  justify-content: flex-start;
+  padding-inline: var(--sgym-track-inset, 0px);
 }
 
 .sgym-coach .sgym-track {
   gap: 15.5px;
-  width: max-content;
-  padding-inline: var(--sgym-coach-inset, 0px);
 }
 
-.sgym-coach .sgym-track > li {
+.sgym-coach .sgym-track > li,
+.sgym-showcase .sgym-track > li,
+.sgym--dark .sgym-track > li,
+.sgym-strip .sgym-track > li {
   scroll-snap-align: start;
+}
+
+.sgym-showcase .sgym-carousel__head,
+.sgym--dark .sgym-carousel__head {
+  box-sizing: border-box;
+  padding-inline: var(--sgym-track-inset, 0px);
+}
+
+.sgym--dark .sgym-carousel__arrows {
+  right: var(--sgym-track-inset, 0px);
 }
 
 .sgym-coach-card {
