@@ -32,7 +32,7 @@
           %}
           <div class="sgym-content-card__body">
             <h3>
-              {{ block.settings.title }}
+              {{- block.settings.title -}}
               {%- if block.settings.badge != blank -%}
                 <span class="sgym-badge">• {{ block.settings.badge }}</span>
               {%- endif -%}
