@@ -407,23 +407,23 @@
           "settings": {
             "fallback_asset": "sgym-key-feature-safety-spotter.jpg",
             "title": "Safety Spotter",
-            "text": "<p>Use the integrated barbell safety spotter to adjust the resistance and automatically cut it off in case of overload – perfect for drop sets.</p>"
+            "text": "<p>With the integrated Safety Spotter, you can adjust the resistance and it automatically switches off in case of overload – perfect for drop sets.</p>"
           }
         },
         "pulley": {
           "type": "card",
           "settings": {
             "fallback_asset": "sgym-key-feature-cable-pulley.jpg",
-            "title": "Versatile Cable Pulley",
-            "text": "<p>The 12-step cable pulley with side floor-plate mounting gives you a wide range of pull, push and rotational exercises.</p>"
+            "title": "Versatile Cable Pull",
+            "text": "<p>The 12-way adjustable cable pulley with side floor mount allows you to perform numerous pulling, pushing and rotation exercises.</p>"
           }
         },
         "lowering": {
           "type": "card",
           "settings": {
             "fallback_asset": "sgym-key-feature-auto-lowering.jpg",
-            "title": "Auto-Lowering Function",
-            "text": "<p>The base plate takes up less than 1.5 m², lowers automatically and can be moved easily thanks to transport wheels.</p>",
+            "title": "Automatic Lowering Function",
+            "text": "<p>The base plate requires less than 1.5 m², lowers automatically and is easy to move thanks to transport wheels.</p>",
             "show_play": true
           }
         },
@@ -431,8 +431,8 @@
           "type": "card",
           "settings": {
             "fallback_asset": "sgym-product-cutout-sgym-pro.png",
-            "title": "120 Kg Widerstand",
-            "text": "<p>Die elektrischen Motoren liefern bis zu 120 kg präzisen Widerstand.</p>"
+            "title": "120 kg Widerstand",
+            "text": "<p>The electric motors provide 60 kg of precise resistance per side.</p>"
           }
         }
       },

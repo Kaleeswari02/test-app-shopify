@@ -151,7 +151,7 @@ if (!customElements.get('sgym-carousel')) {
       // Centre a scrolling row on its section. Track padding and
       // scroll-padding use one inset, so the first and last cards share it.
       centerTrack() {
-        if (!this.closest('.sgym-coach, .sgym-showcase, .sgym--dark, .sgym-strip')) return;
+        if (!this.closest('.sgym-coach, .sgym--dark, .sgym-strip')) return;
         this.track.querySelector('[data-sgym-spacer]')?.remove();
         const items = this.slides();
         if (!items.length) return;
@@ -281,6 +281,14 @@ if (!customElements.get('sgym-carousel')) {
       move(direction) {
         const items = this.slides();
         if (!items.length) return;
+        // A short track can hit the end before the next card's snap point.
+        // Previous still has to return to the start.
+        if (direction < 0 && this.destination == null && this.viewport.scrollLeft > 2 && this.activeIndex() === 0) {
+          this.destination = 0;
+          this.animateScroll(0);
+          this.restartRing();
+          return;
+        }
         const base = this.destination == null ? this.activeIndex() : this.destination;
         let next = base + direction;
         if (this.dataset.loop === 'true') next = (next + items.length) % items.length;
