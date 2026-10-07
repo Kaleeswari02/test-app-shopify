@@ -7,6 +7,19 @@
     <div class="sgym-modes">
       {% render 'sgym-heading', title: section.settings.heading, text: section.settings.subheading, title_class: 'sgym-title--loose' %}
       <sgym-modes>
+        <div class="sgym-modes__switch" role="tablist" aria-label="{{ section.settings.heading | escape }}">
+          <span class="sgym-modes__thumb" aria-hidden="true"></span>
+          {%- for block in section.blocks -%}
+            <button
+              type="button"
+              role="tab"
+              data-sgym-mode
+              aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+            >
+              {{ block.settings.label }}
+            </button>
+          {%- endfor -%}
+        </div>
         <div class="sgym-modes__stage">
           {%- for block in section.blocks -%}
             <div class="sgym-modes__panel{% if forloop.first %} is-active{% endif %}" data-sgym-mode-panel {{ block.shopify_attributes }}>
@@ -40,19 +53,6 @@
               {%- endif -%}
             </div>
           {%- endfor -%}
-          <div class="sgym-modes__switch" role="tablist" aria-label="{{ section.settings.heading | escape }}">
-            <span class="sgym-modes__thumb" aria-hidden="true"></span>
-            {%- for block in section.blocks -%}
-              <button
-                type="button"
-                role="tab"
-                data-sgym-mode
-                aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
-              >
-                {{ block.settings.label }}
-              </button>
-            {%- endfor -%}
-          </div>
         </div>
       </sgym-modes>
     </div>
