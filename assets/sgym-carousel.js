@@ -61,6 +61,7 @@ if (!customElements.get('sgym-carousel')) {
 
       refresh() {
         if (!this.viewport || !this.track) return;
+        this.centerCoaches();
         this.ensureReachable();
         this.buildDots();
         this.update();
@@ -126,10 +127,14 @@ if (!customElements.get('sgym-carousel')) {
         return this.pageCount();
       }
 
+      scrollPad() {
+        return parseFloat(getComputedStyle(this.viewport).scrollPaddingLeft) || 0;
+      }
+
       activeIndex() {
         const items = this.slides();
         if (!items.length) return 0;
-        const left = this.viewport.scrollLeft;
+        const left = this.viewport.scrollLeft + this.scrollPad();
         let index = 0;
         items.forEach((item, i) => {
           if (this.slideLeft(item) <= left + 8) index = i;
@@ -141,7 +146,36 @@ if (!customElements.get('sgym-carousel')) {
         return Math.max(0, this.viewport.scrollWidth - this.viewport.clientWidth);
       }
 
+      // Centre the coach row in the grey section. Track padding and
+      // scroll-padding use one inset, so the first and last cards share it.
+      centerCoaches() {
+        if (!this.closest('.sgym-coach')) return;
+        this.track.querySelector('[data-sgym-spacer]')?.remove();
+        const items = this.slides();
+        if (!items.length) return;
+        const available = this.viewport.clientWidth;
+        const card = items[0].getBoundingClientRect().width;
+        const gap = this.gap();
+        if (available <= 0 || card <= 0) return;
+        const count = items.length;
+        const stride = card + gap;
+        const content = count * card + Math.max(0, count - 1) * gap;
+        let visibleCount = Math.max(1, Math.min(count, Math.floor((available + gap) / stride)));
+        while (visibleCount < count) {
+          const wider = (visibleCount + 1) * card + visibleCount * gap;
+          if (wider <= available + 1) visibleCount += 1;
+          else break;
+        }
+        const visible = Math.min(content, visibleCount * card + Math.max(0, visibleCount - 1) * gap);
+        const inset = Math.max(0, (available - Math.min(visible, available)) / 2);
+        this.style.setProperty('--sgym-coach-inset', `${inset}px`);
+      }
+
       ensureReachable() {
+        if (this.closest('.sgym-coach')) {
+          this.track.querySelector('[data-sgym-spacer]')?.remove();
+          return;
+        }
         const items = this.slides();
         const spacer = this.track.querySelector('[data-sgym-spacer]');
         if (this.dataset.loop === 'true' || items.length < 2) {
@@ -203,7 +237,7 @@ if (!customElements.get('sgym-carousel')) {
         const items = this.slides();
         const target = items[Math.max(0, Math.min(index, items.length - 1))];
         if (!target) return;
-        const left = Math.max(0, Math.min(this.slideLeft(target), this.maxScroll()));
+        const left = Math.max(0, Math.min(this.slideLeft(target) - this.scrollPad(), this.maxScroll()));
         this.animateScroll(left);
         this.update();
       }

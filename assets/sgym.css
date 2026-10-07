@@ -3785,8 +3785,28 @@ sgym-carousel:focus-within .sgym-counter__arc {
   line-height: 1.6;
 }
 
+.sgym-coach .sgym-carousel {
+  box-sizing: border-box;
+  width: 100cqw;
+  max-width: 100cqw;
+  margin-left: calc(50% - 50cqw);
+}
+
+.sgym-coach .sgym-viewport {
+  margin-right: 0;
+  padding-right: 0;
+  scroll-padding-inline: var(--sgym-coach-inset, 0px);
+  clip-path: inset(0 var(--sgym-coach-inset, 0px));
+}
+
 .sgym-coach .sgym-track {
   gap: 15.5px;
+  width: max-content;
+  padding-inline: var(--sgym-coach-inset, 0px);
+}
+
+.sgym-coach .sgym-track > li {
+  scroll-snap-align: start;
 }
 
 .sgym-coach-card {
